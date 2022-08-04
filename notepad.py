@@ -16,7 +16,7 @@ import resources # create a qrc file for your images my guy ;) alan d moore taug
 # none other than this guy: https://www.youtube.com/watch?v=QdOoZ7edqXc&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=4
 
 
-is_document_saved = False
+is_document_already_saved = False
 
 class SearchWidget(qtw.QWidget):
 
@@ -68,7 +68,7 @@ class MainWindow(qtw.QMainWindow):
         # creating a combo box widget
         self.font_size_combo_box = qtw.QComboBox(self)
         self.font_style_combo_box = qtw.QComboBox(self)
-        self.font_style_combo_box.addItems(["Arial","Courier","Impact","Times","Titillium"])
+        self.font_style_combo_box.addItems(["Arial","Courier","Impact","Times"])
         
         # declare event filter for self.font_size_combo_box
         self.font_size_combo_box.installEventFilter(self)
@@ -469,15 +469,15 @@ class MainWindow(qtw.QMainWindow):
     def save_file(self):
         text = self.textedit.toPlainText()
         filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
-        global is_document_saved
-        if is_document_saved == False:
-            print(is_document_saved)
+        global is_document_already_saved
+        if is_document_already_saved == False:
+            print(is_document_already_saved)
             if filename:
                 with open(filename, "w") as handle:
                     handle.write(text)
                     self.statusBar().showMessage(f"Saved to {filename}")
-                    is_document_saved = True
-                    print(is_document_saved)
+                    is_document_already_saved = True
+                    print(is_document_already_saved)
  
             
     def closeEvent(self, event):
@@ -489,7 +489,7 @@ class MainWindow(qtw.QMainWindow):
     def maybe_save(self):
         if not self.textedit.document().isModified():
             return True
-        if is_document_saved == True:
+        if is_document_already_saved == True:
             qtw.QApplication.quit() 
         else:    
             reply = qtw.QMessageBox.warning(self, qtc.QCoreApplication.applicationName(),
@@ -538,7 +538,6 @@ if __name__ == "__main__":
         sys.exit(app.exec_())
     except SystemExit:
         print("Closing Window...")
-
 
 
 
