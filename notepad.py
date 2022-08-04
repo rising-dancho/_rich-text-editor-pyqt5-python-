@@ -15,6 +15,9 @@ import resources # create a qrc file for your images my guy ;) alan d moore taug
 # learned from a programming pyqt god, 
 # none other than this guy: https://www.youtube.com/watch?v=QdOoZ7edqXc&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=4
 
+
+is_document_saved = False
+
 class SearchWidget(qtw.QWidget):
 
     submitted = qtc.pyqtSignal(str, bool)
@@ -65,7 +68,7 @@ class MainWindow(qtw.QMainWindow):
         # creating a combo box widget
         self.font_size_combo_box = qtw.QComboBox(self)
         self.font_style_combo_box = qtw.QComboBox(self)
-        self.font_style_combo_box.addItems(["Arial","Courier","Impact","Times"])
+        self.font_style_combo_box.addItems(["Arial","Courier","Impact","Times","Titillium"])
         
         # declare event filter for self.font_size_combo_box
         self.font_size_combo_box.installEventFilter(self)
@@ -104,37 +107,49 @@ class MainWindow(qtw.QMainWindow):
         # menubar
         menubar = self.menuBar() #QMenuBar
         file_menu = menubar.addMenu("File") #QMenu
-        viewMenu = menubar.addMenu("View")
-        
+      
         # add icon, statustip, misc.
-        open_file = qtw.QAction(qtg.QIcon(':/images/folder.png'),"Open Text File", self)
+        new_file = qtw.QAction(qtg.QIcon(':/images/new_file.png'),"New Text File", self)
+        new_file.setShortcut("Ctrl+N")
+        
+        open_file = qtw.QAction(qtg.QIcon(':/images/folder.png'),"Open...", self)
         open_file.setShortcut("Ctrl+O")
-        open_file.setStatusTip("Open a file")
+
+        save_file = qtw.QAction(qtg.QIcon(':/images/save.png'), "Save", self)
+        save_file.setShortcut('Ctrl+S')
+
+        save_as = qtw.QAction(qtg.QIcon(':/images/save_as.png'), "Save As...", self)
+        save_as.setShortcut('Ctrl+Shift+S')
 
         exit_program = qtw.QAction(qtg.QIcon(':/images/close.png'), "Exit", self)
         exit_program.setShortcut('Ctrl+Q')
-        exit_program.setStatusTip('Exit application')
 
-        save_progress = qtw.QAction(qtg.QIcon(':/images/save.png'), "Save", self)
-        save_progress.setShortcut('Ctrl+S')
-        save_progress.setStatusTip('Save your work')
+        # add functions or actions to the menubar
+        file_menu.addAction(new_file) #QAction
+        file_menu.addAction(open_file) 
+        file_menu.addSeparator()
+        file_menu.addAction(save_file) 
+        #file_menu.addAction(save_as) 
+        file_menu.addSeparator()
+        file_menu.addAction(exit_program)
+
+        # triggers
+        new_file.triggered.connect(self.new_file)
+        open_file.triggered.connect( self.open_file)
+        save_file.triggered.connect(self.save_file)
+        #save_as.triggered.connect(self.save_file_as)
+        exit_program.triggered.connect(self.close)
+        
+        viewMenu = menubar.addMenu("View") #QMenu
 
         # checkable status bar
-        viewStatAct = qtw.QAction('Show statusbar', self, checkable=True)
+        viewStatAct = qtw.QAction('Show Statusbar', self, checkable=True)
         viewStatAct.setStatusTip('Toggle the status bar to be visible or not')
         viewStatAct.setChecked(True)
         
-        # add functions or actions to the menubar
-        file_menu.addAction(open_file) #QAction
-        file_menu.addAction(save_progress) 
-        file_menu.addSeparator()
-        file_menu.addAction(exit_program)
         viewMenu.addAction(viewStatAct)
 
         # triggers
-        open_file.triggered.connect( self.open_file)
-        save_progress.triggered.connect(self.save_file)
-        exit_program.triggered.connect(self.close)
         viewStatAct.triggered.connect(self.toggleMenu)
 
     def create_toolbar(self):
@@ -170,8 +185,8 @@ class MainWindow(qtw.QMainWindow):
         magnify_toolbar.setIconSize(qtc.QSize(25,25))
         #view_toolbar.setMovable(False)
       
-        
-        #           --------- clipboard toolbar [breakpoint] ---------
+
+        #           --------- toolbars [end] ---------
 
         # clipboard toolbar icons and status tips
         select_all_status = qtw.QAction(qtg.QIcon(':/images/select_all.png'), "Select all", self)
@@ -199,7 +214,7 @@ class MainWindow(qtw.QMainWindow):
         paste_icon.triggered.connect( self.textedit.paste)
 
         
-        #           --------- undo redo toolbar [breakpoint] ---------
+        #           --------- undo redo toolbar [end] ---------
         
         # edit toolbar icons and status tips
         undo_icon = qtw.QAction(qtg.QIcon(':/images/undo.png'), "Undo", self)
@@ -216,7 +231,7 @@ class MainWindow(qtw.QMainWindow):
         redo_icon.triggered.connect( self.textedit.redo)
 
         
-        #           --------- alignment toolbar [breakpoint] ---------
+        #           --------- alignment toolbar [end] ---------
 
         # font toolbar icons and status tips
         left_align = qtw.QAction(qtg.QIcon(':/images/left_align.png'), "Left Align", self)
@@ -244,10 +259,8 @@ class MainWindow(qtw.QMainWindow):
         right_align.triggered.connect( lambda: self.textedit.setAlignment(qtc.Qt.AlignRight))
         center_align.triggered.connect( lambda: self.textedit.setAlignment(qtc.Qt.AlignHCenter))
         justify.triggered.connect( lambda: self.textedit.setAlignment(qtc.Qt.AlignJustify))
-
         
-        
-        #           --------- font weight toolbar [breakpoint] ---------
+        #           --------- font weight toolbar [end] ---------
         
         # qt documentation for python: https://doc.qt.io/qtforpython/
         # example code from documentation:  https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
@@ -279,8 +292,9 @@ class MainWindow(qtw.QMainWindow):
         self._action_text_underline.setCheckable(True)
         self._action_text_underline.setStatusTip("Toggle whether the font is underlined or not")
 
-
-        #           --------- fonts toolbar [breakpoint] ---------
+        
+        
+        #           --------- fonts toolbar [end] ---------
 
         # add signal to the widget in the toolbar
         self.font_style_combo_box.activated.connect(self.set_font)
@@ -314,7 +328,7 @@ class MainWindow(qtw.QMainWindow):
         color.triggered.connect( self.color_dialog)
 
         
-        #           --------- magnify toolbar [breakpoint] ---------
+        #           --------- magnify toolbar [end] ---------
         
         # font zoom icons and status tips
         zoom_in = qtw.QAction(qtg.QIcon(':/images/zoom_in.png'), "Zoom In", self)
@@ -336,12 +350,10 @@ class MainWindow(qtw.QMainWindow):
         zoom_out.triggered.connect( self.decrement_font_size)
         zoom_default.triggered.connect( self.set_default_font_size)
 
-    def color_dialog(self):
-        color = qtw.QColorDialog.getColor(self.textedit.textColor(), self)
-        self.textedit.setTextColor(color)
-
+    # -------------------------------------------------------------
     # qt documentation example: https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
     # borrowed code. i myself i have difficulty understanding what's exactly happening.
+    
     def bold_text(self): 
         fmt = qtg.QTextCharFormat()
         weight = qtg.QFont.DemiBold if self._action_text_bold.isChecked() else qtg.QFont.Normal
@@ -364,6 +376,10 @@ class MainWindow(qtw.QMainWindow):
             cursor.select(qtg.QTextCursor.WordUnderCursor)
         cursor.mergeCharFormat(format)
         self.textedit.mergeCurrentCharFormat(format)
+    
+    def color_dialog(self):
+        color = qtw.QColorDialog.getColor(self.textedit.textColor(), self)
+        self.textedit.setTextColor(color)
 
     # -------- [end of borrowed code] -----------
 
@@ -430,17 +446,18 @@ class MainWindow(qtw.QMainWindow):
                 self.statusbar.show()
             else:
                 self.statusbar.hide()
- 
-    def save_file(self):
-        text = self.textedit.toPlainText()
-        filename, _ = qtw.QFileDialog.getSaveFileName()
-        if filename:
-            with open(filename, "w") as handle:
-                handle.write(text)
-                self.statusBar().showMessage(f"Saved to {filename}")
+
+    def file_new(self):
+        if self.maybe_save():
+            self._text_edit.clear()
+            self.set_current_file_name("")
+
+    def new_file(self):
+        if self.maybe_save():
+            self.textedit.clear()
 
     def open_file(self):
-        filename, _ = qtw.QFileDialog.getOpenFileName()
+        filename, _ = qtw.QFileDialog.getOpenFileName(self, 'Open file', None, 'Text files (*.txt)')
         if filename:
             with open(filename, "r") as handle:
                 text = handle.read()
@@ -448,6 +465,45 @@ class MainWindow(qtw.QMainWindow):
             self.textedit.insertPlainText(text)
             self.textedit.moveCursor(qtg.QTextCursor.Start)
             self.statusBar().showMessage(f"Editing {filename}")
+ 
+    def save_file(self):
+        text = self.textedit.toPlainText()
+        filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
+        global is_document_saved
+        if is_document_saved == False:
+            print(is_document_saved)
+            if filename:
+                with open(filename, "w") as handle:
+                    handle.write(text)
+                    self.statusBar().showMessage(f"Saved to {filename}")
+                    is_document_saved = True
+                    print(is_document_saved)
+ 
+            
+    def closeEvent(self, event):
+        if self.maybe_save():
+            event.accept()
+        else:
+            event.ignore()
+
+    def maybe_save(self):
+        if not self.textedit.document().isModified():
+            return True
+        if is_document_saved == True:
+            qtw.QApplication.quit() 
+        else:    
+            reply = qtw.QMessageBox.warning(self, qtc.QCoreApplication.applicationName(),
+                                    "The document has been modified.\n"
+                                    "Do you want to save your changes?",
+                                    qtw.QMessageBox.Save | qtw.QMessageBox.Discard
+                                    | qtw.QMessageBox.Cancel)
+            if reply == qtw.QMessageBox.Save:
+                return self.save_file()
+            if reply == qtw.QMessageBox.Cancel:
+                return False
+            return True
+
+
 
     def search(self, term, case_sensitive=False):
         if case_sensitive:
@@ -459,15 +515,8 @@ class MainWindow(qtw.QMainWindow):
             cur = self.textedit.find(term)
         if not cur:
             self.statusBar().showMessage("No matches found", 5000)
-    
-    def closeEvent(self, event):
-        reply = qtw.QMessageBox.question(self, 'Message',
-                                     "Are you sure to quit?", qtw.QMessageBox.Yes |
-                                     qtw.QMessageBox.No, qtw.QMessageBox.No)
-        if reply == qtw.QMessageBox.Yes:
-            event.accept()
-        else:
-            event.ignore()
+
+
 
 if __name__ == "__main__":
     app = qtw.QApplication.instance()
@@ -489,6 +538,7 @@ if __name__ == "__main__":
         sys.exit(app.exec_())
     except SystemExit:
         print("Closing Window...")
+
 
 
 

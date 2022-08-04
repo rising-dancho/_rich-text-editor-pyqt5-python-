@@ -1,7 +1,9 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="images">
+    <file>new_file.png</file>
     <file>folder.png</file>
     <file>save.png</file>
+    <file>save_as.png</file>
     <file>close.png</file>
     <file>select_all.png</file>
     <file>search.png</file>
