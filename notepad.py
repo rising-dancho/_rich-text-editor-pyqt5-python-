@@ -450,11 +450,11 @@ class MainWindow(qtw.QMainWindow):
     def file_new(self):
         if self.maybe_save():
             self._text_edit.clear()
-            self.set_current_file_name("")
 
     def new_file(self):
         if self.maybe_save():
             self.textedit.clear()
+            self.statusbar.showMessage("New text file created", 90000)
 
     def open_file(self):
         filename, _ = qtw.QFileDialog.getOpenFileName(self, 'Open file', None, 'Text files (*.txt)')
@@ -502,7 +502,6 @@ class MainWindow(qtw.QMainWindow):
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
-
 
 
     def search(self, term, case_sensitive=False):
