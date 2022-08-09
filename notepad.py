@@ -55,6 +55,13 @@ class SearchWidget(qtw.QWidget):
         )
         self.submitted.emit(term, case_sensitive)
 
+class TabContent(qtw.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.textedit = qtw.QTextEdit()
+        self.setCentralWidget(self.textedit)
+  
+
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -63,7 +70,32 @@ class MainWindow(qtw.QMainWindow):
         # ===========================
         # text edit
         self.textedit = qtw.QTextEdit()
-        self.setCentralWidget(self.textedit)
+
+        ##------------ codes for TABS [start] ------------------
+        
+        # creating a tab widget
+        self.tabs = qtw.QTabWidget()
+        self.tabs.setStyleSheet('QTabBar { font-size: 10pt;}')
+        
+        # making tabs closeable
+        self.tabs.setTabsClosable(True)
+
+        # this code allow the use of creating new tabs  
+        self.tabs.setDocumentMode(True)
+
+        # adding action when double clicked
+        self.tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
+
+        # adding action when tab close is requested
+        self.tabs.tabCloseRequested.connect(self.close_current_tab)
+
+        # making tabs as central widget
+        self.setCentralWidget(self.tabs)
+
+        # creating first tab
+        self.add_new_tab("Untitled.txt")
+
+        #------------ codes for TABS [end] ------------------
         
         # creating a combo box widget
         self.font_size_combo_box = qtw.QComboBox(self)
@@ -99,9 +131,39 @@ class MainWindow(qtw.QMainWindow):
         search_widget.submitted.connect(self.search)
 
         # ===========================
-        # code ends here
+        # main ends here
         # ===========================
         self.show()
+
+    ##------------ TAB methods [start] ------------------
+
+    # method for adding new tab
+    def add_new_tab(self, label ="Untitled.txt"):
+
+        # setting tab index
+        index = self.tabs.addTab(TabContent(), label)
+        self.tabs.setCurrentIndex(index)
+
+    # when double clicked is pressed on tabs
+    def tab_open_doubleclick(self, index):
+        
+        # checking index i.e
+        # No tab under the click
+        if index == -1:
+            # creating a new tab
+            self.add_new_tab()
+
+    # when tab is closed
+    def close_current_tab(self, index):
+
+        # if there is only one tab
+        if self.tabs.count() < 2:
+            # do nothing
+            return
+        # else remove the tab
+        self.tabs.removeTab(index)
+
+    ##------------ TAB methods [end] ------------------
 
     def create_menubar(self):
         # menubar
