@@ -55,11 +55,6 @@ class SearchWidget(qtw.QWidget):
         )
         self.submitted.emit(term, case_sensitive)
 
-class TabContent(qtw.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.textedit = qtw.QTextEdit()
-        self.setCentralWidget(self.textedit)
   
 
 class MainWindow(qtw.QMainWindow):
@@ -73,27 +68,50 @@ class MainWindow(qtw.QMainWindow):
 
         ##------------ codes for TABS [start] ------------------
         
-        # creating a tab widget
-        self.tabs = qtw.QTabWidget()
-        self.tabs.setStyleSheet('QTabBar { font-size: 10pt;}')
-        
-        # making tabs closeable
+        self.tabs = qtw.QTabWidget(self)
         self.tabs.setTabsClosable(True)
-
-        # this code allow the use of creating new tabs  
         self.tabs.setDocumentMode(True)
-
-        # adding action when double clicked
         self.tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
-
-        # adding action when tab close is requested
         self.tabs.tabCloseRequested.connect(self.close_current_tab)
+        self.tabs.currentChanged.connect( self.current_tab_changed )
+        self.tabs.tabBar().setMovable(True)
+        self.tabs.setStyleSheet("""
+           QTabBar::tab:selected {
+                color: #e1af4b;
+                background: #161a21;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
 
-        # making tabs as central widget
+                border:1px;
+                border-color: #161a21;
+                border-top-style: solid;
+                border-right-style: solid;
+                border-left-style: solid;
+                padding: 10px 10px 10px 10px;
+
+           }
+
+           QTabBar::tab:!selected{
+                background: #1c2028;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+
+               border:1px;
+                border-color: #1c2028;
+                border-top-style: solid;
+                border-right-style: solid;
+                border-bottom-style: ;
+                border-left-style: solid;
+                padding: 10px 10px 10px 10px;
+            }
+
+        """)
         self.setCentralWidget(self.tabs)
-
-        # creating first tab
         self.add_new_tab("Untitled.txt")
+
+        # index = self.tabs.currentIndex()
+        # self.tabs.setCurrentIndex(index)
+        # self.tabs.currentWidget().findChild().
 
         #------------ codes for TABS [end] ------------------
         
@@ -122,13 +140,13 @@ class MainWindow(qtw.QMainWindow):
         self.create_toolbar()
 
         # dock widget
-        search_dock = qtw.QDockWidget("Search")
-        search_widget = SearchWidget()
-        search_dock.setWidget(search_widget)
+        # search_dock = qtw.QDockWidget("Search")
+        # search_widget = SearchWidget()
+        # search_dock.setWidget(search_widget)
 
-        self.addDockWidget(qtc.Qt.BottomDockWidgetArea, search_dock)
+        # self.addDockWidget(qtc.Qt.BottomDockWidgetArea, search_dock)
 
-        search_widget.submitted.connect(self.search)
+        # search_widget.submitted.connect(self.search)
 
         # ===========================
         # main ends here
@@ -136,32 +154,61 @@ class MainWindow(qtw.QMainWindow):
         self.show()
 
     ##------------ TAB methods [start] ------------------
+    def current_tab_changed(self):
+        self.tabs.currentWidget()
+        pass
 
-    # method for adding new tab
     def add_new_tab(self, label ="Untitled.txt"):
-
-        # setting tab index
-        index = self.tabs.addTab(TabContent(), label)
+        index = self.tabs.addTab(qtw.QTextEdit(), label)  # create a new blank text edit widget
         self.tabs.setCurrentIndex(index)
 
-    # when double clicked is pressed on tabs
     def tab_open_doubleclick(self, index):
-        
-        # checking index i.e
-        # No tab under the click
         if index == -1:
-            # creating a new tab
             self.add_new_tab()
 
-    # when tab is closed
     def close_current_tab(self, index):
-
-        # if there is only one tab
         if self.tabs.count() < 2:
-            # do nothing
             return
-        # else remove the tab
         self.tabs.removeTab(index)
+
+    # def close_current_tab(self, index):
+    #     tab = self.tabs.widget(index)
+    #     tab.deleteLater()
+    #     self.tabs.removeTab(index)
+
+    def new_file(self):
+        if self.maybe_save():
+            self.add_new_tab()
+            self.statusbar.showMessage("New text file created", 90000)
+    
+    def open_file(self):
+        options = qtw.QFileDialog.Options()
+        filenames, _ = qtw.QFileDialog.getOpenFileNames(
+            self, 'Open a file', '',
+            'All Files (*);;Python Files (*.py);;Text Files (*.txt)',
+            options=options
+        )
+        if filenames:
+            for filename in filenames:
+                with open(filename, 'r') as file_o:
+                    content = file_o.read()
+                    editor = qtw.QTextEdit()   # construct new text edit widget
+                    self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
+                    editor.setPlainText(content)  # set the contents of the file as the text
+
+    def save_file(self):
+        text = self.textedit.toPlainText()
+        filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
+        global is_document_already_saved
+        if is_document_already_saved == False:
+            print(is_document_already_saved)
+            if filename:
+                with open(filename, "w") as handle:
+                    handle.write(text)
+                    self.statusBar().showMessage(f"Saved to {filename}")
+                    is_document_already_saved = True
+                    print(is_document_already_saved)
+ 
 
     ##------------ TAB methods [end] ------------------
 
@@ -185,6 +232,9 @@ class MainWindow(qtw.QMainWindow):
 
         exit_program = qtw.QAction(qtg.QIcon(':/images/close.png'), "Exit", self)
         exit_program.setShortcut('Ctrl+Q')
+    
+        closetab_short = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
+        closetab_short.activated.connect(lambda:self.close_current_tab(self.tabs.currentIndex()))
 
         # add functions or actions to the menubar
         file_menu.addAction(new_file) #QAction
@@ -509,38 +559,7 @@ class MainWindow(qtw.QMainWindow):
             else:
                 self.statusbar.hide()
 
-    def file_new(self):
-        if self.maybe_save():
-            self._text_edit.clear()
-
-    def new_file(self):
-        if self.maybe_save():
-            self.textedit.clear()
-            self.statusbar.showMessage("New text file created", 90000)
-
-    def open_file(self):
-        filename, _ = qtw.QFileDialog.getOpenFileName(self, 'Open file', None, 'Text files (*.txt)')
-        if filename:
-            with open(filename, "r") as handle:
-                text = handle.read()
-            self.textedit.clear()
-            self.textedit.insertPlainText(text)
-            self.textedit.moveCursor(qtg.QTextCursor.Start)
-            self.statusBar().showMessage(f"Editing {filename}")
- 
-    def save_file(self):
-        text = self.textedit.toPlainText()
-        filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
-        global is_document_already_saved
-        if is_document_already_saved == False:
-            print(is_document_already_saved)
-            if filename:
-                with open(filename, "w") as handle:
-                    handle.write(text)
-                    self.statusBar().showMessage(f"Saved to {filename}")
-                    is_document_already_saved = True
-                    print(is_document_already_saved)
- 
+   
             
     def closeEvent(self, event):
         if self.maybe_save():
@@ -599,6 +618,7 @@ if __name__ == "__main__":
         sys.exit(app.exec_())
     except SystemExit:
         print("Closing Window...")
+
 
 
 
