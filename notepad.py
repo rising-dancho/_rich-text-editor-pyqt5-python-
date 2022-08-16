@@ -159,23 +159,22 @@ class MainWindow(qtw.QMainWindow):
         pass
 
     def add_new_tab(self, label ="Untitled.txt"):
-        index = self.tabs.addTab(qtw.QTextEdit(), label)  # create a new blank text edit widget
+        newfile = qtw.QTextEdit()
+        index = self.tabs.addTab(newfile, label)  # create a new blank text edit widget
         self.tabs.setCurrentIndex(index)
 
     def tab_open_doubleclick(self, index):
         if index == -1:
             self.add_new_tab()
 
-    def close_current_tab(self, index):
+    def close_current_tab(self, currentIndex):
         if self.tabs.count() < 2:
             return
-        self.tabs.removeTab(index)
-
-    # def close_current_tab(self, index):
-    #     tab = self.tabs.widget(index)
-    #     tab.deleteLater()
-    #     self.tabs.removeTab(index)
-
+        currentQWidget = self.tabs.currentWidget()
+        currentQWidget.deleteLater()
+        self.tabs.removeTab(currentIndex)
+    
+    
     def new_file(self):
         if self.maybe_save():
             self.add_new_tab()
@@ -209,7 +208,7 @@ class MainWindow(qtw.QMainWindow):
                     is_document_already_saved = True
                     print(is_document_already_saved)
  
-
+ 
     ##------------ TAB methods [end] ------------------
 
     def create_menubar(self):
@@ -559,8 +558,6 @@ class MainWindow(qtw.QMainWindow):
             else:
                 self.statusbar.hide()
 
-   
-            
     def closeEvent(self, event):
         if self.maybe_save():
             event.accept()
