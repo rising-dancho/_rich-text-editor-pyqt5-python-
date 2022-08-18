@@ -98,7 +98,6 @@ class MainWindow(qtw.QMainWindow):
         self.text_editors.append(self.current_editor)
         self.tabs.addTab(self.current_editor, title)
         self.tabs.setCurrentWidget(self.current_editor)
-        
 
     def tab_open_doubleclick(self, index):
         if index == -1:
@@ -116,9 +115,9 @@ class MainWindow(qtw.QMainWindow):
                 with open(filename, 'r') as file_o:
                     content = file_o.read()
                     editor = qtw.QTextEdit()   # construct new text edit widget
-                    self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
+                    currentIndex = self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
                     editor.setPlainText(content)  # set the contents of the file as the text
-                   
+                    self.tabs.setCurrentIndex(currentIndex)
         
     
     def saveFile(self):
