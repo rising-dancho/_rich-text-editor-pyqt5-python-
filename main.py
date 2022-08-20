@@ -22,46 +22,8 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.tabCloseRequested.connect(self.remove_editor)
         self.tabs.currentChanged.connect(self.change_text_editor)
         self.tabs.tabBar().setMovable(True)
-        self.tabs.setStyleSheet("""
-           QTabBar::tab:selected {
-                color: #e1af4b;
-                background: #161a21;
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
-
-                border:1px;
-                border-color: #161a21;
-                border-top-style: solid;
-                border-right-style: solid;
-                border-left-style: solid;
-                padding: 10px 10px 10px 10px;
-
-           }
-
-           QTabBar::tab:!selected{
-                background: #1c2028;
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
-
-               border:1px;
-                border-color: #1c2028;
-                border-top-style: solid;
-                border-right-style: solid;
-                border-bottom-style: ;
-                border-left-style: solid;
-                padding: 10px 10px 10px 10px;
-            }
-            
-            QTabBar::close-button {
-                image: url(close.png)
-                subcontrol-position: left;
-            }
-
-            QTabBar::close-button:hover {
-                image: url(close-hover.png)
-            }
-
-        """)
+        self.setStyleSheet(self.myStyleSheet())
+        
         
         self.setCentralWidget(self.tabs)
         self.font_size_combo_box = qtw.QComboBox(self)
@@ -74,11 +36,9 @@ class MainWindow(qtw.QMainWindow):
         self.font = qtg.QFont()
         self.font.setPointSize(self.font_size_default_var)
         self.current_editor.setFont(self.font)
-
         self.statusbar = self.statusBar()
         self.statusbar.showMessage('Ready')
 
-        
         self.newFile()
         
         self.menuBar_new()
@@ -86,17 +46,13 @@ class MainWindow(qtw.QMainWindow):
         self.menuBar_close()
         self.menuBar_save()
         self.menuBar_exit_program()
+        self.configure_menuBar()
         self.create_toolbar()
         self.initUI()
 
     def initUI(self):
-
-        # Font Family Input
-        fontBox = qtw.QFontComboBox(self)
-        fontBox.currentFontChanged.connect(self.FontFamily)
-
         menubar = self.menuBar()
-        file_menu = menubar.addMenu('File')
+        file_menu = menubar .addMenu('File')
         file_menu.addAction(self.new_file)
         file_menu.addAction(self.open_file)
         file_menu.addAction(self.save_file)
@@ -111,8 +67,12 @@ class MainWindow(qtw.QMainWindow):
         if index < len(self.text_editors):
             self.current_editor = self.text_editors[index]
 
-    def FontFamily(self, font):
-        self.current_editor.setCurrentFont(font)
+    def remove_editor(self, index):
+        if self.tabs.count() < 2:
+            return
+        self.tabs.removeTab(index)
+        if index < len(self.text_editors):
+            del self.text_editors[index]
 
     def menuBar_new(self):
         self.new_file = qtw.QAction(qtg.QIcon(':/images/new_file.png'),"New", self)
@@ -143,58 +103,38 @@ class MainWindow(qtw.QMainWindow):
         self.exit_program.triggered.connect(self.close)
 
 
-    def remove_editor(self, index):
-        if self.tabs.count() < 2:
-            return
-        self.tabs.removeTab(index)
-        if index < len(self.text_editors):
-            del self.text_editors[index]
-
-    def create_editor(self):
-        text_editor = qtw.QTextEdit()
-        return text_editor
-
-    def change_text_editor(self, index):
-        if index < len(self.text_editors):
-            self.current_editor = self.text_editors[index]
-
-    # Input Functions
-    def newFile(self, checked = False, title = "Untitled.txt"):
-        self.current_editor = self.create_editor()
-        self.text_editors.append(self.current_editor)
-        self.tabs.addTab(self.current_editor, title)
-        self.tabs.setCurrentWidget(self.current_editor)
-
-    def tab_open_doubleclick(self, index):
-        if index == -1:
-            self.newFile()
-
-    def openFile(self):
-        options = qtw.QFileDialog.Options()
-        filenames, _ = qtw.QFileDialog.getOpenFileNames(
-            self, 'Open a file', '',
-            'All Files (*);;Python Files (*.py);;Text Files (*.txt)',
-            options=options
-        )
-        if filenames:
-            for filename in filenames:
-                with open(filename, 'r') as file_o:
-                    content = file_o.read()
-                    editor = qtw.QTextEdit()   # construct new text edit widget
-                    currentIndex = self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
-                    editor.setPlainText(content)  # set the contents of the file as the text
-                    self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
-        
     
-    def saveFile(self):
-        text = self.current_editor.toPlainText()
-        filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
-        if filename:
-            with open(filename, "w") as handle:
-                handle.write(text)
-                self.statusBar().showMessage(f"Saved to {filename}")
+    def configure_menuBar(self):
+        menubar_items = {
+            '&Edit': [
+                ("&Cut", "Ctrl+X", self.cut_document),
+                ("&Copy", "Ctrl+C", self.copy_document),
+                ("&Paste", "Ctrl+V", self.paste_document),
+                None,
+                ("&Undo", "Ctrl+Z", self.undo_document),
+                ("&Redo", "Ctrl+Y", self.redo_document)
+            ],
+            '&View': [
+                ("&Fullscreen", "F11", self.fullscreen),
+                None,
+                ("&Align Left", "", self.align_left),
+                ("&Align Right", "", self.align_right),
+                ("&Align Center", "", self.align_center),
+                ("&Align Justify", "", self.align_justify)
+            ]
+        }
 
-
+        for menuitem, actions in menubar_items.items():
+            menu = self.menuBar().addMenu(menuitem)
+            for act in actions:
+                if act:
+                    text, shorcut, callback = act
+                    action = qtw.QAction(text, self)
+                    action.setShortcut(shorcut)
+                    action.triggered.connect(callback)
+                    menu.addAction(action)
+                else :
+                    menu.addSeparator()
 
     def create_toolbar(self):
         clipboard_toolbar = self.addToolBar("Clipboard")
@@ -327,6 +267,41 @@ class MainWindow(qtw.QMainWindow):
         zoom_out.triggered.connect( self.decrement_font_size)
         zoom_default.triggered.connect( self.set_default_font_size)
 
+    # Input Functions
+    def newFile(self, checked = False, title = "Untitled.txt"):
+        self.current_editor = self.create_editor()
+        self.text_editors.append(self.current_editor)
+        self.tabs.addTab(self.current_editor, title)
+        self.tabs.setCurrentWidget(self.current_editor)
+
+    def tab_open_doubleclick(self, index):
+        if index == -1:
+            self.newFile()
+
+    def openFile(self):
+        options = qtw.QFileDialog.Options()
+        filenames, _ = qtw.QFileDialog.getOpenFileNames(
+            self, 'Open a file', '',
+            'All Files (*);;Python Files (*.py);;Text Files (*.txt)',
+            options=options
+        )
+        if filenames:
+            for filename in filenames:
+                with open(filename, 'r') as file_o:
+                    content = file_o.read()
+                    editor = qtw.QTextEdit()   # construct new text edit widget
+                    currentIndex = self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
+                    editor.setPlainText(content)  # set the contents of the file as the text
+                    self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
+        
+    def saveFile(self):
+        text = self.current_editor.toPlainText()
+        filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
+        if filename:
+            with open(filename, "w") as handle:
+                handle.write(text)
+                self.statusBar().showMessage(f"Saved to {filename}")
+
     def select_all_document(self): 
         self.current_editor.selectAll()
 
@@ -375,6 +350,24 @@ class MainWindow(qtw.QMainWindow):
     def align_left(self):
         self.current_editor.setAlignment(qtc.Qt.AlignLeft)
         self.current_editor.setFocus()
+    
+    def align_right(self):
+        self.current_editor.setAlignment(qtc.Qt.AlignRight)
+        self.current_editor.setFocus()
+
+    def align_center(self):
+        self.current_editor.setAlignment(qtc.Qt.AlignHCenter)
+        self.current_editor.setFocus()
+
+    def align_justify(self):
+        self.current_editor.setAlignment(qtc.Qt.AlignLeft)
+        self.current_editor.setFocus()
+    
+    def fullscreen(self):
+        if not self.isFullScreen():
+            self.showFullScreen()
+        else :
+            self.showMaximized()
 
     def set_font(self):
         font_selection = self.font_style_combo_box.currentText()
@@ -439,6 +432,61 @@ class MainWindow(qtw.QMainWindow):
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
+    
+    def myStyleSheet(self):
+        return """
+            QTextEdit
+            {
+                background: #161a21;
+                color: #bfbdb6;
+                selection-background-color: #354360;
+                selection-color: #ffffff;
+            }
+            
+            QMenuBar
+            {
+                background: #1c2028;
+                border: 0px;
+            }
+            
+            QToolBar
+            {
+                background: #1c2028;
+                border: 0px;
+            }
+            QMainWindow
+            {
+                background: #1c2028;
+            }
+
+            QTabBar::tab:selected {
+                color: #e1af4b;
+                background: #161a21;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+
+                border:1px;
+                border-color: #161a21;
+                border-top-style: solid;
+                border-right-style: solid;
+                border-left-style: solid;
+                padding: 10px 10px 10px 10px;
+            }
+
+            QTabBar::tab:!selected{
+                background: #1c2028;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+
+                border:1px;
+                border-color: #1c2028;
+                border-top-style: solid;
+                border-right-style: solid;
+                border-bottom-style: ;
+                border-left-style: solid;
+                padding: 10px 10px 10px 10px;
+                }
+        """
 
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
