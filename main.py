@@ -344,7 +344,7 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.mergeCurrentCharFormat(format)
     
     def color_dialog(self):
-        color = qtw.QColorDialog.getColor(self.current_editor.textColor(), self)
+        color = qtw.QColorDialog.getColor()
         self.current_editor.setTextColor(color)
 
     def align_left(self):
