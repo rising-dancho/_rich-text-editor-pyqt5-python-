@@ -15,8 +15,6 @@ class MainWindow(qtw.QMainWindow):
 
         self.statusbar = self.statusBar()
         self.statusbar.showMessage('Ready')
-        self.setWindowTitle("Notepad with tabs")
-        self.setWindowIcon(qtg.QIcon("./_icons/notepad.png"))
         self.tabs = qtw.QTabWidget(self)
         self.tabs.setTabsClosable(True)
         self.tabs.setDocumentMode(True)
@@ -447,6 +445,9 @@ if __name__ == "__main__":
     main = MainWindow()
     main.resize(650,500)
     main.setMinimumSize(550,450)
+    main.setWindowTitle("Text Editor")
+    main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
     main.show()
     sys.exit(app.exec_())
+
 
