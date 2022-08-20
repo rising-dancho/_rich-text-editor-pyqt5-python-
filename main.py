@@ -438,9 +438,8 @@ class MainWindow(qtw.QMainWindow):
             QTextEdit
             {
                 background: #161a21;
-                color: #bfbdb6;
-                selection-background-color: #354360;
-                selection-color: #ffffff;
+                selection-background-color: #ffb454;
+                selection-color: #000000;
             }
             
             QMenuBar
