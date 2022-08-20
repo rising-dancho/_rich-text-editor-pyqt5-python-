@@ -2,6 +2,7 @@ import sys
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
+# from BlurWindow.blurWindow import blur
 
 import resources 
 is_document_already_saved = False
@@ -9,6 +10,12 @@ is_document_already_saved = False
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
+        
+        # BLUR EXPERIMENT
+        # self.setAttribute(qtc.Qt.WA_TranslucentBackground)
+        # hWnd = self.winId()
+        # blur(hWnd)
+        # self.setWindowOpacity(0.98)
 
         self.current_editor = self.create_editor()
         self.text_editors = []
@@ -28,7 +35,7 @@ class MainWindow(qtw.QMainWindow):
         self.setCentralWidget(self.tabs)
         self.font_size_combo_box = qtw.QComboBox(self)
         self.font_style_combo_box = qtw.QComboBox(self)
-        self.font_style_combo_box.addItems(["Arial","Courier","Impact","Times"])
+        self.font_style_combo_box.addItems(["Arial","Courier","Impact","Times","Segoe UI"])
         self.font_size_combo_box.installEventFilter(self)
         
         self.font_size_default_var = 13
@@ -462,12 +469,16 @@ class MainWindow(qtw.QMainWindow):
             {
                 background: #1c2028;
             }
+            QStatusBar 
+            {
+                background: #1c2028;
+            }
 
             QTabBar::tab:selected {
                 color: #e1af4b;
                 background: #161a21;
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
 
                 border:1px;
                 border-color: #161a21;
@@ -479,8 +490,8 @@ class MainWindow(qtw.QMainWindow):
 
             QTabBar::tab:!selected{
                 background: #1c2028;
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
 
                 border:1px;
                 border-color: #1c2028;
