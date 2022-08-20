@@ -297,10 +297,15 @@ class MainWindow(qtw.QMainWindow):
     def saveFile(self):
         text = self.current_editor.toPlainText()
         filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
-        if filename:
-            with open(filename, "w") as handle:
-                handle.write(text)
-                self.statusBar().showMessage(f"Saved to {filename}")
+        global is_document_already_saved
+        if is_document_already_saved == False:
+            print(is_document_already_saved)
+            if filename:
+                with open(filename, "w") as handle:
+                    handle.write(text)
+                    self.statusBar().showMessage(f"Saved to {filename}")
+                    is_document_already_saved = True
+                    print(is_document_already_saved)
 
     def select_all_document(self): 
         self.current_editor.selectAll()
@@ -428,7 +433,7 @@ class MainWindow(qtw.QMainWindow):
                                     qtw.QMessageBox.Save | qtw.QMessageBox.Discard
                                     | qtw.QMessageBox.Cancel)
             if reply == qtw.QMessageBox.Save:
-                return self.save_file()
+                return self.saveFile()
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
