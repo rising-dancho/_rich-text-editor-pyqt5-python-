@@ -101,8 +101,6 @@ class MainWindow(qtw.QMainWindow):
         self.exit_program.setShortcut('Ctrl+Q')
         self.exit_program.setStatusTip('Exit Program')
         self.exit_program.triggered.connect(self.close)
-
-
     
     def configure_menuBar(self):
         menubar_items = {
@@ -349,7 +347,9 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.mergeCurrentCharFormat(format)
     
     def color_dialog(self):
-        color = qtw.QColorDialog.getColor()
+        color = qtw.QColorDialog.getColor(self.current_editor.textColor(), self)
+        if not color.isValid():
+            return
         self.current_editor.setTextColor(color)
 
     def align_left(self):
