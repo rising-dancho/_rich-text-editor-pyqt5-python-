@@ -21,7 +21,7 @@ class MainWindow(qtw.QMainWindow):
         self.text_editors = []
 
         self.statusbar = self.statusBar()
-        self.statusbar.showMessage('Ready')
+        self.statusbar.showMessage("Ready")
         self.tabs = qtw.QTabWidget(self)
         self.tabs.setTabsClosable(True)
         self.tabs.setDocumentMode(True)
@@ -30,7 +30,6 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.currentChanged.connect(self.change_text_editor)
         self.tabs.tabBar().setMovable(True)
         self.setStyleSheet(self.myStyleSheet())
-        
         
         self.setCentralWidget(self.tabs)
         self.font_size_combo_box = qtw.QComboBox(self)
@@ -44,27 +43,17 @@ class MainWindow(qtw.QMainWindow):
         self.font.setPointSize(self.font_size_default_var)
         self.current_editor.setFont(self.font)
         self.statusbar = self.statusBar()
-        self.statusbar.showMessage('Ready')
+        self.statusbar.showMessage("Ready")
 
-        self.newFile()
+        self.new_tab()
+        self.closeTab()
         
-        self.menuBar_new()
-        self.menuBar_open()
-        self.menuBar_close()
-        self.menuBar_save()
-        self.menuBar_exit_program()
-        self.configure_menuBar()
+        self._createActions()
+        self._createMenuBar()
+        self._connectActions()
+  
         self.create_toolbar()
-        self.initUI()
 
-    def initUI(self):
-        menubar = self.menuBar()
-        file_menu = menubar .addMenu('File')
-        file_menu.addAction(self.new_file)
-        file_menu.addAction(self.open_file)
-        file_menu.addAction(self.save_file)
-        file_menu.addSeparator()
-        file_menu.addAction(self.exit_program)
 
     def create_editor(self):
         current_editor = qtw.QTextEdit()
@@ -81,65 +70,109 @@ class MainWindow(qtw.QMainWindow):
         if index < len(self.text_editors):
             del self.text_editors[index]
 
-    def menuBar_new(self):
-        self.new_file = qtw.QAction(qtg.QIcon(':/images/new_file.png'),"New", self)
-        self.new_file.setShortcut('Ctrl+N')
-        self.new_file.setStatusTip('New file')
-        self.new_file.triggered.connect(self.newFile)
+    def _createActions(self):
+        # File menu
+        self.new_action = qtw.QAction(qtg.QIcon(":/"),"New", self)
+        self.open_action = qtw.QAction(qtg.QIcon(":/"),"Open", self)
+        self.save_action = qtw.QAction(qtg.QIcon(":/"),"Save", self)
+        self.exit_action = qtw.QAction(qtg.QIcon(":/"), "Exit", self)
 
-    def menuBar_open(self):
-        self.open_file = qtw.QAction(qtg.QIcon(':/images/folder.png'),"Open", self)
-        self.open_file.setShortcut('Ctrl+O')
-        self.open_file.setStatusTip('Open a file')
-        self.open_file.triggered.connect(self.openFile)
-    
-    def menuBar_save(self):
-        self.save_file = qtw.QAction(qtg.QIcon(':/images/save.png'),"Save", self)
-        self.save_file.setShortcut('Ctrl+S')
-        self.save_file.setStatusTip('Save a file')
-        self.save_file.triggered.connect(self.saveFile)
+        self.new_action.setShortcut("Ctrl+N")
+        self.open_action.setShortcut("Ctrl+O")
+        self.save_action.setShortcut("Ctrl+S")
+        self.exit_action.setShortcut("Ctrl+Q")
 
-    def menuBar_close(self):
-        close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
-        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
+        self.new_action.setStatusTip("New file")
+        self.open_action.setStatusTip("Open a file")
+        self.save_action.setStatusTip("Save a file")
+        self.exit_action.setStatusTip("Exit Program")
 
-    def menuBar_exit_program(self):
-        self.exit_program = qtw.QAction(qtg.QIcon(':/images/close.png'), "Exit", self)
-        self.exit_program.setShortcut('Ctrl+Q')
-        self.exit_program.setStatusTip('Exit Program')
-        self.exit_program.triggered.connect(self.close)
-    
-    def configure_menuBar(self):
-        menubar_items = {
-            '&Edit': [
-                ("&Cut", "Ctrl+X", self.cut_document),
-                ("&Copy", "Ctrl+C", self.copy_document),
-                ("&Paste", "Ctrl+V", self.paste_document),
-                None,
-                ("&Undo", "Ctrl+Z", self.undo_document),
-                ("&Redo", "Ctrl+Y", self.redo_document)
-            ],
-            '&View': [
-                ("&Fullscreen", "F11", self.fullscreen),
-                None,
-                ("&Align Left", "", self.align_left),
-                ("&Align Right", "", self.align_right),
-                ("&Align Center", "", self.align_center),
-                ("&Align Justify", "", self.align_justify)
-            ]
-        }
+        # Edit menu
+        self.cut_action = qtw.QAction(qtg.QIcon(":/"), "Cut", self)
+        self.copy_action = qtw.QAction(qtg.QIcon(":/"), "Copy", self)
+        self.paste_action = qtw.QAction(qtg.QIcon(":/"), "Paste", self)
+        self.undo_action = qtw.QAction(qtg.QIcon(":/"), "Undo", self)
+        self.redo_action = qtw.QAction(qtg.QIcon(":/"), "Redo", self)
 
-        for menuitem, actions in menubar_items.items():
-            menu = self.menuBar().addMenu(menuitem)
-            for act in actions:
-                if act:
-                    text, shorcut, callback = act
-                    action = qtw.QAction(text, self)
-                    action.setShortcut(shorcut)
-                    action.triggered.connect(callback)
-                    menu.addAction(action)
-                else :
-                    menu.addSeparator()
+        self.cut_action.setShortcut("Ctrl+X")
+        self.copy_action.setShortcut("Ctrl+C")
+        self.paste_action.setShortcut("Ctrl+V")
+        self.undo_action.setShortcut("Ctrl+Z")
+        self.redo_action.setShortcut("Ctrl+Y")
+
+        self.cut_action.setStatusTip("Cuts the selected text and copies it to the clipboard")
+        self.copy_action.setStatusTip("Copies the selected text to the clipboard")
+        self.paste_action.setStatusTip("Pastes the clipboard text into line edit")
+        self.undo_action.setStatusTip("Undo the last operation")
+        self.redo_action.setStatusTip("Redo the last operation")
+
+        # View menu
+        self.fullscreen_action = qtw.QAction(qtg.QIcon(":/"), "Fullscreen", self)
+        self.align_left_action = qtw.QAction(qtg.QIcon(":/"), "Align Left", self)
+        self.align_right_action = qtw.QAction(qtg.QIcon(":/"), "Align Right", self)
+        self.align_center_action = qtw.QAction(qtg.QIcon(":/"), "Align Center", self)
+        self.align_justify_action = qtw.QAction(qtg.QIcon(":/"), "Align Justify", self)
+
+        self.fullscreen_action.setShortcut("F11")
+        self.align_left_action.setShortcut("Ctrl+L")
+        self.align_right_action.setShortcut("Ctrl+R")
+        self.align_center_action.setShortcut("Ctrl+E")
+        self.align_justify_action.setShortcut("Ctrl+J")
+
+        self.fullscreen_action.setStatusTip("Toggles the full screen mode")
+        self.align_left_action.setStatusTip("Aligns with the left edge")
+        self.align_right_action.setStatusTip("Aligns with the right edge")
+        self.align_center_action.setStatusTip("Centers horizontally in the available space")
+        self.align_justify_action.setStatusTip("Justifies the text in the available space")
+
+
+    def _createMenuBar(self):
+        menubar = self.menuBar()
+        file_menu = menubar .addMenu("File")
+        file_menu.addAction(self.new_action)
+        file_menu.addAction(self.open_action)
+        file_menu.addAction(self.save_action)
+        file_menu.addSeparator()
+        file_menu.addAction(self.exit_action)
+
+        edit_menu = menubar.addMenu("&Edit")
+        edit_menu.addAction(self.cut_action)
+        edit_menu.addAction(self.copy_action)
+        edit_menu.addAction(self.paste_action)
+        edit_menu.addSeparator()
+        edit_menu.addAction(self.undo_action)
+        edit_menu.addAction(self.redo_action)
+
+        view_menu = menubar.addMenu("&View")
+        view_menu.addAction(self.fullscreen_action)
+        view_menu.addSeparator()
+        view_menu.addAction(self.align_left_action)
+        view_menu.addAction(self.align_right_action)
+        view_menu.addAction(self.align_center_action)
+        view_menu.addAction(self.align_justify_action)
+
+    def _connectActions(self):
+
+        # Connect File actions
+        self.new_action.triggered.connect(self.new_tab)
+        self.open_action.triggered.connect(self.open_file)
+        self.save_action.triggered.connect(self.save_file)
+        self.exit_action.triggered.connect(self.close)
+
+        # Connect Edit actions
+        self.cut_action.triggered.connect(self.cut_document)
+        self.copy_action.triggered.connect(self.copy_document)
+        self.paste_action.triggered.connect(self.paste_document)
+        self.undo_action.triggered.connect(self.undo_document)
+        self.redo_action.triggered.connect(self.redo_document)
+
+        # Connect View actions
+        self.fullscreen_action.triggered.connect(self.fullscreen)
+        self.align_left_action.triggered.connect(self.align_left)
+        self.align_right_action.triggered.connect(self.align_right)
+        self.align_center_action.triggered.connect(self.align_center)
+        self.align_justify_action.triggered.connect(self.align_justify)
+
 
     def create_toolbar(self):
         clipboard_toolbar = self.addToolBar("Clipboard")
@@ -165,16 +198,16 @@ class MainWindow(qtw.QMainWindow):
         magnify_toolbar.setIconSize(qtc.QSize(25,25))
         #view_toolbar.setMovable(False)
       
-        select_all_icon = qtw.QAction(qtg.QIcon(':/images/select_all.png'), "Select all", self)
+        select_all_icon = qtw.QAction(qtg.QIcon(":/images/select_all.png"), "Select all", self)
         select_all_icon.setStatusTip("Select All")
         
-        copy_icon = qtw.QAction(qtg.QIcon(':/images/copy.png'), "Copy", self)
+        copy_icon = qtw.QAction(qtg.QIcon(":/images/copy.png"), "Copy", self)
         copy_icon.setStatusTip("Copies the selected text to the clipboard")
 
-        cut_icon = qtw.QAction(qtg.QIcon(':/images/cut.png'), "Cut", self)
-        cut_icon.setStatusTip("Deletes the selected text and copies it to the clipboard")
+        cut_icon = qtw.QAction(qtg.QIcon(":/images/cut.png"), "Cut", self)
+        cut_icon.setStatusTip("Cuts the selected text and copies it to the clipboard")
 
-        paste_icon = qtw.QAction(qtg.QIcon(':/images/paste.png'), "Paste", self)
+        paste_icon = qtw.QAction(qtg.QIcon(":/images/paste.png"), "Paste", self)
         paste_icon.setStatusTip("Pastes the clipboard text into line edit")
 
         clipboard_toolbar.addAction(select_all_icon)
@@ -187,23 +220,23 @@ class MainWindow(qtw.QMainWindow):
         cut_icon.triggered.connect(self.cut_document)
         paste_icon.triggered.connect(self.paste_document)
 
-        undo_icon = qtw.QAction(qtg.QIcon(':/images/undo.png'), "Undo", self)
-        undo_icon.setStatusTip("Undoes the last operation")
-        redo_icon = qtw.QAction(qtg.QIcon(':/images/redo.png'), "Redo", self)
-        redo_icon.setStatusTip("Redoes the last undone operation")
+        undo_icon = qtw.QAction(qtg.QIcon(":/images/undo.png"), "Undo", self)
+        undo_icon.setStatusTip("Undo the last operation")
+        redo_icon = qtw.QAction(qtg.QIcon(":/images/redo.png"), "Redo", self)
+        redo_icon.setStatusTip("Redo the last operation")
         undo_redo_toolbar.addAction(undo_icon)
         undo_redo_toolbar.addAction(redo_icon)
 
         undo_icon.triggered.connect(self.undo_document)
         redo_icon.triggered.connect(self.redo_document)
 
-        left_align = qtw.QAction(qtg.QIcon(':/images/left_align.png'), "Left Align", self)
+        left_align = qtw.QAction(qtg.QIcon(":/images/left_align.png"), "Left Align", self)
         left_align.setStatusTip("Aligns with the left edge")
-        right_align = qtw.QAction(qtg.QIcon(':/images/right_align.png'), "Right Align", self)
+        right_align = qtw.QAction(qtg.QIcon(":/images/right_align.png"), "Right Align", self)
         right_align.setStatusTip("Aligns with the right edge")
-        center_align = qtw.QAction(qtg.QIcon(':/images/center_align.png'), "Center Align", self)
+        center_align = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Center Align", self)
         center_align.setStatusTip("Centers horizontally in the available space")
-        justify = qtw.QAction(qtg.QIcon(':/images/justify.png'), "Justify", self)
+        justify = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Justify", self)
         justify.setStatusTip("Justifies the text in the available space")
 
         alignment_toolbar.addAction(left_align)
@@ -216,7 +249,7 @@ class MainWindow(qtw.QMainWindow):
         center_align.triggered.connect( lambda: self.current_editor.setAlignment(qtc.Qt.AlignHCenter))
         justify.triggered.connect( lambda: self.current_editor.setAlignment(qtc.Qt.AlignJustify))
         
-        self._action_text_bold = font_weight_toolbar.addAction(qtg.QIcon(':/images/bold.png'), "&Bold", self.bold_text)
+        self._action_text_bold = font_weight_toolbar.addAction(qtg.QIcon(":/images/bold.png"), "&Bold", self.bold_text)
         self._action_text_bold.setShortcut(qtc.Qt.CTRL | qtc.Qt.Key_B)
         bold_font = qtg.QFont()
         bold_font.setBold(True)
@@ -224,7 +257,7 @@ class MainWindow(qtw.QMainWindow):
         self._action_text_bold.setCheckable(True)
         self._action_text_bold.setStatusTip("Toggle whether the font weight is bold or not")
         
-        self._action_text_italic = font_weight_toolbar.addAction(qtg.QIcon(':/images/italic.png'), "&Italic", self.italic_text)
+        self._action_text_italic = font_weight_toolbar.addAction(qtg.QIcon(":/images/italic.png"), "&Italic", self.italic_text)
         self._action_text_italic.setShortcut(qtc.Qt.CTRL | qtc.Qt.Key_I)
         italic_font = qtg.QFont()
         italic_font.setItalic(True)
@@ -232,7 +265,7 @@ class MainWindow(qtw.QMainWindow):
         self._action_text_italic.setCheckable(True)
         self._action_text_italic.setStatusTip("Toggle whether the font is italic or not")
 
-        self._action_text_underline = font_weight_toolbar.addAction(qtg.QIcon(':/images/underline.png'), "&Underline", self.underlined_text)
+        self._action_text_underline = font_weight_toolbar.addAction(qtg.QIcon(":/images/underline.png"), "&Underline", self.underlined_text)
         self._action_text_underline.setShortcut(qtc.Qt.CTRL | qtc.Qt.Key_U)
         underlined_font = qtg.QFont()
         underlined_font.setUnderline(True)
@@ -251,17 +284,17 @@ class MainWindow(qtw.QMainWindow):
         self.font_size_combo_box.currentTextChanged.connect(self.setFontSize)
         fonts_toolbar.addWidget(self.font_size_combo_box)
 
-        color = qtw.QAction(qtg.QIcon(':/images/colour.png'), "Color", self)
+        color = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Color", self)
         color.setStatusTip("The color dialog’s function is to allow users to choose colors")
 
         fonts_toolbar.addAction(color)
         color.triggered.connect( self.color_dialog)
 
-        zoom_in = qtw.QAction(qtg.QIcon(':/images/zoom_in.png'), "Zoom In", self)
+        zoom_in = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
         zoom_in.setStatusTip("Zoom In")
-        zoom_out = qtw.QAction(qtg.QIcon(':/images/zoom_out.png'), "Zoom Out", self)
+        zoom_out = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
         zoom_out.setStatusTip("Zoom Out")
-        zoom_default = qtw.QAction(qtg.QIcon(':/images/reset.png'), "Restore", self)
+        zoom_default = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
         zoom_default.setStatusTip("Restore to the default font size")
 
         magnify_toolbar.addAction(zoom_in)
@@ -272,36 +305,40 @@ class MainWindow(qtw.QMainWindow):
         zoom_out.triggered.connect( self.decrement_font_size)
         zoom_default.triggered.connect( self.set_default_font_size)
 
-    # Input Functions
-    def newFile(self, checked = False, title = "Untitled.txt"):
+
+    def new_tab(self, checked = False, title = "Untitled.txt"):
         self.current_editor = self.create_editor()
         self.text_editors.append(self.current_editor)
         self.tabs.addTab(self.current_editor, title)
         self.tabs.setCurrentWidget(self.current_editor)
-
+    
+    def closeTab(self):
+        close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
+        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
+    
     def tab_open_doubleclick(self, index):
         if index == -1:
-            self.newFile()
+            self.new_tab()
 
-    def openFile(self):
+    def open_file(self):
         options = qtw.QFileDialog.Options()
         filenames, _ = qtw.QFileDialog.getOpenFileNames(
-            self, 'Open a file', '',
-            'All Files (*);;Python Files (*.py);;Text Files (*.txt)',
+            self, "Open a file", "",
+            "All Files (*);;Python Files (*.py);;Text Files (*.txt)",
             options=options
         )
         if filenames:
             for filename in filenames:
-                with open(filename, 'r') as file_o:
+                with open(filename, "r") as file_o:
                     content = file_o.read()
                     editor = qtw.QTextEdit()   # construct new text edit widget
                     currentIndex = self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
                     editor.setPlainText(content)  # set the contents of the file as the text
                     self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
         
-    def saveFile(self):
+    def save_file(self):
         text = self.current_editor.toPlainText()
-        filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
+        filename, _ = qtw.QFileDialog.getSaveFileName(self, "Save file", None, "Text files(*.txt)")
         global is_document_already_saved
         if is_document_already_saved == False:
             print(is_document_already_saved)
@@ -440,7 +477,7 @@ class MainWindow(qtw.QMainWindow):
                                     qtw.QMessageBox.Save | qtw.QMessageBox.Discard
                                     | qtw.QMessageBox.Cancel)
             if reply == qtw.QMessageBox.Save:
-                return self.saveFile()
+                return self.save_file()
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
