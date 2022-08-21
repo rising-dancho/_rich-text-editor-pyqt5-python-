@@ -36,6 +36,7 @@ class MainWindow(qtw.QMainWindow):
         self.font_style_combo_box = qtw.QComboBox(self)
         self.font_style_combo_box.addItems(["Arial","Courier","Impact","Times","Segoe UI"])
         self.font_size_combo_box.installEventFilter(self)
+        self.font_size_list = [" 9","13","14","16","18","20","22","24","26","28","36","48","56","72","84","99"]
         
         self.font_size_default_var = 13
         self.counter_font_size = self.font_size_default_var
@@ -51,8 +52,7 @@ class MainWindow(qtw.QMainWindow):
         self._createActions()
         self._createMenuBar()
         self._connectActions()
-  
-        self.create_toolbar()
+        self._createToolBars()
 
 
     def create_editor(self):
@@ -71,11 +71,11 @@ class MainWindow(qtw.QMainWindow):
             del self.text_editors[index]
 
     def _createActions(self):
-        # File menu
-        self.new_action = qtw.QAction(qtg.QIcon(":/"),"New", self)
-        self.open_action = qtw.QAction(qtg.QIcon(":/"),"Open", self)
-        self.save_action = qtw.QAction(qtg.QIcon(":/"),"Save", self)
-        self.exit_action = qtw.QAction(qtg.QIcon(":/"), "Exit", self)
+        # FILE MENU
+        self.new_action = qtw.QAction(qtg.QIcon(":/images/new_file.png"),"New", self)
+        self.open_action = qtw.QAction(qtg.QIcon(":/images/folder.png"),"Open", self)
+        self.save_action = qtw.QAction(qtg.QIcon(":/images/save.png"),"Save", self)
+        self.exit_action = qtw.QAction(qtg.QIcon(":/images/close.png"), "Exit", self)
 
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
@@ -87,44 +87,76 @@ class MainWindow(qtw.QMainWindow):
         self.save_action.setStatusTip("Save a file")
         self.exit_action.setStatusTip("Exit Program")
 
-        # Edit menu
-        self.cut_action = qtw.QAction(qtg.QIcon(":/"), "Cut", self)
-        self.copy_action = qtw.QAction(qtg.QIcon(":/"), "Copy", self)
-        self.paste_action = qtw.QAction(qtg.QIcon(":/"), "Paste", self)
-        self.undo_action = qtw.QAction(qtg.QIcon(":/"), "Undo", self)
-        self.redo_action = qtw.QAction(qtg.QIcon(":/"), "Redo", self)
+        # EDIT MENU
+        self.select_all_action = qtw.QAction(qtg.QIcon(":/images/select_all.png"), "Select All", self)
+        self.cut_action = qtw.QAction(qtg.QIcon(":/images/cut.png"), "Cut", self)
+        self.copy_action = qtw.QAction(qtg.QIcon(":/images/copy.png"), "Copy", self)
+        self.paste_action = qtw.QAction(qtg.QIcon(":/images/paste.png"), "Paste", self)
+        self.undo_action = qtw.QAction(qtg.QIcon(":/images/undo.png"), "Undo", self)
+        self.redo_action = qtw.QAction(qtg.QIcon(":/images/redo.png"), "Redo", self)
 
+        self.select_all_action.setShortcut("Ctrl+A")
         self.cut_action.setShortcut("Ctrl+X")
         self.copy_action.setShortcut("Ctrl+C")
         self.paste_action.setShortcut("Ctrl+V")
         self.undo_action.setShortcut("Ctrl+Z")
         self.redo_action.setShortcut("Ctrl+Y")
 
+        self.select_all_action.setStatusTip("Selects all texts")
         self.cut_action.setStatusTip("Cuts the selected text and copies it to the clipboard")
         self.copy_action.setStatusTip("Copies the selected text to the clipboard")
         self.paste_action.setStatusTip("Pastes the clipboard text into line edit")
         self.undo_action.setStatusTip("Undo the last operation")
         self.redo_action.setStatusTip("Redo the last operation")
 
-        # View menu
-        self.fullscreen_action = qtw.QAction(qtg.QIcon(":/"), "Fullscreen", self)
-        self.align_left_action = qtw.QAction(qtg.QIcon(":/"), "Align Left", self)
-        self.align_right_action = qtw.QAction(qtg.QIcon(":/"), "Align Right", self)
-        self.align_center_action = qtw.QAction(qtg.QIcon(":/"), "Align Center", self)
-        self.align_justify_action = qtw.QAction(qtg.QIcon(":/"), "Align Justify", self)
+        # FORMAT MENU
+        self._action_text_bold = qtw.QAction(qtg.QIcon(":/images/bold.png"), "Bold", self)
+        self._action_text_italic = qtw.QAction(qtg.QIcon(":/images/italic.png"), "Italic", self)
+        self._action_text_underline = qtw.QAction(qtg.QIcon(":/images/underline.png"), "Underline", self)
+        self.align_left_action = qtw.QAction(qtg.QIcon(":/images/left_align.png"), "Align Left", self)
+        self.align_right_action = qtw.QAction(qtg.QIcon(":/images/right_align.png"), "Align Right", self)
+        self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
+        self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
+        self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Color", self)
+        self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
+        self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
+        self.zoom_default_action = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
 
-        self.fullscreen_action.setShortcut("F11")
+        self._action_text_bold.setShortcut("Ctrl+B")
+        self._action_text_italic.setShortcut("Ctrl+I")
+        self._action_text_underline.setShortcut("Ctrl+U")
         self.align_left_action.setShortcut("Ctrl+L")
         self.align_right_action.setShortcut("Ctrl+R")
         self.align_center_action.setShortcut("Ctrl+E")
         self.align_justify_action.setShortcut("Ctrl+J")
+        self.color_action.setShortcut("Ctrl+Shift+C")
+        self.zoom_in_action.setShortcut("Ctrl+=") 
+        self.zoom_out_action.setShortcut("Ctrl+-") 
+        self.zoom_default_action.setShortcut("Ctrl+0")
 
-        self.fullscreen_action.setStatusTip("Toggles the full screen mode")
+        self._action_text_bold.setStatusTip("Toggle whether the font weight is bold or not")
+        self._action_text_italic.setStatusTip("Toggle whether the font is italic or not")
+        self._action_text_underline.setStatusTip("Toggle whether the font is underlined or not")
         self.align_left_action.setStatusTip("Aligns with the left edge")
         self.align_right_action.setStatusTip("Aligns with the right edge")
         self.align_center_action.setStatusTip("Centers horizontally in the available space")
         self.align_justify_action.setStatusTip("Justifies the text in the available space")
+        self.color_action.setStatusTip("The color dialog’s function is to allow users to choose colors")
+        self.zoom_in_action.setStatusTip("Zoom In") 
+        self.zoom_out_action.setStatusTip("Zoom Out") 
+        self.zoom_default_action.setStatusTip("Restore to the default font size")
 
+        # VIEW MENU
+        self.fullscreen_action = qtw.QAction(qtg.QIcon(":/"), "Fullscreen", self)
+        self.view_status_action = qtw.QAction('Show Statusbar', self, checkable=True)
+        
+        self.fullscreen_action.setShortcut("F11")
+        self.view_status_action.setShortcut("")
+
+        self.fullscreen_action.setStatusTip("Toggles the full screen mode")
+        self.view_status_action.setStatusTip('Toggle the status bar to be visible or not')
+        self.view_status_action.setChecked(True)
+      
 
     def _createMenuBar(self):
         menubar = self.menuBar()
@@ -135,7 +167,9 @@ class MainWindow(qtw.QMainWindow):
         file_menu.addSeparator()
         file_menu.addAction(self.exit_action)
 
-        edit_menu = menubar.addMenu("&Edit")
+        edit_menu = menubar.addMenu("Edit")
+        edit_menu.addAction(self.select_all_action)
+        edit_menu.addSeparator()
         edit_menu.addAction(self.cut_action)
         edit_menu.addAction(self.copy_action)
         edit_menu.addAction(self.paste_action)
@@ -143,16 +177,25 @@ class MainWindow(qtw.QMainWindow):
         edit_menu.addAction(self.undo_action)
         edit_menu.addAction(self.redo_action)
 
-        view_menu = menubar.addMenu("&View")
-        view_menu.addAction(self.fullscreen_action)
-        view_menu.addSeparator()
-        view_menu.addAction(self.align_left_action)
-        view_menu.addAction(self.align_right_action)
-        view_menu.addAction(self.align_center_action)
-        view_menu.addAction(self.align_justify_action)
+        format_menu = menubar.addMenu("Format")
+        format_menu.addAction(self._action_text_bold)
+        format_menu.addAction(self._action_text_italic)
+        format_menu.addAction(self._action_text_underline)
+        format_menu.addSeparator()
+        format_menu.addAction(self.align_left_action)
+        format_menu.addAction(self.align_right_action)
+        format_menu.addAction(self.align_center_action)
+        format_menu.addAction(self.align_justify_action)
+        format_menu.addSeparator()
+        format_menu.addAction(self.color_action)
+
+        view_menu = menubar.addMenu("View")
+        view_menu.addAction(self.fullscreen_action) 
+        view_menu.addAction(self.view_status_action) 
+       
+      
 
     def _connectActions(self):
-
         # Connect File actions
         self.new_action.triggered.connect(self.new_tab)
         self.open_action.triggered.connect(self.open_document)
@@ -160,150 +203,107 @@ class MainWindow(qtw.QMainWindow):
         self.exit_action.triggered.connect(self.close)
 
         # Connect Edit actions
+        self.select_all_action.triggered.connect(self.select_all_document)
         self.cut_action.triggered.connect(self.cut_document)
         self.copy_action.triggered.connect(self.copy_document)
         self.paste_action.triggered.connect(self.paste_document)
         self.undo_action.triggered.connect(self.undo_document)
         self.redo_action.triggered.connect(self.redo_document)
 
-        # Connect View actions
+        # Connect Format actions
         self.fullscreen_action.triggered.connect(self.fullscreen)
+        
+        self._action_text_bold.triggered.connect(self.bold_text)
+        bold_font = qtg.QFont()
+        bold_font.setBold(True)
+        self._action_text_bold.setFont(bold_font)
+        self._action_text_bold.setCheckable(True)
+
+        self._action_text_italic.triggered.connect(self.italic_text)
+        italic_font = qtg.QFont()
+        italic_font.setItalic(True)
+        self._action_text_italic.setFont(italic_font)
+        self._action_text_italic.setCheckable(True)
+
+        self._action_text_underline.triggered.connect(self.underlined_text)
+        underlined_font = qtg.QFont()
+        underlined_font.setUnderline(True)
+        self._action_text_underline.setFont(underlined_font)
+        self._action_text_underline.setCheckable(True)
+
         self.align_left_action.triggered.connect(self.align_left)
         self.align_right_action.triggered.connect(self.align_right)
         self.align_center_action.triggered.connect(self.align_center)
         self.align_justify_action.triggered.connect(self.align_justify)
 
+        self.color_action.triggered.connect( self.color_dialog)
+        self.zoom_in_action.triggered.connect( self.increment_font_size)
+        self.zoom_out_action.triggered.connect( self.decrement_font_size)
+        self.zoom_default_action.triggered.connect( self.set_default_font_size)
 
-    def create_toolbar(self):
+        self.view_status_action.triggered.connect(self.toggleMenu)
+
+
+    def _createToolBars(self):
+        # File toolbar
+        file_toolbar = self.addToolBar("File")
+        file_toolbar.setIconSize(qtc.QSize(22,22))
+        # file_toolbar.setMovable(False)
+        file_toolbar.addAction(self.new_action)
+        file_toolbar.addAction(self.open_action)
+        file_toolbar.addAction(self.save_action)
+
+        # Select all, cut, copy, paste toolbar
         clipboard_toolbar = self.addToolBar("Clipboard")
         clipboard_toolbar.setIconSize(qtc.QSize(25,25))
-        #clipboard_toolbar.setMovable(False)
+        # clipboard_toolbar.setMovable(False)
+        clipboard_toolbar.addAction(self.select_all_action)
+        clipboard_toolbar.addAction(self.cut_action)
+        clipboard_toolbar.addAction(self.copy_action)
+        clipboard_toolbar.addAction(self.paste_action)
 
+        # Undo, redo toolbar
         undo_redo_toolbar = self.addToolBar("Undo Redo") 
-        undo_redo_toolbar.setIconSize(qtc.QSize(20,20))
-        #undo_redo_toolbar.setMovable(False)
+        undo_redo_toolbar.setIconSize(qtc.QSize(23,23))
+        # undo_redo_toolbar.setMovable(False)
+        undo_redo_toolbar.addAction(self.undo_action)
+        undo_redo_toolbar.addAction(self.redo_action)
 
         self.addToolBarBreak()
 
+        # Alignment toolbar
         alignment_toolbar = self.addToolBar("Alignment") 
         alignment_toolbar.setIconSize(qtc.QSize(20,20))
+        # alignment_toolbar.setMovable(False)
+        alignment_toolbar.addAction(self.align_left_action)
+        alignment_toolbar.addAction(self.align_right_action)
+        alignment_toolbar.addAction(self.align_center_action)
+        alignment_toolbar.addAction(self.align_justify_action)
 
         font_weight_toolbar = self.addToolBar("Font Weight") 
         font_weight_toolbar.setIconSize(qtc.QSize(18,18))
+        # font_weight_toolbar.setMovable(False)
+        font_weight_toolbar.addAction(self._action_text_bold)
+        font_weight_toolbar.addAction(self._action_text_italic)
+        font_weight_toolbar.addAction(self._action_text_underline)
 
         fonts_toolbar = self.addToolBar("Fonts") 
         fonts_toolbar.setIconSize(qtc.QSize(20,20))
-
-        magnify_toolbar = self.addToolBar("Magnify") 
-        magnify_toolbar.setIconSize(qtc.QSize(25,25))
-        #view_toolbar.setMovable(False)
-      
-        select_all_icon = qtw.QAction(qtg.QIcon(":/images/select_all.png"), "Select all", self)
-        select_all_icon.setStatusTip("Select All")
-        
-        copy_icon = qtw.QAction(qtg.QIcon(":/images/copy.png"), "Copy", self)
-        copy_icon.setStatusTip("Copies the selected text to the clipboard")
-
-        cut_icon = qtw.QAction(qtg.QIcon(":/images/cut.png"), "Cut", self)
-        cut_icon.setStatusTip("Cuts the selected text and copies it to the clipboard")
-
-        paste_icon = qtw.QAction(qtg.QIcon(":/images/paste.png"), "Paste", self)
-        paste_icon.setStatusTip("Pastes the clipboard text into line edit")
-
-        clipboard_toolbar.addAction(select_all_icon)
-        clipboard_toolbar.addAction(copy_icon)
-        clipboard_toolbar.addAction(cut_icon)
-        clipboard_toolbar.addAction(paste_icon)
-
-        select_all_icon.triggered.connect( self.select_all_document)
-        copy_icon.triggered.connect(self.copy_document)
-        cut_icon.triggered.connect(self.cut_document)
-        paste_icon.triggered.connect(self.paste_document)
-
-        undo_icon = qtw.QAction(qtg.QIcon(":/images/undo.png"), "Undo", self)
-        undo_icon.setStatusTip("Undo the last operation")
-        redo_icon = qtw.QAction(qtg.QIcon(":/images/redo.png"), "Redo", self)
-        redo_icon.setStatusTip("Redo the last operation")
-        undo_redo_toolbar.addAction(undo_icon)
-        undo_redo_toolbar.addAction(redo_icon)
-
-        undo_icon.triggered.connect(self.undo_document)
-        redo_icon.triggered.connect(self.redo_document)
-
-        left_align = qtw.QAction(qtg.QIcon(":/images/left_align.png"), "Left Align", self)
-        left_align.setStatusTip("Aligns with the left edge")
-        right_align = qtw.QAction(qtg.QIcon(":/images/right_align.png"), "Right Align", self)
-        right_align.setStatusTip("Aligns with the right edge")
-        center_align = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Center Align", self)
-        center_align.setStatusTip("Centers horizontally in the available space")
-        justify = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Justify", self)
-        justify.setStatusTip("Justifies the text in the available space")
-
-        alignment_toolbar.addAction(left_align)
-        alignment_toolbar.addAction(center_align)
-        alignment_toolbar.addAction(right_align)
-        alignment_toolbar.addAction(justify)
-
-        left_align.triggered.connect(self.align_left)
-        right_align.triggered.connect( lambda: self.current_editor.setAlignment(qtc.Qt.AlignRight))
-        center_align.triggered.connect( lambda: self.current_editor.setAlignment(qtc.Qt.AlignHCenter))
-        justify.triggered.connect( lambda: self.current_editor.setAlignment(qtc.Qt.AlignJustify))
-        
-        self._action_text_bold = font_weight_toolbar.addAction(qtg.QIcon(":/images/bold.png"), "&Bold", self.bold_text)
-        self._action_text_bold.setShortcut(qtc.Qt.CTRL | qtc.Qt.Key_B)
-        bold_font = qtg.QFont()
-        bold_font.setBold(True)
-        self._action_text_bold.setFont(bold_font)
-        self._action_text_bold.setCheckable(True)
-        self._action_text_bold.setStatusTip("Toggle whether the font weight is bold or not")
-        
-        self._action_text_italic = font_weight_toolbar.addAction(qtg.QIcon(":/images/italic.png"), "&Italic", self.italic_text)
-        self._action_text_italic.setShortcut(qtc.Qt.CTRL | qtc.Qt.Key_I)
-        italic_font = qtg.QFont()
-        italic_font.setItalic(True)
-        self._action_text_italic.setFont(italic_font)
-        self._action_text_italic.setCheckable(True)
-        self._action_text_italic.setStatusTip("Toggle whether the font is italic or not")
-
-        self._action_text_underline = font_weight_toolbar.addAction(qtg.QIcon(":/images/underline.png"), "&Underline", self.underlined_text)
-        self._action_text_underline.setShortcut(qtc.Qt.CTRL | qtc.Qt.Key_U)
-        underlined_font = qtg.QFont()
-        underlined_font.setUnderline(True)
-        self._action_text_underline.setFont(underlined_font)
-        self._action_text_underline.setCheckable(True)
-        self._action_text_underline.setStatusTip("Toggle whether the font is underlined or not")
-
-        self.font_style_combo_box.activated.connect(self.set_font)
-        fonts_toolbar.addWidget(self.font_style_combo_box) 
-
-        font_size_list = [" 9","13","14","16","18","20","22","24","26","28","36","48","56","72","84","99"]
-
-        self.font_size_combo_box.addItems(font_size_list)
-
+        # fonts_toolbar.setMovable(False)
+        fonts_toolbar.addWidget(self.font_style_combo_box)
+        self.font_style_combo_box.activated.connect(self.set_font) 
+        self.font_size_combo_box.addItems(self.font_size_list)
         self.font_size_combo_box.setCurrentText(str(self.counter_font_size))
         self.font_size_combo_box.currentTextChanged.connect(self.setFontSize)
         fonts_toolbar.addWidget(self.font_size_combo_box)
+        fonts_toolbar.addAction(self.color_action)
 
-        color = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Color", self)
-        color.setStatusTip("The color dialog’s function is to allow users to choose colors")
-
-        fonts_toolbar.addAction(color)
-        color.triggered.connect( self.color_dialog)
-
-        zoom_in = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
-        zoom_in.setStatusTip("Zoom In")
-        zoom_out = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
-        zoom_out.setStatusTip("Zoom Out")
-        zoom_default = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
-        zoom_default.setStatusTip("Restore to the default font size")
-
-        magnify_toolbar.addAction(zoom_in)
-        magnify_toolbar.addAction(zoom_out)
-        magnify_toolbar.addAction(zoom_default)
-        
-        zoom_in.triggered.connect( self.increment_font_size)
-        zoom_out.triggered.connect( self.decrement_font_size)
-        zoom_default.triggered.connect( self.set_default_font_size)
+        magnify_toolbar = self.addToolBar("Magnify") 
+        magnify_toolbar.setIconSize(qtc.QSize(25,25))
+        # magnify_toolbar.setMovable(False)
+        magnify_toolbar.addAction(self.zoom_in_action)
+        magnify_toolbar.addAction(self.zoom_out_action)
+        magnify_toolbar.addAction(self.zoom_default_action)
 
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
@@ -549,5 +549,6 @@ if __name__ == "__main__":
     main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
     main.show()
     sys.exit(app.exec_())
+
 
 
