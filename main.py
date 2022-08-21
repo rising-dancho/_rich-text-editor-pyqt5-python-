@@ -155,8 +155,8 @@ class MainWindow(qtw.QMainWindow):
 
         # Connect File actions
         self.new_action.triggered.connect(self.new_tab)
-        self.open_action.triggered.connect(self.open_file)
-        self.save_action.triggered.connect(self.save_file)
+        self.open_action.triggered.connect(self.open_document)
+        self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
 
         # Connect Edit actions
@@ -320,7 +320,7 @@ class MainWindow(qtw.QMainWindow):
         if index == -1:
             self.new_tab()
 
-    def open_file(self):
+    def open_document(self):
         options = qtw.QFileDialog.Options()
         filenames, _ = qtw.QFileDialog.getOpenFileNames(
             self, "Open a file", "",
@@ -336,7 +336,7 @@ class MainWindow(qtw.QMainWindow):
                     editor.setPlainText(content)  # set the contents of the file as the text
                     self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
         
-    def save_file(self):
+    def save_document(self):
         text = self.current_editor.toPlainText()
         filename, _ = qtw.QFileDialog.getSaveFileName(self, "Save file", None, "Text files(*.txt)")
         global is_document_already_saved
@@ -477,7 +477,7 @@ class MainWindow(qtw.QMainWindow):
                                     qtw.QMessageBox.Save | qtw.QMessageBox.Discard
                                     | qtw.QMessageBox.Cancel)
             if reply == qtw.QMessageBox.Save:
-                return self.save_file()
+                return self.save_document()
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
