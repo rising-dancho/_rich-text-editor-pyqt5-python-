@@ -82,7 +82,7 @@ class MainWindow(qtw.QMainWindow):
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
         self.save_action.setShortcut("Ctrl+S")
-        self.exit_action.setShortcut("Ctrl+Q")
+        self.exit_action.setShortcut("Ctrl+Shift+Q")
 
         self.new_action.setStatusTip("New file")
         self.open_action.setStatusTip("Open a file")
@@ -603,7 +603,7 @@ if __name__ == "__main__":
     main = MainWindow()
     main.resize(650,500)
     main.setMinimumSize(590,450)
-    main.setWindowTitle("adfinem notes")
+    main.setWindowTitle("Notes_")
     main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
     main.show()
     sys.exit(app.exec_())
