@@ -57,13 +57,6 @@ class MainWindow(qtw.QMainWindow):
         self._connectActions()
         self._createToolBars()
     
-    def textSize(self, pointSize): 
-        pointSize = float(self.comboSize.currentText())
-        if pointSize > 0:
-            fmt = qtg.QTextCharFormat()
-            fmt.setFontPointSize(pointSize)
-            self.mergeFormatOnWordOrSelection(fmt)
-        
     def create_editor(self):
         current_editor = qtw.QTextEdit()
         return current_editor
@@ -305,7 +298,8 @@ class MainWindow(qtw.QMainWindow):
         font_weight_toolbar.addAction(self._action_text_underline)
 
         self.font_toolbar = qtw.QToolBar(self)
-        self.font_toolbar.setAllowedAreas(qtc.Qt.TopToolBarArea | qtc.Qt.BottomToolBarArea)
+        self.font_toolbar.setIconSize(qtc.QSize(20,20))
+        self.font_toolbar.setMovable(False)
         self.font_toolbar.setWindowTitle("Font Toolbar")
         
         self.comboFont =  qtw.QFontComboBox(self.font_toolbar)
@@ -313,7 +307,6 @@ class MainWindow(qtw.QMainWindow):
         self.font_toolbar.addWidget(self.comboFont)
         self.comboFont.activated[str].connect(self.textFamily)
 
-        
         self.defaultFontSize = 9
         self.counterFontSize = self.defaultFontSize
         
@@ -335,7 +328,8 @@ class MainWindow(qtw.QMainWindow):
                     self.comboSize.findText( 
                             "%s" % (qtw.QApplication.font().pointSize())))                    
             self.addToolBar(self.font_toolbar)
- 
+        
+        self.font_toolbar.addAction(self.color_action)
         view_menu = self.menubar.addMenu("View")
         view_menu.addAction(self.fullscreen_action) 
         view_menu.addAction(self.view_status_action) 
@@ -346,7 +340,6 @@ class MainWindow(qtw.QMainWindow):
         magnify_toolbar.addAction(self.zoom_in_action)
         magnify_toolbar.addAction(self.zoom_out_action)
         magnify_toolbar.addAction(self.zoom_default_action)
-
 
     def textFamily(self, family): 
         fmt = qtg.QTextCharFormat()
