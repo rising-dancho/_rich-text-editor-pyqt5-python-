@@ -1,3 +1,22 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #######################
+# NOTE: 
+# here are some resources that may be helpful to those that will inherit the work 
+# ..that was poured here. goodluck! - adfinem_rising
+# ----------------------------------------------------------------------------------
+# UI guide: https://realpython.com/python-menus-toolbars/
+# TEXT editor guide: https://www.binpress.com/building-text-editor-pyqt-1/
+# QT exmples doc: https://doc.qt.io/qtforpython/examples/index.html
+# RESOURCES guide: https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
+# 
+# NOTABLE people: 
+# https://github.com/alandmoore
+# https://github.com/goldsborough
+# https://github.com/Axel-Erfurt
+# https://github.com/zhiyiYo
+# https://github.com/Fus3n
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####################
+
 import sys
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
@@ -16,12 +35,11 @@ class MainWindow(qtw.QMainWindow):
         # hWnd = self.winId()
         # blur(hWnd)
         # self.setWindowOpacity(0.98)
-
+   
         self.current_editor = self.create_editor()
         self.text_editors = []
-
         self.statusbar = self.statusBar()
-        self.statusbar.showMessage("Ready")
+        self.statusbar.showMessage("Ready")    
         self.tabs = qtw.QTabWidget(self)
         self.tabs.setTabsClosable(True)
         self.tabs.setDocumentMode(True)
@@ -32,20 +50,10 @@ class MainWindow(qtw.QMainWindow):
         self.setStyleSheet(self.myStyleSheet())
         self.setCentralWidget(self.tabs)
     
-        self.font_style_combo_box = qtw.QFontComboBox()
-        
-        self.font_size_combo_box = qtw.QComboBox(self)
-        # self.font_size_combo_box.setEditable(True)
-        self.font_size_list = [" 9","13","14","16","18","20","22","24","26","28","36","48","56","72","84","99"]
-        self.font_size_default_var = 13
-        self.counter_font_size = self.font_size_default_var
-        self.font = qtg.QFont()
-        self.font.setPointSize(self.font_size_default_var)
-        self.current_editor.setFont(self.font)
-        
-        self.statusbar = self.statusBar()
-        self.statusbar.showMessage("Ready")
-
+        self.fontSize = qtw.QComboBox(self)
+        self.defaultFontSize = 9
+        self.counterFontSize = self.defaultFontSize
+    
         self.new_tab()
         self.closeTab()
         
@@ -53,6 +61,13 @@ class MainWindow(qtw.QMainWindow):
         self._createMenuBar()
         self._connectActions()
         self._createToolBars()
+    
+    def textSize(self, pointSize): 
+        pointSize = float(self.comboSize.currentText())
+        if pointSize > 0:
+            fmt = qtg.QTextCharFormat()
+            fmt.setFontPointSize(pointSize)
+            self.mergeFormatOnWordOrSelection(fmt)
         
     def create_editor(self):
         current_editor = qtw.QTextEdit()
@@ -117,6 +132,7 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Color", self)
+        
         # font style combobox
         fontBox = qtw.QFontComboBox(self)
         fontBox.currentFontChanged.connect(self.FontFamily)
@@ -162,7 +178,6 @@ class MainWindow(qtw.QMainWindow):
         self.view_status_action.setStatusTip('Toggle the status bar to be visible or not')
         self.view_status_action.setChecked(True)
       
-
     def _createMenuBar(self):
         self.menubar = self.menuBar()
         file_menu = self.menubar .addMenu("File")
@@ -201,11 +216,6 @@ class MainWindow(qtw.QMainWindow):
         fontBox.currentFontChanged.connect(self.FontFamily)
         font_family = qtw.QWidgetAction(self)
         font_family.setDefaultWidget(fontBox)
-
-        view_menu = self.menubar.addMenu("View")
-        view_menu.addAction(self.fullscreen_action) 
-        view_menu.addAction(self.view_status_action) 
-       
        
     def _connectActions(self):
         # Connect File actions
@@ -247,7 +257,7 @@ class MainWindow(qtw.QMainWindow):
         self.align_right_action.triggered.connect(self.align_right)
         self.align_center_action.triggered.connect(self.align_center)
         self.align_justify_action.triggered.connect(self.align_justify)
-
+       
         self.color_action.triggered.connect( self.color_dialog)
         self.zoom_in_action.triggered.connect( self.increment_font_size)
         self.zoom_out_action.triggered.connect( self.decrement_font_size)
@@ -299,17 +309,39 @@ class MainWindow(qtw.QMainWindow):
         font_weight_toolbar.addAction(self._action_text_italic)
         font_weight_toolbar.addAction(self._action_text_underline)
 
-        fonts_toolbar = self.addToolBar("Fonts") 
-        fonts_toolbar.setIconSize(qtc.QSize(20,20))
-        # fonts_toolbar.setMovable(False)
-        fonts_toolbar.addWidget(self.font_style_combo_box)
-        self.font_style_combo_box.activated.connect(self.set_font) 
-        self.font_size_combo_box.addItems(self.font_size_list)
-        self.font_size_combo_box.setCurrentText(str(self.counter_font_size))
-        self.font_size_combo_box.currentTextChanged.connect(self.setFontSize)
-        fonts_toolbar.addWidget(self.font_size_combo_box)
-        fonts_toolbar.addAction(self.color_action)
+        self.font_tb = qtw.QToolBar(self)
+        self.font_tb.setAllowedAreas(qtc.Qt.TopToolBarArea | qtc.Qt.BottomToolBarArea)
+        self.font_tb.setWindowTitle("Font Toolbar")
+        
+        self.comboFont =  qtw.QFontComboBox(self.font_tb)
+        self.font_tb.addSeparator()
+        self.font_tb.addWidget(self.comboFont)
+        self.comboFont.activated[str].connect(self.textFamily)
 
+        # prevent letter inputs in the font size combobox
+        regex = qtc.QRegExp(r'[0-9]+')
+        validator = qtg.QRegExpValidator(regex)
+
+        self.comboSize = qtw.QComboBox(self.font_tb)
+        self.font_tb.addSeparator()
+        self.comboSize.setObjectName("comboSize")
+        self.font_tb.addWidget(self.comboSize)
+        self.comboSize.setEditable(True)
+        self.comboSize.setValidator(validator)
+
+        fontDatabase = qtg.QFontDatabase()
+        for size in fontDatabase.standardSizes():
+            self.comboSize.addItem("%s" % (size))
+            self.comboSize.activated[str].connect(self.textSize)
+            self.comboSize.setCurrentIndex(
+                    self.comboSize.findText( 
+                            "%s" % (qtw.QApplication.font().pointSize())))                    
+            self.addToolBar(self.font_tb)
+ 
+        view_menu = self.menubar.addMenu("View")
+        view_menu.addAction(self.fullscreen_action) 
+        view_menu.addAction(self.view_status_action) 
+  
         magnify_toolbar = self.addToolBar("Magnify") 
         magnify_toolbar.setIconSize(qtc.QSize(25,25))
         # magnify_toolbar.setMovable(False)
@@ -317,6 +349,25 @@ class MainWindow(qtw.QMainWindow):
         magnify_toolbar.addAction(self.zoom_out_action)
         magnify_toolbar.addAction(self.zoom_default_action)
 
+
+    def textFamily(self, family): 
+        fmt = qtg.QTextCharFormat()
+        fmt.setFontFamily(family)
+        self.mergeFormatOnWordOrSelection(fmt)
+
+    def textSize(self, pointSize):
+        pointSize = float(self.comboSize.currentText())
+        if pointSize > 0:
+            fmt = qtg.QTextCharFormat()
+            fmt.setFontPointSize(pointSize)
+            self.mergeFormatOnWordOrSelection(fmt)
+    
+    def mergeFormatOnWordOrSelection(self, format):
+        cursor = self.current_editor.textCursor()
+        if not cursor.hasSelection(): 
+            cursor.select(qtg.QTextCursor.WordUnderCursor)
+        cursor.mergeCharFormat(format)
+        self.current_editor.mergeCurrentCharFormat(format)
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
         self.current_editor = self.create_editor()
@@ -430,40 +481,35 @@ class MainWindow(qtw.QMainWindow):
         else :
             self.showMaximized()
 
-    def set_font(self):
-        font_selection = self.font_style_combo_box.currentText()
-        self.current_editor.setFont(qtg.QFont(font_selection,self.counter_font_size))
-        self.current_editor.setFocus()
-
     def setFontSize(self):
         font = self.current_editor.font()                         
-        self.counter_font_size = int(self.font_size_combo_box.currentText())
-        font.setPointSize(int(self.counter_font_size))            
+        self.counterFontSize = int(self.fontSize.currentText())
+        font.setPointSize(int(self.counterFontSize))            
         self.current_editor.setFont(font)      
                  
     def increment_font_size(self):
-        self.counter_font_size +=1
+        self.counterFontSize +=1
         font = self.current_editor.font()                         
-        font.setPointSize(int(self.counter_font_size))       
+        font.setPointSize(int(self.counterFontSize))       
         self.current_editor.setFont(font)                         
 
     def decrement_font_size(self):
-        self.counter_font_size -=1
+        self.counterFontSize -=1
         font = self.current_editor.font()                         
-        font.setPointSize(int(self.counter_font_size))       
+        font.setPointSize(int(self.counterFontSize))       
         self.current_editor.setFont(font)                          
 
     def set_default_font_size(self):
         self.current_editor.selectAll
         font = self.current_editor.font()                         
-        font.setPointSize(int(self.font_size_default_var))  
+        font.setPointSize(int(self.defaultFontSize))  
         self.current_editor.setFont(font)                          
-        self.counter_font_size = self.font_size_default_var
-        self.font_size_combo_box.setCurrentText(str(self.counter_font_size))
+        self.counterFontSize = self.defaultFontSize
+        self.fontSize.setCurrentText(str(self.counterFontSize))
 
     def select_comboBox_contents(self):
-        self.font_size_combo_box.lineEdit().setCursorPosition(0)
-        self.font_size_combo_box.lineEdit().selectAll()
+        self.fontSize.lineEdit().setCursorPosition(0)
+        self.fontSize.lineEdit().selectAll()
 
     def toggleMenu(self, state):
             if state:
@@ -497,8 +543,9 @@ class MainWindow(qtw.QMainWindow):
     def FontFamily(self, font):
         self.current_editor.setCurrentFont(font)
 
+    def FontSize(self, fontsize):
+        self.current_editor.setFontPointSize(int(fontsize))
 
-    
     def myStyleSheet(self):
         return """
             QTextEdit
