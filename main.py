@@ -1,20 +1,19 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######################
 # NOTE: 
 # here are some resources that may be helpful to those that will inherit the work and love
-# ..that was poured in here. goodluck, my child - adfinem_rising
-# ----------------------------------------------------------------------------------
-# UI GUIDE: https://realpython.com/python-menus-toolbars/
-# TEXT EDITOR GUIDE: https://www.binpress.com/building-text-editor-pyqt-1/
-# QT EXAMPLE DOC: https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
-# TABBED EDITOR: https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
-# RESOURCES GUIDE: https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
+# .. that was poured in here. goodluck, my child - adfinem_rising
 # 
-# NOTABLE people: 
-#   https://github.com/alandmoore
-#   https://github.com/goldsborough
-#   https://github.com/Axel-Erfurt
-#   https://github.com/zhiyiYo
-#   https://github.com/Fus3n
+#   UI GUIDE:            https://realpython.com/python-menus-toolbars/
+#   TEXT EDITOR GUIDE:   https://www.binpress.com/building-text-editor-pyqt-1/
+#   QT EXAMPLE DOC:      https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
+#   TABBED EDITOR:       https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
+#   RESOURCES GUIDE:     https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
+# 
+#   NOTABLE PEOPLE:      https://github.com/alandmoore
+#                        https://github.com/goldsborough
+#                        https://github.com/Axel-Erfurt
+#                        https://github.com/zhiyiYo
+#                        https://github.com/Fus3n
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####################
 
@@ -57,7 +56,7 @@ class MainWindow(qtw.QMainWindow):
         self._createMenuBar()
         self._connectActions()
         self._createToolBars()
-    
+  
     def create_editor(self):
         current_editor = qtw.QTextEdit()
         return current_editor
@@ -121,6 +120,7 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Color", self)
+        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Font Dialog Box", self)
         
         # font style combobox
         fontBox = qtw.QFontComboBox(self)
@@ -140,6 +140,7 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action.setShortcut("Ctrl+E")
         self.align_justify_action.setShortcut("Ctrl+J")
         self.color_action.setShortcut("Ctrl+Shift+C")
+        self.font_dialog_action.setShortcut("Ctrl+Shift+F")
         self.zoom_in_action.setShortcut("Ctrl+=") 
         self.zoom_out_action.setShortcut("Ctrl+-") 
         self.zoom_default_action.setShortcut("Ctrl+0")
@@ -152,6 +153,7 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action.setStatusTip("Centers horizontally in the available space")
         self.align_justify_action.setStatusTip("Justifies the text in the available space")
         self.color_action.setStatusTip("The color dialog’s function is to allow users to choose colors")
+        self.font_dialog_action.setStatusTip("The font dialog’s function is to allow users to choose their preferred font style")
         self.zoom_in_action.setStatusTip("Zoom In") 
         self.zoom_out_action.setStatusTip("Zoom Out") 
         self.zoom_default_action.setStatusTip("Restore to the default font size")
@@ -197,14 +199,8 @@ class MainWindow(qtw.QMainWindow):
         format_menu.addAction(self.align_justify_action)
         format_menu.addSeparator()
         format_menu.addAction(self.color_action)
-        menu_font = format_menu.addMenu("&Font")
-        menu_font.addAction(self.font_family_action)
-
-        # font family widget
-        fontBox = qtw.QFontComboBox(self)
-        fontBox.currentFontChanged.connect(self.FontFamily)
-        font_family = qtw.QWidgetAction(self)
-        font_family.setDefaultWidget(fontBox)
+        format_menu.addAction(self.font_dialog_action)
+  
        
     def _connectActions(self):
         # Connect File actions
@@ -247,11 +243,12 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action.triggered.connect(self.align_center)
         self.align_justify_action.triggered.connect(self.align_justify)
        
-        self.color_action.triggered.connect( self.color_dialog)
         self.zoom_in_action.triggered.connect( self.increment_font_size)
         self.zoom_out_action.triggered.connect( self.decrement_font_size)
         self.zoom_default_action.triggered.connect( self.set_default_font_size)
 
+        self.color_action.triggered.connect( self.color_dialog)
+        self.font_dialog_action.triggered.connect( self.font_dialog)
         self.view_status_action.triggered.connect(self.toggleMenu)
 
 
@@ -450,6 +447,11 @@ class MainWindow(qtw.QMainWindow):
         if not color.isValid():
             return
         self.current_editor.setTextColor(color)
+    
+    def font_dialog(self):
+        font, ok =qtw.QFontDialog.getFont()
+        if ok:
+            self.current_editor.setFont(font)
 
     def align_left(self):
         self.current_editor.setAlignment(qtc.Qt.AlignLeft)
@@ -552,12 +554,18 @@ class MainWindow(qtw.QMainWindow):
                 background: #1c2028;
                 border: 0px;
             }
+
             QMainWindow
             {
                 background: #1c2028;
             }
+
             QStatusBar 
             {
+                background: #1c2028;
+            }
+
+            QTabBar {
                 background: #1c2028;
             }
 
@@ -594,8 +602,8 @@ if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     main = MainWindow()
     main.resize(650,500)
-    main.setMinimumSize(550,450)
-    main.setWindowTitle("Text Editor")
+    main.setMinimumSize(590,450)
+    main.setWindowTitle("adfinem notes")
     main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
     main.show()
     sys.exit(app.exec_())
