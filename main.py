@@ -5,7 +5,8 @@
 # ----------------------------------------------------------------------------------
 # UI GUIDE: https://realpython.com/python-menus-toolbars/
 # TEXT EDITOR GUIDE: https://www.binpress.com/building-text-editor-pyqt-1/
-# QT EXAMPLE DOC: https://doc.qt.io/qtforpython/examples/index.html
+# QT EXAMPLE DOC: https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
+# TABBED EDITOR: https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
 # RESOURCES GUIDE: https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
 # 
 # NOTABLE people: 
