@@ -1,19 +1,19 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #######################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######################
 # NOTE: 
-# here are some resources that may be helpful to those that will inherit the work 
-# ..that was poured here. goodluck! - adfinem_rising
+# here are some resources that may be helpful to those that will inherit the work and love
+# ..that was poured in here. goodluck, my child - adfinem_rising
 # ----------------------------------------------------------------------------------
-# UI guide: https://realpython.com/python-menus-toolbars/
-# TEXT editor guide: https://www.binpress.com/building-text-editor-pyqt-1/
-# QT exmples doc: https://doc.qt.io/qtforpython/examples/index.html
-# RESOURCES guide: https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
+# UI GUIDE: https://realpython.com/python-menus-toolbars/
+# TEXT EDITOR GUIDE: https://www.binpress.com/building-text-editor-pyqt-1/
+# QT EXAMPLE DOC: https://doc.qt.io/qtforpython/examples/index.html
+# RESOURCES GUIDE: https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
 # 
 # NOTABLE people: 
-# https://github.com/alandmoore
-# https://github.com/goldsborough
-# https://github.com/Axel-Erfurt
-# https://github.com/zhiyiYo
-# https://github.com/Fus3n
+#   https://github.com/alandmoore
+#   https://github.com/goldsborough
+#   https://github.com/Axel-Erfurt
+#   https://github.com/zhiyiYo
+#   https://github.com/Fus3n
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####################
 
@@ -299,7 +299,7 @@ class MainWindow(qtw.QMainWindow):
 
         self.font_toolbar = qtw.QToolBar(self)
         self.font_toolbar.setIconSize(qtc.QSize(20,20))
-        self.font_toolbar.setMovable(False)
+        # self.font_toolbar.setMovable(False)
         self.font_toolbar.setWindowTitle("Font Toolbar")
         
         self.comboFont =  qtw.QFontComboBox(self.font_toolbar)
