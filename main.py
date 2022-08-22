@@ -53,8 +53,7 @@ class MainWindow(qtw.QMainWindow):
         self._createMenuBar()
         self._connectActions()
         self._createToolBars()
-
-
+        
     def create_editor(self):
         current_editor = qtw.QTextEdit()
         return current_editor
@@ -118,6 +117,12 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Color", self)
+        # font style combobox
+        fontBox = qtw.QFontComboBox(self)
+        fontBox.currentFontChanged.connect(self.FontFamily)
+        self.font_family_action = qtw.QWidgetAction(self)
+        self.font_family_action.setDefaultWidget(fontBox)
+        # -- [end] -- 
         self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
         self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
         self.zoom_default_action = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
@@ -133,7 +138,7 @@ class MainWindow(qtw.QMainWindow):
         self.zoom_in_action.setShortcut("Ctrl+=") 
         self.zoom_out_action.setShortcut("Ctrl+-") 
         self.zoom_default_action.setShortcut("Ctrl+0")
-
+ 
         self._action_text_bold.setStatusTip("Toggle whether the font weight is bold or not")
         self._action_text_italic.setStatusTip("Toggle whether the font is italic or not")
         self._action_text_underline.setStatusTip("Toggle whether the font is underlined or not")
@@ -147,7 +152,7 @@ class MainWindow(qtw.QMainWindow):
         self.zoom_default_action.setStatusTip("Restore to the default font size")
 
         # VIEW MENU
-        self.fullscreen_action = qtw.QAction(qtg.QIcon(":/"), "Fullscreen", self)
+        self.fullscreen_action = qtw.QAction(qtg.QIcon(":/images/fullscreen.png"), "Fullscreen", self)
         self.view_status_action = qtw.QAction('Show Statusbar', self, checkable=True)
         
         self.fullscreen_action.setShortcut("F11")
@@ -159,15 +164,15 @@ class MainWindow(qtw.QMainWindow):
       
 
     def _createMenuBar(self):
-        menubar = self.menuBar()
-        file_menu = menubar .addMenu("File")
+        self.menubar = self.menuBar()
+        file_menu = self.menubar .addMenu("File")
         file_menu.addAction(self.new_action)
         file_menu.addAction(self.open_action)
         file_menu.addAction(self.save_action)
         file_menu.addSeparator()
         file_menu.addAction(self.exit_action)
 
-        edit_menu = menubar.addMenu("Edit")
+        edit_menu = self.menubar.addMenu("Edit")
         edit_menu.addAction(self.select_all_action)
         edit_menu.addSeparator()
         edit_menu.addAction(self.cut_action)
@@ -177,7 +182,7 @@ class MainWindow(qtw.QMainWindow):
         edit_menu.addAction(self.undo_action)
         edit_menu.addAction(self.redo_action)
 
-        format_menu = menubar.addMenu("Format")
+        format_menu = self.menubar.addMenu("Format")
         format_menu.addAction(self._action_text_bold)
         format_menu.addAction(self._action_text_italic)
         format_menu.addAction(self._action_text_underline)
@@ -188,13 +193,20 @@ class MainWindow(qtw.QMainWindow):
         format_menu.addAction(self.align_justify_action)
         format_menu.addSeparator()
         format_menu.addAction(self.color_action)
+        menu_font = format_menu.addMenu("&Font")
+        menu_font.addAction(self.font_family_action)
 
-        view_menu = menubar.addMenu("View")
+        # font family widget
+        fontBox = qtw.QFontComboBox(self)
+        fontBox.currentFontChanged.connect(self.FontFamily)
+        font_family = qtw.QWidgetAction(self)
+        font_family.setDefaultWidget(fontBox)
+
+        view_menu = self.menubar.addMenu("View")
         view_menu.addAction(self.fullscreen_action) 
         view_menu.addAction(self.view_status_action) 
        
-      
-
+       
     def _connectActions(self):
         # Connect File actions
         self.new_action.triggered.connect(self.new_tab)
@@ -482,6 +494,12 @@ class MainWindow(qtw.QMainWindow):
                 return False
             return True
     
+    def FontFamily(self, font):
+        self.current_editor.setCurrentFont(font)
+
+    def FontSize(self, fontsize):
+        self.current_editor.setFontPointSize(int(fontsize))
+    
     def myStyleSheet(self):
         return """
             QTextEdit
@@ -549,6 +567,3 @@ if __name__ == "__main__":
     main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
     main.show()
     sys.exit(app.exec_())
-
-
-
