@@ -30,19 +30,19 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.currentChanged.connect(self.change_text_editor)
         self.tabs.tabBar().setMovable(True)
         self.setStyleSheet(self.myStyleSheet())
-        
         self.setCentralWidget(self.tabs)
-        self.font_size_combo_box = qtw.QComboBox(self)
-        self.font_style_combo_box = qtw.QComboBox(self)
-        self.font_style_combo_box.addItems(["Arial","Courier","Impact","Times","Segoe UI"])
-        self.font_size_combo_box.installEventFilter(self)
-        self.font_size_list = [" 9","13","14","16","18","20","22","24","26","28","36","48","56","72","84","99"]
+    
+        self.font_style_combo_box = qtw.QFontComboBox()
         
+        self.font_size_combo_box = qtw.QComboBox(self)
+        # self.font_size_combo_box.setEditable(True)
+        self.font_size_list = [" 9","13","14","16","18","20","22","24","26","28","36","48","56","72","84","99"]
         self.font_size_default_var = 13
         self.counter_font_size = self.font_size_default_var
         self.font = qtg.QFont()
         self.font.setPointSize(self.font_size_default_var)
         self.current_editor.setFont(self.font)
+        
         self.statusbar = self.statusBar()
         self.statusbar.showMessage("Ready")
 
@@ -438,9 +438,9 @@ class MainWindow(qtw.QMainWindow):
     def setFontSize(self):
         font = self.current_editor.font()                         
         self.counter_font_size = int(self.font_size_combo_box.currentText())
-        font.setPointSize(self.counter_font_size)            
-        self.current_editor.setFont(font)                         
-
+        font.setPointSize(int(self.counter_font_size))            
+        self.current_editor.setFont(font)      
+                 
     def increment_font_size(self):
         self.counter_font_size +=1
         font = self.current_editor.font()                         
@@ -497,8 +497,7 @@ class MainWindow(qtw.QMainWindow):
     def FontFamily(self, font):
         self.current_editor.setCurrentFont(font)
 
-    def FontSize(self, fontsize):
-        self.current_editor.setFontPointSize(int(fontsize))
+
     
     def myStyleSheet(self):
         return """
