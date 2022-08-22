@@ -49,14 +49,9 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.tabBar().setMovable(True)
         self.setStyleSheet(self.myStyleSheet())
         self.setCentralWidget(self.tabs)
-    
-        self.fontSize = qtw.QComboBox(self)
-        self.defaultFontSize = 9
-        self.counterFontSize = self.defaultFontSize
-    
+
         self.new_tab()
         self.closeTab()
-        
         self._createActions()
         self._createMenuBar()
         self._connectActions()
@@ -309,23 +304,26 @@ class MainWindow(qtw.QMainWindow):
         font_weight_toolbar.addAction(self._action_text_italic)
         font_weight_toolbar.addAction(self._action_text_underline)
 
-        self.font_tb = qtw.QToolBar(self)
-        self.font_tb.setAllowedAreas(qtc.Qt.TopToolBarArea | qtc.Qt.BottomToolBarArea)
-        self.font_tb.setWindowTitle("Font Toolbar")
+        self.font_toolbar = qtw.QToolBar(self)
+        self.font_toolbar.setAllowedAreas(qtc.Qt.TopToolBarArea | qtc.Qt.BottomToolBarArea)
+        self.font_toolbar.setWindowTitle("Font Toolbar")
         
-        self.comboFont =  qtw.QFontComboBox(self.font_tb)
-        self.font_tb.addSeparator()
-        self.font_tb.addWidget(self.comboFont)
+        self.comboFont =  qtw.QFontComboBox(self.font_toolbar)
+        self.font_toolbar.addSeparator()
+        self.font_toolbar.addWidget(self.comboFont)
         self.comboFont.activated[str].connect(self.textFamily)
 
+        
+        self.defaultFontSize = 9
+        self.counterFontSize = self.defaultFontSize
+        
         # prevent letter inputs in the font size combobox
-        regex = qtc.QRegExp(r'[0-9]+')
-        validator = qtg.QRegExpValidator(regex)
+        validator = qtg.QIntValidator()
 
-        self.comboSize = qtw.QComboBox(self.font_tb)
-        self.font_tb.addSeparator()
+        self.comboSize = qtw.QComboBox(self.font_toolbar)
+        self.font_toolbar.addSeparator()
         self.comboSize.setObjectName("comboSize")
-        self.font_tb.addWidget(self.comboSize)
+        self.font_toolbar.addWidget(self.comboSize)
         self.comboSize.setEditable(True)
         self.comboSize.setValidator(validator)
 
@@ -336,7 +334,7 @@ class MainWindow(qtw.QMainWindow):
             self.comboSize.setCurrentIndex(
                     self.comboSize.findText( 
                             "%s" % (qtw.QApplication.font().pointSize())))                    
-            self.addToolBar(self.font_tb)
+            self.addToolBar(self.font_toolbar)
  
         view_menu = self.menubar.addMenu("View")
         view_menu.addAction(self.fullscreen_action) 
@@ -480,13 +478,7 @@ class MainWindow(qtw.QMainWindow):
             self.showFullScreen()
         else :
             self.showMaximized()
-
-    def setFontSize(self):
-        font = self.current_editor.font()                         
-        self.counterFontSize = int(self.fontSize.currentText())
-        font.setPointSize(int(self.counterFontSize))            
-        self.current_editor.setFont(font)      
-                 
+    
     def increment_font_size(self):
         self.counterFontSize +=1
         font = self.current_editor.font()                         
@@ -505,11 +497,11 @@ class MainWindow(qtw.QMainWindow):
         font.setPointSize(int(self.defaultFontSize))  
         self.current_editor.setFont(font)                          
         self.counterFontSize = self.defaultFontSize
-        self.fontSize.setCurrentText(str(self.counterFontSize))
+        self.comboSize.setCurrentText(str(self.counterFontSize))
 
     def select_comboBox_contents(self):
-        self.fontSize.lineEdit().setCursorPosition(0)
-        self.fontSize.lineEdit().selectAll()
+        self.comboSize.lineEdit().setCursorPosition(0)
+        self.comboSize.lineEdit().selectAll()
 
     def toggleMenu(self, state):
             if state:
