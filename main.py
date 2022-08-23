@@ -150,7 +150,6 @@ class MainWindow(qtw.QMainWindow):
         self.align_right_action.setShortcut("Ctrl+R")
         self.align_center_action.setShortcut("Ctrl+E")
         self.align_justify_action.setShortcut("Ctrl+J")
-        self.color_action.setShortcut("Ctrl+Shift+C")
         self.font_dialog_action.setShortcut("Ctrl+Shift+F")
         self.zoom_in_action.setShortcut("Ctrl+=") 
         self.zoom_out_action.setShortcut("Ctrl+-") 
@@ -163,8 +162,8 @@ class MainWindow(qtw.QMainWindow):
         self.align_right_action.setStatusTip("Aligns with the right edge")
         self.align_center_action.setStatusTip("Centers horizontally in the available space")
         self.align_justify_action.setStatusTip("Justifies the text in the available space")
-        self.color_action.setStatusTip("The color dialog’s function is to allow users to choose colors")
-        self.font_dialog_action.setStatusTip("The font dialog’s function is to allow users to choose their preferred font style")
+        self.color_action.setStatusTip("Allows users to pick a color of their choice")
+        self.font_dialog_action.setStatusTip("Allows users to pick a font of their choice")
         self.zoom_in_action.setStatusTip("Zoom In") 
         self.zoom_out_action.setStatusTip("Zoom Out") 
         self.zoom_default_action.setStatusTip("Restore to the default font size")
@@ -209,7 +208,14 @@ class MainWindow(qtw.QMainWindow):
         format_menu.addAction(self.align_center_action)
         format_menu.addAction(self.align_justify_action)
         format_menu.addSeparator()
-        format_menu.addAction(self.color_action)
+        # color for toolbar
+        pix = qtg.QPixmap(20, 20)
+        pix.fill(qtc.Qt.black) 
+        self.actionTextColor = qtw.QAction(qtg.QIcon(pix), "Colors", self,
+                triggered=self.textColor)
+        self.actionTextColor.setShortcut("Ctrl+Shift+C")
+        self.actionTextColor.setStatusTip("Allows users to pick a color of their choice")
+        format_menu.addAction(self.actionTextColor)
         format_menu.addAction(self.font_dialog_action)
   
        
@@ -339,11 +345,7 @@ class MainWindow(qtw.QMainWindow):
             self.addToolBar(self.font_toolbar)
         
         # color for toolbar
-        pix = qtg.QPixmap(20, 20)
-        pix.fill(qtc.Qt.black) 
-        self.actionTextColor = qtw.QAction(qtg.QIcon(pix), "TextColor", self,
-                triggered=self.textColor)
-        self.font_toolbar.addAction(self.actionTextColor)
+        self.font_toolbar.addAction(self.color_action)
 
         view_menu = self.menubar.addMenu("View")
         view_menu.addAction(self.fullscreen_action) 
