@@ -3,12 +3,14 @@
 # here are some resources that may be helpful to those that will inherit the work and love
 # .. that was poured in here. goodluck, my child - adfinem_rising
 # 
-#   UI GUIDE:            https://realpython.com/python-menus-toolbars/
-#   TEXT EDITOR GUIDE:   https://www.binpress.com/building-text-editor-pyqt-1/
-#   QT EXAMPLE DOC:      https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
-#   TABBED EDITOR:       https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
-#   RESOURCES GUIDE:     https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
-# 
+#   UI GUIDE:                   https://realpython.com/python-menus-toolbars/
+#   TEXT EDITOR GUIDE:          https://www.binpress.com/building-text-editor-pyqt-1/
+#   QT EXAMPLE DOC:             https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
+#   TABBED EDITOR:              https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
+#   QRC RESOURCES GUIDE:        https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
+#   SYNTAX HIGHLIGHTING GUIDE:  https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
+#                               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
+#
 #   NOTABLE PEOPLE:      https://github.com/alandmoore
 #                        https://github.com/goldsborough
 #                        https://github.com/Axel-Erfurt
@@ -37,6 +39,7 @@ class MainWindow(qtw.QMainWindow):
         # self.setWindowOpacity(0.98)
    
         self.current_editor = self.create_editor()
+        self.current_editor.setFocus()
         self.text_editors = []
         self.statusbar = self.statusBar()
         self.statusbar.showMessage("Ready")    
@@ -49,6 +52,13 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.tabBar().setMovable(True)
         self.setStyleSheet(self.myStyleSheet())
         self.setCentralWidget(self.tabs)
+
+        self.font_size_default_var = 13
+        self.counter_font_size = self.font_size_default_var
+
+        font = qtg.QFont()
+        font.setPointSize(self.font_size_default_var)
+        self.current_editor.setFont(font)
 
         self.new_tab()
         self.closeTab()
@@ -119,8 +129,8 @@ class MainWindow(qtw.QMainWindow):
         self.align_right_action = qtw.QAction(qtg.QIcon(":/images/right_align.png"), "Align Right", self)
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
-        self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Color", self)
-        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Font Dialog Box", self)
+        self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
+        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Fonts", self)
         
         # font style combobox
         fontBox = qtw.QFontComboBox(self)
@@ -494,10 +504,6 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.setFont(font)                          
         self.counterFontSize = self.defaultFontSize
         self.comboSize.setCurrentText(str(self.counterFontSize))
-
-    def select_comboBox_contents(self):
-        self.comboSize.lineEdit().setCursorPosition(0)
-        self.comboSize.lineEdit().selectAll()
 
     def toggleMenu(self, state):
             if state:
