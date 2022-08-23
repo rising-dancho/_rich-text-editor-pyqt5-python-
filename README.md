@@ -1,5 +1,5 @@
 # _notepad-pyqt5-python-
-i had a lot of difficulty putting this together. especially the tab functionality, since it created so much problems in relation to other functionalities. this project is still in progress. 
+i had a lot of difficulty putting this together. especially the tab functionality, since it created so much problems in relation to other functionalities. this project is still in progress. but it made learning pyqt5 an enjoyable process..
 
 EDIT:
 - lmao!! hahahahaa!!! i just now realized the difference between a rich text editor (eg. microsoft word) vs. a text editor (like notepad). big difference!!
