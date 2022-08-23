@@ -1,5 +1,5 @@
 # _notepad-pyqt5-python-
-i had a lot of difficulty putting this together. especially the tab functionality, since it created so much problems in relation to the other functionalities like figuring out how the computer can understand which text editor is currently selected. i experimented with inheritance only to learn that it was getting the index of the currently selected tab. this project is still in progress. but it made learning pyqt5 an enjoyable process..
+i had a lot of difficulty putting this together. especially the tab functionality, since it created so much problems in relation to the other functionalities like figuring out how the computer can understand which text editor is currently being used. i experimented with inheritance only to learn that it was getting the index of the currently selected tab. this project is still in progress. but it made learning pyqt5 an enjoyable process..
 
 EDIT:
 - lmao!! hahahahaa!!! i just now realized the difference between a rich text editor (eg. microsoft word) vs. a text editor (like notepad). big difference!!
