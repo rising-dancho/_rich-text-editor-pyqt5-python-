@@ -1,5 +1,5 @@
 # _notepad-pyqt5-python-
 this is a notepad i am currently creating, check it out!
 
-![image](https://user-images.githubusercontent.com/43742265/186156743-403b851a-d355-4991-b71d-065fe44eac5c.png)
+![image](https://user-images.githubusercontent.com/43742265/186157477-06915431-cb3e-4c79-a90a-497dd9253387.png)
 
