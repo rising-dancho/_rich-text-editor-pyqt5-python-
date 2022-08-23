@@ -4,7 +4,6 @@
     <file>folder.png</file>
     <file>save.png</file>
     <file>save_as.png</file>
-    <file>close.png</file>
     <file>select_all.png</file>
     <file>search.png</file>
     <file>search_disabled.png</file>
@@ -27,5 +26,8 @@
     <file>colour.png</file>
     <file>fullscreen.png</file>
     <file>text.png</file>
+    <file>close.png</file>
+    <file>close_active.png</file>
+    <file>close_default.png</file>
 </qresource>
 </RCC>

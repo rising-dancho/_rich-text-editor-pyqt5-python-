@@ -107,9 +107,9 @@ class MainWindow(qtw.QMainWindow):
         self.select_all_action.setStatusTip("Selects all texts")
         self.cut_action.setStatusTip("Cuts the selected text and copies it to the clipboard")
         self.copy_action.setStatusTip("Copies the selected text to the clipboard")
-        self.paste_action.setStatusTip("Pastes the clipboard text into line edit")
-        self.undo_action.setStatusTip("Undo the last operation")
-        self.redo_action.setStatusTip("Redo the last operation")
+        self.paste_action.setStatusTip("Pastes the clipboard text into the text editor")
+        self.undo_action.setStatusTip("Undo the previous operation")
+        self.redo_action.setStatusTip("Redo the previous operation")
 
         # FORMAT MENU
         self._action_text_bold = qtw.QAction(qtg.QIcon(":/images/bold.png"), "Bold", self)
@@ -596,6 +596,15 @@ class MainWindow(qtw.QMainWindow):
                 border-left-style: solid;
                 padding: 10px 10px 10px 10px;
                 }
+
+            QTabBar::close-button {
+                image: url(:/images/close_default.png);
+            }
+
+            QTabBar::close-button:hover {
+                image: url(:/images/close_active.png);
+            }
+
         """
 
 if __name__ == "__main__":
