@@ -5,7 +5,7 @@
 # 
 #   UI GUIDE:                   https://realpython.com/python-menus-toolbars/
 #   TEXT EDITOR GUIDE:          https://www.binpress.com/building-text-editor-pyqt-1/
-#   QT EXAMPLE DOC:             https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
+#   QT TEXT EDITOR DOC:         https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
 #   TABBED EDITOR:              https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
 #   QRC RESOURCES GUIDE:        https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
 #   SYNTAX HIGHLIGHTING GUIDE:  https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
@@ -37,6 +37,7 @@ class MainWindow(qtw.QMainWindow):
         # hWnd = self.winId()
         # blur(hWnd)
         # self.setWindowOpacity(0.98)
+        self.comboFont =  qtw.QFontComboBox(self)
 
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
@@ -133,12 +134,11 @@ class MainWindow(qtw.QMainWindow):
         self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Fonts (applies globally)", self)
         
         # font style combobox
-        menuFontBox = qtw.QFontComboBox(self)
-        menuFontBox.activated[str].connect(self.textFamily)
+        self.comboFont.activated[str].connect(self.textFamily)
         self.font_family_action = qtw.QWidgetAction(self)
-        self.font_family_action.setDefaultWidget(menuFontBox)
+        self.font_family_action.setDefaultWidget(self.comboFont)
         # -- [end] -- 
-        
+
         self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
         self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
         self.zoom_default_action = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
@@ -316,7 +316,6 @@ class MainWindow(qtw.QMainWindow):
         self.font_toolbar.addSeparator()
         self.font_toolbar.addWidget(self.comboFont)
         
-
         self.defaultFontSize = 9
         self.counterFontSize = self.defaultFontSize
         
@@ -339,7 +338,13 @@ class MainWindow(qtw.QMainWindow):
                             "%s" % (qtw.QApplication.font().pointSize())))                    
             self.addToolBar(self.font_toolbar)
         
-        self.font_toolbar.addAction(self.color_action)
+        # color for toolbar
+        pix = qtg.QPixmap(20, 20)
+        pix.fill(qtc.Qt.black) 
+        self.actionTextColor = qtw.QAction(qtg.QIcon(pix), "TextColor", self,
+                triggered=self.textColor)
+        self.font_toolbar.addAction(self.actionTextColor)
+
         view_menu = self.menubar.addMenu("View")
         view_menu.addAction(self.fullscreen_action) 
         view_menu.addAction(self.view_status_action) 
@@ -350,6 +355,21 @@ class MainWindow(qtw.QMainWindow):
         magnify_toolbar.addAction(self.zoom_in_action)
         magnify_toolbar.addAction(self.zoom_out_action)
         magnify_toolbar.addAction(self.zoom_default_action)
+
+    # toolbar update display color depending on color selected
+    def textColor(self):
+        col = qtw.QColorDialog.getColor(self.current_editor.textColor(), self)
+        if not col.isValid():
+            return
+        fmt = qtg.QTextCharFormat()
+        fmt.setForeground(col)
+        self.mergeFormatOnWordOrSelection(fmt)
+        self.colorChanged(col)
+    
+    def colorChanged(self, color):
+        pix = qtg.QPixmap(16, 16)
+        pix.fill(color)
+        self.actionTextColor.setIcon(qtg.QIcon(pix))
 
     def textFamily(self, family): 
         fmt = qtg.QTextCharFormat()
@@ -452,6 +472,8 @@ class MainWindow(qtw.QMainWindow):
         if not color.isValid():
             return
         self.current_editor.setTextColor(color)
+    
+
     
     def font_dialog(self):
         font, ok =qtw.QFontDialog.getFont()
