@@ -37,7 +37,7 @@ class MainWindow(qtw.QMainWindow):
         # hWnd = self.winId()
         # blur(hWnd)
         # self.setWindowOpacity(0.98)
-   
+
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
@@ -130,14 +130,15 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
-        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Fonts", self)
+        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Fonts (applies globally)", self)
         
         # font style combobox
-        fontBox = qtw.QFontComboBox(self)
-        fontBox.currentFontChanged.connect(self.FontFamily)
+        menuFontBox = qtw.QFontComboBox(self)
+        menuFontBox.activated[str].connect(self.textFamily)
         self.font_family_action = qtw.QWidgetAction(self)
-        self.font_family_action.setDefaultWidget(fontBox)
+        self.font_family_action.setDefaultWidget(menuFontBox)
         # -- [end] -- 
+        
         self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
         self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
         self.zoom_default_action = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
@@ -311,9 +312,10 @@ class MainWindow(qtw.QMainWindow):
         self.font_toolbar.setWindowTitle("Font Toolbar")
         
         self.comboFont =  qtw.QFontComboBox(self.font_toolbar)
+        self.comboFont.activated[str].connect(self.textFamily)
         self.font_toolbar.addSeparator()
         self.font_toolbar.addWidget(self.comboFont)
-        self.comboFont.activated[str].connect(self.textFamily)
+        
 
         self.defaultFontSize = 9
         self.counterFontSize = self.defaultFontSize
@@ -367,6 +369,22 @@ class MainWindow(qtw.QMainWindow):
             cursor.select(qtg.QTextCursor.WordUnderCursor)
         cursor.mergeCharFormat(format)
         self.current_editor.mergeCurrentCharFormat(format)
+    
+    def bold_text(self): 
+        fmt = qtg.QTextCharFormat()
+        weight = qtg.QFont.DemiBold if self._action_text_bold.isChecked() else qtg.QFont.Normal
+        fmt.setFontWeight(weight)
+        self.mergeFormatOnWordOrSelection(fmt)
+    
+    def italic_text(self):
+        fmt = qtg.QTextCharFormat()
+        fmt.setFontItalic(self._action_text_italic.isChecked())
+        self.mergeFormatOnWordOrSelection(fmt)
+
+    def underlined_text(self):
+        fmt = qtg.QTextCharFormat()
+        fmt.setFontUnderline(self._action_text_underline.isChecked())
+        self.mergeFormatOnWordOrSelection(fmt)
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
         self.current_editor = self.create_editor()
@@ -428,29 +446,6 @@ class MainWindow(qtw.QMainWindow):
 
     def redo_document(self): 
         self.current_editor.redo()
-    
-    def bold_text(self): 
-        fmt = qtg.QTextCharFormat()
-        weight = qtg.QFont.DemiBold if self._action_text_bold.isChecked() else qtg.QFont.Normal
-        fmt.setFontWeight(weight)
-        self.merge_format_on_word_or_selection(fmt)
-    
-    def italic_text(self):
-        fmt = qtg.QTextCharFormat()
-        fmt.setFontItalic(self._action_text_italic.isChecked())
-        self.merge_format_on_word_or_selection(fmt)
-
-    def underlined_text(self):
-        fmt = qtg.QTextCharFormat()
-        fmt.setFontUnderline(self._action_text_underline.isChecked())
-        self.merge_format_on_word_or_selection(fmt)
-
-    def merge_format_on_word_or_selection(self, format):
-        cursor = self.current_editor.textCursor()
-        if not cursor.hasSelection(): 
-            cursor.select(qtg.QTextCursor.WordUnderCursor)
-        cursor.mergeCharFormat(format)
-        self.current_editor.mergeCurrentCharFormat(format)
     
     def color_dialog(self):
         color = qtw.QColorDialog.getColor(self.current_editor.textColor(), self)
@@ -533,12 +528,6 @@ class MainWindow(qtw.QMainWindow):
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
-    
-    def FontFamily(self, font):
-        self.current_editor.setCurrentFont(font)
-
-    def FontSize(self, fontsize):
-        self.current_editor.setFontPointSize(int(fontsize))
 
     def myStyleSheet(self):
         return """
