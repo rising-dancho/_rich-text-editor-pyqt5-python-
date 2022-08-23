@@ -10,5 +10,6 @@ a rich text editor produces a file that can handle fancy colors, table, bullets,
 damn.. but luckily i can save the file as .odt, .pdf or .html extentions which allows a rich form for text editing. all this time i was thinking that i was creating something that can replace the boring notepad, but i was wrong. i didn't even understand clearly the capabilities of both..
 
 anyway, here it is:
+
 ![Screenshot 2022-08-24 045311](https://user-images.githubusercontent.com/43742265/186263570-c1640fb3-cb2c-41eb-ae5f-2de5457952bb.png)
 
