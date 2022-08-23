@@ -267,7 +267,7 @@ class MainWindow(qtw.QMainWindow):
         # File toolbar
         file_toolbar = self.addToolBar("File")
         file_toolbar.setIconSize(qtc.QSize(22,22))
-        # file_toolbar.setMovable(False)
+        file_toolbar.setMovable(False)
         file_toolbar.addAction(self.new_action)
         file_toolbar.addAction(self.open_action)
         file_toolbar.addAction(self.save_action)
@@ -275,7 +275,7 @@ class MainWindow(qtw.QMainWindow):
         # Select all, cut, copy, paste toolbar
         clipboard_toolbar = self.addToolBar("Clipboard")
         clipboard_toolbar.setIconSize(qtc.QSize(25,25))
-        # clipboard_toolbar.setMovable(False)
+        clipboard_toolbar.setMovable(False)
         clipboard_toolbar.addAction(self.select_all_action)
         clipboard_toolbar.addAction(self.cut_action)
         clipboard_toolbar.addAction(self.copy_action)
@@ -284,7 +284,7 @@ class MainWindow(qtw.QMainWindow):
         # Undo, redo toolbar
         undo_redo_toolbar = self.addToolBar("Undo Redo") 
         undo_redo_toolbar.setIconSize(qtc.QSize(23,23))
-        # undo_redo_toolbar.setMovable(False)
+        undo_redo_toolbar.setMovable(False)
         undo_redo_toolbar.addAction(self.undo_action)
         undo_redo_toolbar.addAction(self.redo_action)
 
@@ -293,7 +293,7 @@ class MainWindow(qtw.QMainWindow):
         # Alignment toolbar
         alignment_toolbar = self.addToolBar("Alignment") 
         alignment_toolbar.setIconSize(qtc.QSize(20,20))
-        # alignment_toolbar.setMovable(False)
+        alignment_toolbar.setMovable(False)
         alignment_toolbar.addAction(self.align_left_action)
         alignment_toolbar.addAction(self.align_right_action)
         alignment_toolbar.addAction(self.align_center_action)
@@ -301,14 +301,14 @@ class MainWindow(qtw.QMainWindow):
 
         font_weight_toolbar = self.addToolBar("Font Weight") 
         font_weight_toolbar.setIconSize(qtc.QSize(18,18))
-        # font_weight_toolbar.setMovable(False)
+        font_weight_toolbar.setMovable(False)
         font_weight_toolbar.addAction(self._action_text_bold)
         font_weight_toolbar.addAction(self._action_text_italic)
         font_weight_toolbar.addAction(self._action_text_underline)
 
         self.font_toolbar = qtw.QToolBar(self)
         self.font_toolbar.setIconSize(qtc.QSize(20,20))
-        # self.font_toolbar.setMovable(False)
+        self.font_toolbar.setMovable(False)
         self.font_toolbar.setWindowTitle("Font Toolbar")
         
         self.comboFont =  qtw.QFontComboBox(self.font_toolbar)
@@ -351,7 +351,7 @@ class MainWindow(qtw.QMainWindow):
   
         magnify_toolbar = self.addToolBar("Magnify") 
         magnify_toolbar.setIconSize(qtc.QSize(25,25))
-        # magnify_toolbar.setMovable(False)
+        magnify_toolbar.setMovable(False)
         magnify_toolbar.addAction(self.zoom_in_action)
         magnify_toolbar.addAction(self.zoom_out_action)
         magnify_toolbar.addAction(self.zoom_default_action)
