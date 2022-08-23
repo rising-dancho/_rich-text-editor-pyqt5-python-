@@ -37,7 +37,9 @@ class MainWindow(qtw.QMainWindow):
         # hWnd = self.winId()
         # blur(hWnd)
         # self.setWindowOpacity(0.98)
-        self.comboFont =  qtw.QFontComboBox(self)
+
+        self.comboFont =  qtw.QFontComboBox()
+        self.align_group = qtw.QActionGroup(self)
 
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
@@ -53,13 +55,6 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.tabBar().setMovable(True)
         self.setStyleSheet(self.myStyleSheet())
         self.setCentralWidget(self.tabs)
-
-        self.font_size_default_var = 13
-        self.counter_font_size = self.font_size_default_var
-
-        font = qtg.QFont()
-        font.setPointSize(self.font_size_default_var)
-        self.current_editor.setFont(font)
 
         self.new_tab()
         self.closeTab()
@@ -123,9 +118,10 @@ class MainWindow(qtw.QMainWindow):
         self.redo_action.setStatusTip("Redo the previous operation")
 
         # FORMAT MENU
-        self._action_text_bold = qtw.QAction(qtg.QIcon(":/images/bold.png"), "Bold", self)
-        self._action_text_italic = qtw.QAction(qtg.QIcon(":/images/italic.png"), "Italic", self)
-        self._action_text_underline = qtw.QAction(qtg.QIcon(":/images/underline.png"), "Underline", self)
+        self.bold_text_action = qtw.QAction(qtg.QIcon(":/images/bold.png"), "Bold", self)
+        self.italic_text_action = qtw.QAction(qtg.QIcon(":/images/italic.png"), "Italic", self)
+        self.underline_text_action = qtw.QAction(qtg.QIcon(":/images/underline.png"), "Underline", self)
+        self.strike_out_text_action = qtw.QAction(qtg.QIcon(":/images/strikeout.png"), "Strikeout", self)
         self.align_left_action = qtw.QAction(qtg.QIcon(":/images/left_align.png"), "Align Left", self)
         self.align_right_action = qtw.QAction(qtg.QIcon(":/images/right_align.png"), "Align Right", self)
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
@@ -139,34 +135,36 @@ class MainWindow(qtw.QMainWindow):
         self.font_family_action.setDefaultWidget(self.comboFont)
         # -- [end] -- 
 
-        self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
-        self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
-        self.zoom_default_action = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
+        # self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
+        # self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
+        # self.zoom_default_action = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
 
-        self._action_text_bold.setShortcut("Ctrl+B")
-        self._action_text_italic.setShortcut("Ctrl+I")
-        self._action_text_underline.setShortcut("Ctrl+U")
+        self.bold_text_action.setShortcut("Ctrl+B")
+        self.italic_text_action.setShortcut("Ctrl+I")
+        self.underline_text_action.setShortcut("Ctrl+U")
+        self.strike_out_text_action.setShortcut("Ctrl+/")
         self.align_left_action.setShortcut("Ctrl+L")
         self.align_right_action.setShortcut("Ctrl+R")
         self.align_center_action.setShortcut("Ctrl+E")
         self.align_justify_action.setShortcut("Ctrl+J")
         self.font_dialog_action.setShortcut("Ctrl+Shift+F")
-        self.zoom_in_action.setShortcut("Ctrl+=") 
-        self.zoom_out_action.setShortcut("Ctrl+-") 
-        self.zoom_default_action.setShortcut("Ctrl+0")
+        # self.zoom_in_action.setShortcut("Ctrl+=") 
+        # self.zoom_out_action.setShortcut("Ctrl+-") 
+        # self.zoom_default_action.setShortcut("Ctrl+0")
  
-        self._action_text_bold.setStatusTip("Toggle whether the font weight is bold or not")
-        self._action_text_italic.setStatusTip("Toggle whether the font is italic or not")
-        self._action_text_underline.setStatusTip("Toggle whether the font is underlined or not")
+        self.bold_text_action.setStatusTip("Toggle whether the font weight is bold or not")
+        self.italic_text_action.setStatusTip("Toggle whether the font is italic or not")
+        self.underline_text_action.setStatusTip("Toggle whether the font is underlined or not")
+        self.strike_out_text_action.setStatusTip("Toggle whether the font is striked out or not")
         self.align_left_action.setStatusTip("Aligns with the left edge")
         self.align_right_action.setStatusTip("Aligns with the right edge")
         self.align_center_action.setStatusTip("Centers horizontally in the available space")
         self.align_justify_action.setStatusTip("Justifies the text in the available space")
         self.color_action.setStatusTip("Allows users to pick a color of their choice")
         self.font_dialog_action.setStatusTip("Allows users to pick a font of their choice")
-        self.zoom_in_action.setStatusTip("Zoom In") 
-        self.zoom_out_action.setStatusTip("Zoom Out") 
-        self.zoom_default_action.setStatusTip("Restore to the default font size")
+        # self.zoom_in_action.setStatusTip("Zoom In") 
+        # self.zoom_out_action.setStatusTip("Zoom Out") 
+        # self.zoom_default_action.setStatusTip("Restore to the default font size")
 
         # VIEW MENU
         self.fullscreen_action = qtw.QAction(qtg.QIcon(":/images/fullscreen.png"), "Fullscreen", self)
@@ -199,14 +197,16 @@ class MainWindow(qtw.QMainWindow):
         edit_menu.addAction(self.redo_action)
 
         format_menu = self.menubar.addMenu("Format")
-        format_menu.addAction(self._action_text_bold)
-        format_menu.addAction(self._action_text_italic)
-        format_menu.addAction(self._action_text_underline)
+        format_menu.addAction(self.bold_text_action)
+        format_menu.addAction(self.italic_text_action)
+        format_menu.addAction(self.underline_text_action)
+        format_menu.addAction(self.strike_out_text_action)
         format_menu.addSeparator()
         format_menu.addAction(self.align_left_action)
         format_menu.addAction(self.align_right_action)
         format_menu.addAction(self.align_center_action)
         format_menu.addAction(self.align_justify_action)
+        format_menu.addActions(self.align_group.actions())
         format_menu.addSeparator()
         # color for toolbar
         pix = qtg.QPixmap(20, 20)
@@ -237,32 +237,56 @@ class MainWindow(qtw.QMainWindow):
         # Connect Format actions
         self.fullscreen_action.triggered.connect(self.fullscreen)
         
-        self._action_text_bold.triggered.connect(self.bold_text)
+        self.bold_text_action.triggered.connect(self.bold_text)
         bold_font = qtg.QFont()
         bold_font.setBold(True)
-        self._action_text_bold.setFont(bold_font)
-        self._action_text_bold.setCheckable(True)
+        self.bold_text_action.setFont(bold_font)
+        self.bold_text_action.setCheckable(True)
 
-        self._action_text_italic.triggered.connect(self.italic_text)
+        self.italic_text_action.triggered.connect(self.italic_text)
         italic_font = qtg.QFont()
         italic_font.setItalic(True)
-        self._action_text_italic.setFont(italic_font)
-        self._action_text_italic.setCheckable(True)
+        self.italic_text_action.setFont(italic_font)
+        self.italic_text_action.setCheckable(True)
 
-        self._action_text_underline.triggered.connect(self.underlined_text)
+        self.underline_text_action.triggered.connect(self.underlined_text)
         underlined_font = qtg.QFont()
         underlined_font.setUnderline(True)
-        self._action_text_underline.setFont(underlined_font)
-        self._action_text_underline.setCheckable(True)
+        self.underline_text_action.setFont(underlined_font)
+        self.underline_text_action.setCheckable(True)
+
+        self.strike_out_text_action.triggered.connect(self.strike_out_text)
+        strike_font = qtg.QFont()
+        strike_font.setStrikeOut(True)
+        self.strike_out_text_action.setFont(strike_font)
+        self.strike_out_text_action.setCheckable(True)
 
         self.align_left_action.triggered.connect(self.align_left)
+        self.align_left_action.setCheckable(True)
         self.align_right_action.triggered.connect(self.align_right)
+        self.align_right_action.setCheckable(True)
         self.align_center_action.triggered.connect(self.align_center)
+        self.align_center_action.setCheckable(True)
         self.align_justify_action.triggered.connect(self.align_justify)
+        self.align_justify_action.setCheckable(True)
+
+        
+        # Make sure the alignLeft is always left of the alignRight
+        self.align_group.triggered.connect(self.text_align)
+
+        if qtg.QGuiApplication.isLeftToRight():
+            self.align_group.addAction(self.align_left_action)
+            self.align_group.addAction(self.align_center_action)
+            self.align_group.addAction(self.align_right_action)
+        else:
+            self.align_group.addAction(self.align_right_action)
+            self.align_group.addAction(self.align_center_action)
+            self.align_group.addAction(self.align_left_action)
+        self.align_group.addAction(self.align_justify_action)
        
-        self.zoom_in_action.triggered.connect( self.increment_font_size)
-        self.zoom_out_action.triggered.connect( self.decrement_font_size)
-        self.zoom_default_action.triggered.connect( self.set_default_font_size)
+        # self.zoom_in_action.triggered.connect( self.increment_font_size)
+        # self.zoom_out_action.triggered.connect( self.decrement_font_size)
+        # self.zoom_default_action.triggered.connect( self.set_default_font_size)
 
         self.color_action.triggered.connect( self.color_dialog)
         self.font_dialog_action.triggered.connect( self.font_dialog)
@@ -305,12 +329,16 @@ class MainWindow(qtw.QMainWindow):
         alignment_toolbar.addAction(self.align_center_action)
         alignment_toolbar.addAction(self.align_justify_action)
 
+        alignment_toolbar.addActions(self.align_group.actions())
+  
+
         font_weight_toolbar = self.addToolBar("Font Weight") 
         font_weight_toolbar.setIconSize(qtc.QSize(18,18))
         font_weight_toolbar.setMovable(False)
-        font_weight_toolbar.addAction(self._action_text_bold)
-        font_weight_toolbar.addAction(self._action_text_italic)
-        font_weight_toolbar.addAction(self._action_text_underline)
+        font_weight_toolbar.addAction(self.bold_text_action)
+        font_weight_toolbar.addAction(self.italic_text_action)
+        font_weight_toolbar.addAction(self.underline_text_action)
+        font_weight_toolbar.addAction(self.strike_out_text_action)
 
         self.font_toolbar = qtw.QToolBar(self)
         self.font_toolbar.setIconSize(qtc.QSize(20,20))
@@ -327,7 +355,6 @@ class MainWindow(qtw.QMainWindow):
         
         # prevent letter inputs in the font size combobox
         validator = qtg.QIntValidator()
-
         self.comboSize = qtw.QComboBox(self.font_toolbar)
         self.font_toolbar.addSeparator()
         self.comboSize.setObjectName("comboSize")
@@ -351,12 +378,22 @@ class MainWindow(qtw.QMainWindow):
         view_menu.addAction(self.fullscreen_action) 
         view_menu.addAction(self.view_status_action) 
   
-        magnify_toolbar = self.addToolBar("Magnify") 
-        magnify_toolbar.setIconSize(qtc.QSize(25,25))
-        magnify_toolbar.setMovable(False)
-        magnify_toolbar.addAction(self.zoom_in_action)
-        magnify_toolbar.addAction(self.zoom_out_action)
-        magnify_toolbar.addAction(self.zoom_default_action)
+        # magnify_toolbar = self.addToolBar("Magnify") 
+        # magnify_toolbar.setIconSize(qtc.QSize(25,25))
+        # magnify_toolbar.setMovable(False)
+        # magnify_toolbar.addAction(self.zoom_in_action)
+        # magnify_toolbar.addAction(self.zoom_out_action)
+        # magnify_toolbar.addAction(self.zoom_default_action)
+
+    def text_align(self, a):
+        if a == self.align_left_action:
+            self.current_editor.setAlignment(qtc.Qt.AlignLeft | qtc.Qt.AlignAbsolute)
+        elif a == self.align_center_action:
+            self.current_editor.setAlignment(qtc.Qt.AlignHCenter)
+        elif a == self.align_right_action:
+            self.current_editor.setAlignment(qtc.Qt.AlignRight | qtc.Qt.AlignAbsolute)
+        elif a == self.align_justify_action:
+            self.current_editor.setAlignment(qtc.Qt.AlignJustify)
 
     # toolbar update display color depending on color selected
     def textColor(self):
@@ -379,12 +416,13 @@ class MainWindow(qtw.QMainWindow):
         self.mergeFormatOnWordOrSelection(fmt)
 
     def textSize(self, pointSize):
-        pointSize = float(self.comboSize.currentText())
+        pointSize = int(self.comboSize.currentText())
+        # self.counterFontSize = pointSize
         if pointSize > 0:
             fmt = qtg.QTextCharFormat()
             fmt.setFontPointSize(pointSize)
             self.mergeFormatOnWordOrSelection(fmt)
-    
+            
     def mergeFormatOnWordOrSelection(self, format):
         cursor = self.current_editor.textCursor()
         if not cursor.hasSelection(): 
@@ -394,18 +432,27 @@ class MainWindow(qtw.QMainWindow):
     
     def bold_text(self): 
         fmt = qtg.QTextCharFormat()
-        weight = qtg.QFont.DemiBold if self._action_text_bold.isChecked() else qtg.QFont.Normal
+        weight = qtg.QFont.DemiBold if self.bold_text_action.isChecked() else qtg.QFont.Normal
         fmt.setFontWeight(weight)
         self.mergeFormatOnWordOrSelection(fmt)
     
     def italic_text(self):
         fmt = qtg.QTextCharFormat()
-        fmt.setFontItalic(self._action_text_italic.isChecked())
+        fmt.setFontItalic(self.italic_text_action.isChecked())
         self.mergeFormatOnWordOrSelection(fmt)
 
     def underlined_text(self):
         fmt = qtg.QTextCharFormat()
-        fmt.setFontUnderline(self._action_text_underline.isChecked())
+        fmt.setFontUnderline(self.underline_text_action.isChecked())
+        self.mergeFormatOnWordOrSelection(fmt)
+
+    def strike_out_text(self):
+
+        # Grab the text's format
+        fmt = qtg.QTextCharFormat()
+        # Set the fontStrikeOut property to its opposite
+        fmt.setFontStrikeOut(self.strike_out_text_action.isChecked())
+        # And set the next char format
         self.mergeFormatOnWordOrSelection(fmt)
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
@@ -475,8 +522,6 @@ class MainWindow(qtw.QMainWindow):
             return
         self.current_editor.setTextColor(color)
     
-
-    
     def font_dialog(self):
         font, ok =qtw.QFontDialog.getFont()
         if ok:
@@ -504,25 +549,25 @@ class MainWindow(qtw.QMainWindow):
         else :
             self.showMaximized()
     
-    def increment_font_size(self):
-        self.counterFontSize +=1
-        font = self.current_editor.font()                         
-        font.setPointSize(int(self.counterFontSize))       
-        self.current_editor.setFont(font)                         
+    # def increment_font_size(self):
+    #     self.counterFontSize +=1
+    #     font = self.current_editor.font()                         
+    #     font.setPointSize(int(self.counterFontSize))       
+    #     self.current_editor.setFont(font)                         
 
-    def decrement_font_size(self):
-        self.counterFontSize -=1
-        font = self.current_editor.font()                         
-        font.setPointSize(int(self.counterFontSize))       
-        self.current_editor.setFont(font)                          
+    # def decrement_font_size(self):
+    #     self.counterFontSize -=1
+    #     font = self.current_editor.font()                         
+    #     font.setPointSize(int(self.counterFontSize))       
+    #     self.current_editor.setFont(font)                          
 
-    def set_default_font_size(self):
-        self.current_editor.selectAll
-        font = self.current_editor.font()                         
-        font.setPointSize(int(self.defaultFontSize))  
-        self.current_editor.setFont(font)                          
-        self.counterFontSize = self.defaultFontSize
-        self.comboSize.setCurrentText(str(self.counterFontSize))
+    # def set_default_font_size(self):
+    #     self.current_editor.selectAll
+    #     font = self.current_editor.font()                         
+    #     font.setPointSize(int(self.defaultFontSize))  
+    #     self.current_editor.setFont(font)                          
+    #     self.counterFontSize = self.defaultFontSize
+    #     self.comboSize.setCurrentText(str(self.counterFontSize))
 
     def toggleMenu(self, state):
             if state:
