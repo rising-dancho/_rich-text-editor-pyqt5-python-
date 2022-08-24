@@ -1,5 +1,5 @@
 # _notepad-pyqt5-python-
-i had a lot of difficulty putting this together. especially the tab functionality, since it created so much problems in relation to the other functionalities like figuring out how the computer can understand which text editor is currently being used. i tried experimenting with inheritance and searched all over the internet only to learn that the solution was getting the index of the currently selected tab and dynamically populating each tab with a separate textbox (that might sound simple, but if you don't know how to program that you'll have a very bad time.) 
+i had a lot of difficulty putting this together. especially the tab functionality, since it created so much problems in relation to the other functionalities like figuring out how the computer can understand which text editor is currently being used. i tried experimenting with inheritance and searched all over the internet only to learn that the solution was getting the index of the currently selected tab and dynamically populating each tab with a separate textbox (that might sound simple, but if you don't know how to program that, you'll have a very bad time.) 
 
 the project is still very much in progress, but it made learning pyqt5 an enjoyable process.. even though a confusing one (depending on how ambitious you are)..
 
