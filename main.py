@@ -122,6 +122,8 @@ class MainWindow(qtw.QMainWindow):
         self.italic_text_action = qtw.QAction(qtg.QIcon(":/images/italic.png"), "Italic", self)
         self.underline_text_action = qtw.QAction(qtg.QIcon(":/images/underline.png"), "Underline", self)
         self.strike_out_text_action = qtw.QAction(qtg.QIcon(":/images/strikeout.png"), "Strikeout", self)
+        self.superscript_text_action = qtw.QAction(qtg.QIcon(":/images/superscript.png"), "Superscript", self)
+        self.subscript_text_action = qtw.QAction(qtg.QIcon(":/images/subscript.png"), "Subscript", self)
         self.align_left_action = qtw.QAction(qtg.QIcon(":/images/left_align.png"), "Align Left", self)
         self.align_right_action = qtw.QAction(qtg.QIcon(":/images/right_align.png"), "Align Right", self)
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
@@ -143,6 +145,8 @@ class MainWindow(qtw.QMainWindow):
         self.italic_text_action.setShortcut("Ctrl+I")
         self.underline_text_action.setShortcut("Ctrl+U")
         self.strike_out_text_action.setShortcut("Ctrl+/")
+        self.superscript_text_action.setShortcut("") # superscript shortcut does not work
+        self.subscript_text_action.setShortcut("")  # subscript shortcut does not work
         self.align_left_action.setShortcut("Ctrl+L")
         self.align_right_action.setShortcut("Ctrl+R")
         self.align_center_action.setShortcut("Ctrl+E")
@@ -156,6 +160,8 @@ class MainWindow(qtw.QMainWindow):
         self.italic_text_action.setStatusTip("Toggle whether the font is italic or not")
         self.underline_text_action.setStatusTip("Toggle whether the font is underlined or not")
         self.strike_out_text_action.setStatusTip("Toggle whether the font is striked out or not")
+        self.superscript_text_action.setShortcut("Type very small letters just above the line of text")
+        self.subscript_text_action.setShortcut("Type very small letters just below the line of text")
         self.align_left_action.setStatusTip("Aligns with the left edge")
         self.align_right_action.setStatusTip("Aligns with the right edge")
         self.align_center_action.setStatusTip("Centers horizontally in the available space")
@@ -201,6 +207,8 @@ class MainWindow(qtw.QMainWindow):
         format_menu.addAction(self.italic_text_action)
         format_menu.addAction(self.underline_text_action)
         format_menu.addAction(self.strike_out_text_action)
+        format_menu.addAction(self.superscript_text_action)
+        format_menu.addAction(self.subscript_text_action)
         format_menu.addSeparator()
         format_menu.addAction(self.align_left_action)
         format_menu.addAction(self.align_right_action)
@@ -261,6 +269,11 @@ class MainWindow(qtw.QMainWindow):
         self.strike_out_text_action.setFont(strike_font)
         self.strike_out_text_action.setCheckable(True)
 
+        self.superscript_text_action.triggered.connect(self.superScript)
+        self.superscript_text_action.setCheckable(True)
+        self.subscript_text_action.triggered.connect(self.subScript)
+        self.subscript_text_action.setCheckable(True)
+
         self.align_left_action.triggered.connect(self.align_left)
         self.align_left_action.setCheckable(True)
         self.align_right_action.triggered.connect(self.align_right)
@@ -270,20 +283,6 @@ class MainWindow(qtw.QMainWindow):
         self.align_justify_action.triggered.connect(self.align_justify)
         self.align_justify_action.setCheckable(True)
 
-        
-        # Make sure the alignLeft is always left of the alignRight
-        self.align_group.triggered.connect(self.text_align)
-
-        if qtg.QGuiApplication.isLeftToRight():
-            self.align_group.addAction(self.align_left_action)
-            self.align_group.addAction(self.align_center_action)
-            self.align_group.addAction(self.align_right_action)
-        else:
-            self.align_group.addAction(self.align_right_action)
-            self.align_group.addAction(self.align_center_action)
-            self.align_group.addAction(self.align_left_action)
-        self.align_group.addAction(self.align_justify_action)
-       
         # self.zoom_in_action.triggered.connect( self.increment_font_size)
         # self.zoom_out_action.triggered.connect( self.decrement_font_size)
         # self.zoom_default_action.triggered.connect( self.set_default_font_size)
@@ -297,7 +296,7 @@ class MainWindow(qtw.QMainWindow):
         # File toolbar
         file_toolbar = self.addToolBar("File")
         file_toolbar.setIconSize(qtc.QSize(22,22))
-        file_toolbar.setMovable(False)
+        # file_toolbar.setMovable(False)
         file_toolbar.addAction(self.new_action)
         file_toolbar.addAction(self.open_action)
         file_toolbar.addAction(self.save_action)
@@ -305,44 +304,43 @@ class MainWindow(qtw.QMainWindow):
         # Select all, cut, copy, paste toolbar
         clipboard_toolbar = self.addToolBar("Clipboard")
         clipboard_toolbar.setIconSize(qtc.QSize(25,25))
-        clipboard_toolbar.setMovable(False)
+        # clipboard_toolbar.setMovable(False)
         clipboard_toolbar.addAction(self.select_all_action)
         clipboard_toolbar.addAction(self.cut_action)
         clipboard_toolbar.addAction(self.copy_action)
         clipboard_toolbar.addAction(self.paste_action)
+        clipboard_toolbar.addAction(self.undo_action)
+        clipboard_toolbar.addAction(self.redo_action)
 
-        # Undo, redo toolbar
-        undo_redo_toolbar = self.addToolBar("Undo Redo") 
-        undo_redo_toolbar.setIconSize(qtc.QSize(23,23))
-        undo_redo_toolbar.setMovable(False)
-        undo_redo_toolbar.addAction(self.undo_action)
-        undo_redo_toolbar.addAction(self.redo_action)
+       
+       
 
         self.addToolBarBreak()
 
         # Alignment toolbar
         alignment_toolbar = self.addToolBar("Alignment") 
         alignment_toolbar.setIconSize(qtc.QSize(20,20))
-        alignment_toolbar.setMovable(False)
+        # alignment_toolbar.setMovable(False)
         alignment_toolbar.addAction(self.align_left_action)
         alignment_toolbar.addAction(self.align_right_action)
         alignment_toolbar.addAction(self.align_center_action)
         alignment_toolbar.addAction(self.align_justify_action)
 
-        alignment_toolbar.addActions(self.align_group.actions())
   
-
+  
         font_weight_toolbar = self.addToolBar("Font Weight") 
         font_weight_toolbar.setIconSize(qtc.QSize(18,18))
-        font_weight_toolbar.setMovable(False)
+        # font_weight_toolbar.setMovable(False)
         font_weight_toolbar.addAction(self.bold_text_action)
         font_weight_toolbar.addAction(self.italic_text_action)
         font_weight_toolbar.addAction(self.underline_text_action)
         font_weight_toolbar.addAction(self.strike_out_text_action)
+        font_weight_toolbar.addAction(self.superscript_text_action)
+        font_weight_toolbar.addAction(self.subscript_text_action)
 
         self.font_toolbar = qtw.QToolBar(self)
         self.font_toolbar.setIconSize(qtc.QSize(20,20))
-        self.font_toolbar.setMovable(False)
+        # self.font_toolbar.setMovable(False)
         self.font_toolbar.setWindowTitle("Font Toolbar")
         
         self.comboFont =  qtw.QFontComboBox(self.font_toolbar)
@@ -385,16 +383,7 @@ class MainWindow(qtw.QMainWindow):
         # magnify_toolbar.addAction(self.zoom_out_action)
         # magnify_toolbar.addAction(self.zoom_default_action)
 
-    def text_align(self, a):
-        if a == self.align_left_action:
-            self.current_editor.setAlignment(qtc.Qt.AlignLeft | qtc.Qt.AlignAbsolute)
-        elif a == self.align_center_action:
-            self.current_editor.setAlignment(qtc.Qt.AlignHCenter)
-        elif a == self.align_right_action:
-            self.current_editor.setAlignment(qtc.Qt.AlignRight | qtc.Qt.AlignAbsolute)
-        elif a == self.align_justify_action:
-            self.current_editor.setAlignment(qtc.Qt.AlignJustify)
-
+   
     # toolbar update display color depending on color selected
     def textColor(self):
         col = qtw.QColorDialog.getColor(self.current_editor.textColor(), self)
@@ -460,6 +449,37 @@ class MainWindow(qtw.QMainWindow):
         self.text_editors.append(self.current_editor)
         self.tabs.addTab(self.current_editor, title)
         self.tabs.setCurrentWidget(self.current_editor)
+
+    
+    def superScript(self):
+
+        # Grab the current format
+        fmt = self.current_editor.currentCharFormat()
+        # And get the vertical alignment property
+        align = fmt.verticalAlignment()
+        # Toggle the state
+        if align == qtg.QTextCharFormat.AlignNormal:
+            fmt.setVerticalAlignment(qtg.QTextCharFormat.AlignSuperScript)
+        else:
+            fmt.setVerticalAlignment(qtg.QTextCharFormat.AlignNormal)
+        # Set the new format
+        self.current_editor.setCurrentCharFormat(fmt)
+
+    def subScript(self):
+
+        # Grab the current format
+        fmt = self.current_editor.currentCharFormat()
+        # And get the vertical alignment property
+        align = fmt.verticalAlignment()
+        # Toggle the state
+        if align == qtg.QTextCharFormat.AlignNormal:
+            fmt.setVerticalAlignment(qtg.QTextCharFormat.AlignSubScript)
+        else:
+            fmt.setVerticalAlignment(qtg.QTextCharFormat.AlignNormal)
+        # Set the new format
+        self.current_editor.setCurrentCharFormat(fmt)
+
+
     
     def closeTab(self):
         close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)

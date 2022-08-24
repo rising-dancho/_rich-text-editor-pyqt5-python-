@@ -31,5 +31,7 @@
     <file>close.png</file>
     <file>close_active.png</file>
     <file>close_default.png</file>
+    <file>superscript.png</file>
+    <file>subscript.png</file>
 </qresource>
 </RCC>
