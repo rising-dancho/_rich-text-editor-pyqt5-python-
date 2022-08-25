@@ -130,7 +130,7 @@ class MainWindow(qtw.QMainWindow):
                 handle.write(text)
                 print(self.tabs.currentIndex())
                 print(str(filename))
-                self.tabs.setTabText(self.tabs.currentIndex(), str(filename)) # renames the current tabs with the filename
+                self.tabs.setTabText(self.tabs.currentIndex(), str(filename)) # renames the current tab with the filename
                 self.statusBar().showMessage(f"Saved to {filename}")
 
 
