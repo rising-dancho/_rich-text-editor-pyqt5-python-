@@ -7,8 +7,8 @@ class MainWindow(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.current_editor = self.create_editor()
-        self.text_editors = []
+        self.current_editor = self.create_editor()  # declares a variable for the create_editor method
+        self.text_editors = [] # an array that stores the indexes of newly created tabs
 
         self.statusbar = self.statusBar()
         self.statusbar.showMessage('Ready')
@@ -19,7 +19,7 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.setDocumentMode(True)
         self.tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
         self.tabs.tabCloseRequested.connect(self.remove_editor)
-        self.tabs.currentChanged.connect(self.change_text_editor)
+        self.tabs.currentChanged.connect(self.change_text_editor) # whenever a different tab is clicked the change_text_editor method is called
         self.setCentralWidget(self.tabs)
         
         self.newFile()
@@ -141,5 +141,3 @@ if __name__ == "__main__":
     main.setMinimumSize(550,450)
     main.show()
     sys.exit(app.exec_())
-
-
