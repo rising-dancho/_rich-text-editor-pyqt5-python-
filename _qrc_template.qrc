@@ -33,5 +33,6 @@
     <file>close_default.png</file>
     <file>superscript.png</file>
     <file>subscript.png</file>
+    <file>odt_file.png</file>
 </qresource>
 </RCC>

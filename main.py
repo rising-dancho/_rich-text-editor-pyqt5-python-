@@ -28,6 +28,7 @@ from PyQt5 import QtGui as qtg
 # from BlurWindow.blurWindow import blur
 
 import resources 
+is_document_already_saved = False
 
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
@@ -534,6 +535,8 @@ class MainWindow(qtw.QMainWindow):
                     self.current_editor.setPlainText(content)  # set the contents of the file as the text
                     self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
     
+
+
     def open_document(self):
         options = qtw.QFileDialog.Options()
         # Get filename and show only .notes files
@@ -546,13 +549,18 @@ class MainWindow(qtw.QMainWindow):
     def save_document (self):
         text = self.current_editor.toPlainText()
         filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
-        if filename:
-            with open(filename, "w") as handle:
-                handle.write(text)
-                print(self.tabs.currentIndex())
-                print(str(filename))
-                self.tabs.setTabText(self.tabs.currentIndex(), str(filename)) # renames the current tabs with the filename
-                self.statusBar().showMessage(f"Saved to {filename}")
+        global is_document_already_saved
+        if is_document_already_saved == False:
+            print(is_document_already_saved)
+            if filename:
+                with open(filename, "w") as handle:
+                    handle.write(text)
+                    print(self.tabs.currentIndex())
+                    print(str(filename))
+                    self.tabs.setTabText(self.tabs.currentIndex(), str(filename)) # renames the current tabs with the filename
+                    self.statusBar().showMessage(f"Saved to {filename}")
+                    is_document_already_saved = True
+                    print(is_document_already_saved)
 
 
     def fileSaveAsODT(self):
@@ -673,7 +681,7 @@ class MainWindow(qtw.QMainWindow):
                                     qtw.QMessageBox.Save | qtw.QMessageBox.Discard
                                     | qtw.QMessageBox.Cancel)
             if reply == qtw.QMessageBox.Save:
-                return self.fileSaveAsODT()
+                return self.save_document()
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
