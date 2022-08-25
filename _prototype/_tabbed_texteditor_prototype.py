@@ -12,7 +12,7 @@ class MainWindow(qtw.QMainWindow):
 
         self.statusbar = self.statusBar()
         self.statusbar.showMessage('Ready')
-        self.setWindowTitle("Tab Widget Application")
+        self.setWindowTitle("Notepad with tabs")
         self.setWindowIcon(qtg.QIcon("./_icons/notepad.png"))
         self.tabs = qtw.QTabWidget(self)
         self.tabs.setTabsClosable(True)
@@ -106,18 +106,20 @@ class MainWindow(qtw.QMainWindow):
     def openFile(self):
         options = qtw.QFileDialog.Options()
         filenames, _ = qtw.QFileDialog.getOpenFileNames(
-            self, 'Open a file', '',
-            'All Files (*);;Python Files (*.py);;Text Files (*.txt)',
+            self, "Open a file", "",
+            "All Files (*);;Python Files (*.py);;Text Files (*.txt)",
             options=options
         )
         if filenames:
             for filename in filenames:
-                with open(filename, 'r') as file_o:
+                with open(filename, "r") as file_o:
                     content = file_o.read()
-                    editor = qtw.QTextEdit()   # construct new text edit widget
-                    currentIndex = self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
-                    editor.setPlainText(content)  # set the contents of the file as the text
-                    self.tabs.setCurrentIndex(currentIndex)
+                    self.current_editor = self.create_editor() # similar to what the newFile method is doing
+                    # editor = qtw.QTextEdit()  # construct new text edit widget
+                    currentIndex = self.tabs.addTab(self.current_editor, str(filename))   # use that widget as the new tab
+                    self.current_editor.setPlainText(content)  # set the contents of the file as the text
+                    self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
+    
         
     
     def saveFile(self):
@@ -126,6 +128,9 @@ class MainWindow(qtw.QMainWindow):
         if filename:
             with open(filename, "w") as handle:
                 handle.write(text)
+                print(self.tabs.currentIndex())
+                print(str(filename))
+                self.tabs.setTabText(self.tabs.currentIndex(), str(filename)) # renames the current tabs with the filename
                 self.statusBar().showMessage(f"Saved to {filename}")
 
 
