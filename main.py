@@ -47,8 +47,6 @@ class MainWindow(qtw.QMainWindow):
         # self.setWindowOpacity(0.98)
 
         self.comboFont =  qtw.QFontComboBox()
-        self.align_group = qtw.QActionGroup(self)
-
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
@@ -233,7 +231,6 @@ class MainWindow(qtw.QMainWindow):
         format_menu.addAction(self.align_right_action)
         format_menu.addAction(self.align_center_action)
         format_menu.addAction(self.align_justify_action)
-        format_menu.addActions(self.align_group.actions())
         format_menu.addSeparator()
         # color for toolbar
         pix = qtg.QPixmap(20, 20)
@@ -252,7 +249,7 @@ class MainWindow(qtw.QMainWindow):
         self.open_action.triggered.connect(self.open_document1)
         self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
-        self.export_as_odt_action.triggered.connect(self.file_save_as_odt)
+        self.export_as_odt_action.triggered.connect(self.export_as_odt)
         self.export_as_pdf_action.triggered.connect(self.export_as_pdf)
 
         # Connect Edit actions
@@ -375,12 +372,10 @@ class MainWindow(qtw.QMainWindow):
         self.font_toolbar.setWindowTitle("Font Toolbar")
         
         self.comboFont =  qtw.QFontComboBox(self.font_toolbar)
+        self.comboFont.setCurrentFont(qtg.QFont("Consolas"))
         self.comboFont.activated[str].connect(self.textFamily)
         self.font_toolbar.addSeparator()
         self.font_toolbar.addWidget(self.comboFont)
-        
-        self.defaultFontSize = 9
-        self.counterFontSize = self.defaultFontSize
         
         # prevent letter inputs in the font size combobox
         validator = qtg.QIntValidator()
@@ -391,6 +386,7 @@ class MainWindow(qtw.QMainWindow):
         self.comboSize.setEditable(True)
         self.comboSize.setValidator(validator)
 
+        # getting all the valid font sizes from QFontDatabase
         fontDatabase = qtg.QFontDatabase()
         for size in fontDatabase.standardSizes():
             self.comboSize.addItem("%s" % (size))
@@ -560,7 +556,7 @@ class MainWindow(qtw.QMainWindow):
         options = qtw.QFileDialog.Options()
         # Get filename and show only .notes files
         #PYQT5 Returns a tuple in PyQt5, we only need the filename
-        self.filename, _ = qtw.QFileDialog.getOpenFileName(self, 'Open File',".","(*.notes);;Python Files (*.py);;Text Files (*.txt)",options=options)
+        self.filename, _ = qtw.QFileDialog.getOpenFileName(self, 'Open File',"(*.notes);;Python Files (*.py);;Text Files (*.txt)",options=options)
         if self.filename:
             with open(self.filename,"rt") as file:
                 self.current_editor.setText(file.read())
@@ -582,17 +578,17 @@ class MainWindow(qtw.QMainWindow):
                     print(is_document_already_saved)
 
 
-    def file_save_as_odt(self):
-            filename, _ = qtw.QFileDialog.getSaveFileName(self, "Save as", self.strippedName(self.filename).replace(".html",""),
+    def export_as_odt(self):
+            filename, _ = qtw.QFileDialog.getSaveFileName(self, "Export as OpenOffice Document", self.strippedName(self.filename).replace(".html",""),
                 "OpenOffice document (*.odt)")
             if not filename:
                 return False
             lfn = filename.lower()
             if not lfn.endswith(('.odt')):
                 filename += '.odt'
-            return self.fileSaveODT(filename)
+            return self.file_export_odt(filename)
 
-    def fileSaveODT(self, filename): 
+    def file_export_odt(self, filename): 
         writer = qtg.QTextDocumentWriter(filename)
         success = writer.write(self.current_editor.document())
         if success:
@@ -618,6 +614,7 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.document().print_(printer)
         native_fn = qtc.QDir.toNativeSeparators(pdf_file_name)
         self.statusBar().showMessage(f'Exported "{native_fn}"')
+        self.tabs.setTabText(self.tabs.currentIndex(), str(native_fn)) # renames the current tabs with the filename
 
     def select_all_document(self): 
         self.current_editor.selectAll()
@@ -723,6 +720,7 @@ class MainWindow(qtw.QMainWindow):
         return """
             QTextEdit
             {
+                font: 10pt "Consolas";
                 background: #161a21;
                 selection-background-color: #ffb454;
                 selection-color: #000000;
