@@ -10,10 +10,12 @@
 #   TEXT EDITOR REFERENCE 1:    https://gist.github.com/Axel-Erfurt/e33608124a4e47167ba76f4d62cba9ca
 #   TEXT EDITOR REFERENCE 2:    https://github.com/goldsborough/Writer
 #   QRC RESOURCES GUIDE:        https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
+#   INFO ABOUT SAVING AS DOCX:  https://stackoverflow.com/questions/22959642/pyqt4-how-to-read-a-doc-file-with-all-formatting-settings-using-python
 #   SYNTAX HIGHLIGHTING GUIDE:  https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
 #                               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
+#   
 #
-#   LEGENDS:             https://github.com/alandmoore
+#   LIVING LEGENDS:      https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
 #                        https://github.com/goldsborough
 #                        https://github.com/zhiyiYo
@@ -25,6 +27,7 @@ import sys
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
+from PyQt5 import QtPrintSupport
 # from BlurWindow.blurWindow import blur
 
 import resources 
@@ -88,19 +91,22 @@ class MainWindow(qtw.QMainWindow):
         self.open_action = qtw.QAction(qtg.QIcon(":/images/folder.png"),"Open", self)
         self.save_action = qtw.QAction(qtg.QIcon(":/images/save.png"),"Save", self)
         self.exit_action = qtw.QAction(qtg.QIcon(":/images/close.png"), "Exit", self)
-        self.save_as_odt_action = qtw.QAction(qtg.QIcon(":/images/odt_file.png"), "Save as OpenOffice Document", self)
- 
+        self.export_as_odt_action = qtw.QAction(qtg.QIcon(":/images/odt.png"), "Export as OpenOffice Document", self)
+        self.export_as_pdf_action = qtw.QAction(qtg.QIcon(":/images/pdf.png"), "Export as PDF Document", self)
+
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
         self.save_action.setShortcut("Ctrl+S")
-        self.exit_action.setShortcut("Ctrl+Shift+Q")
-        self.save_as_odt_action.setShortcut("Ctrl+Shift+O")
+        self.exit_action.setShortcut("Ctrl+Q")
+        self.export_as_odt_action.setShortcut("Alt+O")
+        self.export_as_pdf_action.setShortcut("Alt+P")
 
         self.new_action.setStatusTip("New file")
         self.open_action.setStatusTip("Open a file")
         self.save_action.setStatusTip("Save a file")
         self.exit_action.setStatusTip("Exit Program")
-        self.save_as_odt_action.setStatusTip("Save as an OpenOffice Document")
+        self.export_as_odt_action.setStatusTip("Export as OpenOffice Document")
+        self.export_as_pdf_action.setStatusTip("Export as PDF Document")
 
         # EDIT MENU
         self.select_all_action = qtw.QAction(qtg.QIcon(":/images/select_all.png"), "Select All", self)
@@ -196,7 +202,8 @@ class MainWindow(qtw.QMainWindow):
         file_menu.addAction(self.new_action)
         file_menu.addAction(self.open_action)
         file_menu.addAction(self.save_action)
-        file_menu.addAction(self.save_as_odt_action)
+        file_menu.addAction(self.export_as_odt_action)
+        file_menu.addAction(self.export_as_pdf_action)
         file_menu.addSeparator()
         file_menu.addAction(self.exit_action)
 
@@ -242,9 +249,8 @@ class MainWindow(qtw.QMainWindow):
         self.open_action.triggered.connect(self.open_document1)
         self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
-        self.save_as_odt_action.triggered.connect(self.fileSaveAsODT)
-
-        
+        self.export_as_odt_action.triggered.connect(self.file_save_as_odt)
+        self.export_as_pdf_action.triggered.connect(self.export_as_pdf)
 
         # Connect Edit actions
         self.select_all_action.triggered.connect(self.select_all_document)
@@ -313,7 +319,13 @@ class MainWindow(qtw.QMainWindow):
         file_toolbar.addAction(self.open_action)
         file_toolbar.addAction(self.save_action)
 
-        
+        # export pdf and odt
+        export_toolbar = self.addToolBar("Export")
+        export_toolbar.setIconSize(qtc.QSize(25,25))
+        # export_toolbar.setMovable(False)
+        export_toolbar.addAction(self.export_as_odt_action)
+        export_toolbar.addAction(self.export_as_pdf_action)
+   
 
         # Select all, cut, copy, paste toolbar
         clipboard_toolbar = self.addToolBar("Clipboard")
@@ -392,8 +404,6 @@ class MainWindow(qtw.QMainWindow):
         # magnify_toolbar.addAction(self.zoom_in_action)
         # magnify_toolbar.addAction(self.zoom_out_action)
         # magnify_toolbar.addAction(self.zoom_default_action)
-
-   
    
     # toolbar update display color depending on color selected
     def textColor(self):
@@ -563,28 +573,38 @@ class MainWindow(qtw.QMainWindow):
                     print(is_document_already_saved)
 
 
-    def fileSaveAsODT(self):
-            fn, _ = qtw.QFileDialog.getSaveFileName(self, "Save as", self.strippedName(self.filename).replace(".html",""),
+    def file_save_as_odt(self):
+            filename, _ = qtw.QFileDialog.getSaveFileName(self, "Save as", self.strippedName(self.filename).replace(".html",""),
                 "OpenOffice-Files (*.odt)")
 
-            if not fn:
+            if not filename:
                 return False
 
-            lfn = fn.lower()
+            lfn = filename.lower()
             if not lfn.endswith(('.odt')):
-                fn += '.odt'
-            return self.fileSaveODT(fn)
+                filename += '.odt'
+            return self.fileSaveODT(filename)
 
-    def fileSaveODT(self, fn): 
-        writer = qtg.QTextDocumentWriter(fn)
-#        writer.setFormat("ODF")
+    def fileSaveODT(self, filename): 
+        writer = qtg.QTextDocumentWriter(filename)
         success = writer.write(self.current_editor.document())
         if success:
-            self.statusBar().showMessage("saved file '" + fn + "'")
+            self.statusBar().showMessage("saved file '" + filename + "'")
+            self.tabs.setTabText(self.tabs.currentIndex(), str(filename)) # renames the current tabs with the filename
+            self.statusBar().showMessage(f"Exported {filename}")
         return success
 
     def strippedName(self, fullFileName): 
         return qtc.QFileInfo(fullFileName).fileName()
+    
+    def export_as_pdf(self):
+            newname = self.strippedName(self.filename).replace(".html", ".pdf") 
+            filename, _ = qtw.QFileDialog.getSaveFileName(self,
+                    "PDF files (*.pdf);;All Files (*)", (qtc.QDir.homePath() + "/PDF/" + newname))
+            printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
+            printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
+            printer.setOutputFileName(filename)
+            self.current_editor.document().print_(printer)
 
     def select_all_document(self): 
         self.current_editor.selectAll()
