@@ -14,6 +14,7 @@
 #   SYNTAX HIGHLIGHTING GUIDE:  https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
 #                               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
 #   QSCINTILLA DOC:             https://qscintilla.com/#home
+#   EXECUTING PYTHON SCRIPT:    https://www.pythonguis.com/tutorials/qprocess-external-programs/
 #
 #   LIVING LEGENDS:      https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
@@ -337,8 +338,14 @@ class MainWindow(qtw.QMainWindow):
         clipboard_toolbar.addAction(self.cut_action)
         clipboard_toolbar.addAction(self.copy_action)
         clipboard_toolbar.addAction(self.paste_action)
-        clipboard_toolbar.addAction(self.undo_action)
-        clipboard_toolbar.addAction(self.redo_action)
+
+        # Select all, cut, copy, paste toolbar
+        undo_redo_toolbar = self.addToolBar("Undo Redo")
+        undo_redo_toolbar.setIconSize(qtc.QSize(28,28))
+        # clipboard_toolbar.setMovable(False)
+
+        undo_redo_toolbar.addAction(self.undo_action)
+        undo_redo_toolbar.addAction(self.redo_action)
 
         self.addToolBarBreak()
 
@@ -752,6 +759,8 @@ class MainWindow(qtw.QMainWindow):
                 background: #161a21;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
+                border-bottom: 2px solid #d3d3d3;
+                
 
                 border:1px;
                 border-color: #161a21;
@@ -765,6 +774,8 @@ class MainWindow(qtw.QMainWindow):
                 background: #1c2028;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
+                border-bottom: 2px solid #d3d3d3;
+                
 
                 border:1px;
                 border-color: #1c2028;
