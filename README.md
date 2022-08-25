@@ -11,5 +11,5 @@ damn.. but luckily i can save the file as .odt, .pdf or .html extentions which a
 
 anyway, here it is:
 
-![image](https://user-images.githubusercontent.com/43742265/186334027-92f04f08-9061-4ab7-aab7-aaeea3977aeb.png)
+![image](https://user-images.githubusercontent.com/43742265/186591345-98b66eef-5bae-437b-9505-498f15a6cb03.png)
 
