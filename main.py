@@ -7,13 +7,15 @@
 #   TEXT EDITOR GUIDE:          https://www.binpress.com/building-text-editor-pyqt-1/
 #   QT TEXT EDITOR DOC:         https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
 #   TABBED EDITOR:              https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
+#   TEXT EDITOR REFERENCE 1:
+#   TEXT EDITOR REFERENCE 2:    https://github.com/goldsborough/Writer
 #   QRC RESOURCES GUIDE:        https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
 #   SYNTAX HIGHLIGHTING GUIDE:  https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
 #                               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
 #
-#   NOTABLE PEOPLE:      https://github.com/alandmoore
-#                        https://github.com/goldsborough
+#   LEGENDS:             https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
+#                        https://github.com/goldsborough
 #                        https://github.com/zhiyiYo
 #                        https://github.com/Fus3n
 #
@@ -26,7 +28,6 @@ from PyQt5 import QtGui as qtg
 # from BlurWindow.blurWindow import blur
 
 import resources 
-is_document_already_saved = False
 
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
@@ -44,6 +45,8 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
+        self.filename = ""
+
         self.statusbar = self.statusBar()
         self.statusbar.showMessage("Ready")    
         self.tabs = qtw.QTabWidget(self)
@@ -84,16 +87,19 @@ class MainWindow(qtw.QMainWindow):
         self.open_action = qtw.QAction(qtg.QIcon(":/images/folder.png"),"Open", self)
         self.save_action = qtw.QAction(qtg.QIcon(":/images/save.png"),"Save", self)
         self.exit_action = qtw.QAction(qtg.QIcon(":/images/close.png"), "Exit", self)
-
+        self.save_as_odt_action = qtw.QAction(qtg.QIcon(":/images/odt_file.png"), ".ODT", self)
+ 
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
         self.save_action.setShortcut("Ctrl+S")
         self.exit_action.setShortcut("Ctrl+Shift+Q")
+        self.save_as_odt_action.setShortcut("Ctrl+Shift+O")
 
         self.new_action.setStatusTip("New file")
         self.open_action.setStatusTip("Open a file")
         self.save_action.setStatusTip("Save a file")
         self.exit_action.setStatusTip("Exit Program")
+        self.save_as_odt_action.setStatusTip("Save as an OpenOffice Document")
 
         # EDIT MENU
         self.select_all_action = qtw.QAction(qtg.QIcon(":/images/select_all.png"), "Select All", self)
@@ -189,6 +195,7 @@ class MainWindow(qtw.QMainWindow):
         file_menu.addAction(self.new_action)
         file_menu.addAction(self.open_action)
         file_menu.addAction(self.save_action)
+        file_menu.addAction(self.save_as_odt_action)
         file_menu.addSeparator()
         file_menu.addAction(self.exit_action)
 
@@ -203,10 +210,11 @@ class MainWindow(qtw.QMainWindow):
         edit_menu.addAction(self.redo_action)
 
         format_menu = self.menubar.addMenu("Format")
+        format_menu.addAction(self.strike_out_text_action)
         format_menu.addAction(self.bold_text_action)
         format_menu.addAction(self.italic_text_action)
         format_menu.addAction(self.underline_text_action)
-        format_menu.addAction(self.strike_out_text_action)
+       
         format_menu.addAction(self.superscript_text_action)
         format_menu.addAction(self.subscript_text_action)
         format_menu.addSeparator()
@@ -230,9 +238,12 @@ class MainWindow(qtw.QMainWindow):
     def _connectActions(self):
         # Connect File actions
         self.new_action.triggered.connect(self.new_tab)
-        self.open_action.triggered.connect(self.open_document)
+        self.open_action.triggered.connect(self.open_document1)
         self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
+        self.save_as_odt_action.triggered.connect(self.fileSaveAsODT)
+
+        
 
         # Connect Edit actions
         self.select_all_action.triggered.connect(self.select_all_document)
@@ -301,6 +312,8 @@ class MainWindow(qtw.QMainWindow):
         file_toolbar.addAction(self.open_action)
         file_toolbar.addAction(self.save_action)
 
+        
+
         # Select all, cut, copy, paste toolbar
         clipboard_toolbar = self.addToolBar("Clipboard")
         clipboard_toolbar.setIconSize(qtc.QSize(25,25))
@@ -311,9 +324,6 @@ class MainWindow(qtw.QMainWindow):
         clipboard_toolbar.addAction(self.paste_action)
         clipboard_toolbar.addAction(self.undo_action)
         clipboard_toolbar.addAction(self.redo_action)
-
-       
-       
 
         self.addToolBarBreak()
 
@@ -326,15 +336,14 @@ class MainWindow(qtw.QMainWindow):
         alignment_toolbar.addAction(self.align_center_action)
         alignment_toolbar.addAction(self.align_justify_action)
 
-  
-  
         font_weight_toolbar = self.addToolBar("Font Weight") 
         font_weight_toolbar.setIconSize(qtc.QSize(18,18))
         # font_weight_toolbar.setMovable(False)
+        font_weight_toolbar.addAction(self.strike_out_text_action)
         font_weight_toolbar.addAction(self.bold_text_action)
         font_weight_toolbar.addAction(self.italic_text_action)
         font_weight_toolbar.addAction(self.underline_text_action)
-        font_weight_toolbar.addAction(self.strike_out_text_action)
+       
         font_weight_toolbar.addAction(self.superscript_text_action)
         font_weight_toolbar.addAction(self.subscript_text_action)
 
@@ -383,6 +392,7 @@ class MainWindow(qtw.QMainWindow):
         # magnify_toolbar.addAction(self.zoom_out_action)
         # magnify_toolbar.addAction(self.zoom_default_action)
 
+   
    
     # toolbar update display color depending on color selected
     def textColor(self):
@@ -450,7 +460,6 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.addTab(self.current_editor, title)
         self.tabs.setCurrentWidget(self.current_editor)
 
-    
     def superScript(self):
 
         # Grab the current format
@@ -479,8 +488,6 @@ class MainWindow(qtw.QMainWindow):
         # Set the new format
         self.current_editor.setCurrentCharFormat(fmt)
 
-
-    
     def closeTab(self):
         close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
         close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
@@ -489,7 +496,28 @@ class MainWindow(qtw.QMainWindow):
         if index == -1:
             self.new_tab()
 
-    def open_document(self):
+    def new_tab(self, checked = False, title = "Untitled.txt"):
+        self.current_editor = self.create_editor()
+        self.text_editors.append(self.current_editor)
+        self.tabs.addTab(self.current_editor, title)
+        self.tabs.setCurrentWidget(self.current_editor)
+
+    def openFile(self):
+        options = qtw.QFileDialog.Options()
+        filenames, _ = qtw.QFileDialog.getOpenFileNames(
+            self, 'Open a file', '',
+            'All Files (*);;Python Files (*.py);;Text Files (*.txt)',
+            options=options
+        )
+        if filenames:
+            for filename in filenames:
+                with open(filename, 'r') as file_o:
+                    content = file_o.read()
+                    editor = qtw.QTextEdit()   # construct new text edit widget
+                    self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
+                    editor.setPlainText(content)  # set the contents of the file as the text
+
+    def open_document1(self):
         options = qtw.QFileDialog.Options()
         filenames, _ = qtw.QFileDialog.getOpenFileNames(
             self, "Open a file", "",
@@ -500,23 +528,55 @@ class MainWindow(qtw.QMainWindow):
             for filename in filenames:
                 with open(filename, "r") as file_o:
                     content = file_o.read()
-                    editor = qtw.QTextEdit()   # construct new text edit widget
-                    currentIndex = self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
-                    editor.setPlainText(content)  # set the contents of the file as the text
+                    self.current_editor = self.create_editor() 
+                    # editor = qtw.QTextEdit()   # construct new text edit widget
+                    currentIndex = self.tabs.addTab(self.current_editor, str(filename))   # use that widget as the new tab
+                    self.current_editor.setPlainText(content)  # set the contents of the file as the text
                     self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
-        
-    def save_document(self):
+    
+    def open_document(self):
+        options = qtw.QFileDialog.Options()
+        # Get filename and show only .notes files
+        #PYQT5 Returns a tuple in PyQt5, we only need the filename
+        self.filename, _ = qtw.QFileDialog.getOpenFileName(self, 'Open File',".","(*.notes);;Python Files (*.py);;Text Files (*.txt)",options=options)
+        if self.filename:
+            with open(self.filename,"rt") as file:
+                self.current_editor.setText(file.read())
+
+    def save_document (self):
         text = self.current_editor.toPlainText()
-        filename, _ = qtw.QFileDialog.getSaveFileName(self, "Save file", None, "Text files(*.txt)")
-        global is_document_already_saved
-        if is_document_already_saved == False:
-            print(is_document_already_saved)
-            if filename:
-                with open(filename, "w") as handle:
-                    handle.write(text)
-                    self.statusBar().showMessage(f"Saved to {filename}")
-                    is_document_already_saved = True
-                    print(is_document_already_saved)
+        filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
+        if filename:
+            with open(filename, "w") as handle:
+                handle.write(text)
+                print(self.tabs.currentIndex())
+                print(str(filename))
+                self.tabs.setTabText(self.tabs.currentIndex(), str(filename)) # renames the current tabs with the filename
+                self.statusBar().showMessage(f"Saved to {filename}")
+
+
+    def fileSaveAsODT(self):
+            fn, _ = qtw.QFileDialog.getSaveFileName(self, "Save as", self.strippedName(self.filename).replace(".html",""),
+                "OpenOffice-Files (*.odt)")
+
+            if not fn:
+                return False
+
+            lfn = fn.lower()
+            if not lfn.endswith(('.odt')):
+                fn += '.odt'
+            return self.fileSaveODT(fn)
+
+    def fileSaveODT(self, fn): 
+        writer = qtg.QTextDocumentWriter(fn)
+#        writer.setFormat("ODF")
+        success = writer.write(self.current_editor.document())
+        if success:
+            self.statusBar().showMessage("saved file '" + fn + "'")
+        return success
+
+    def strippedName(self, fullFileName): 
+        return qtc.QFileInfo(fullFileName).fileName()
 
     def select_all_document(self): 
         self.current_editor.selectAll()
@@ -613,7 +673,7 @@ class MainWindow(qtw.QMainWindow):
                                     qtw.QMessageBox.Save | qtw.QMessageBox.Discard
                                     | qtw.QMessageBox.Cancel)
             if reply == qtw.QMessageBox.Save:
-                return self.save_document()
+                return self.fileSaveAsODT()
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
