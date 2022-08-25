@@ -13,14 +13,15 @@
 #   INFO ABOUT SAVING AS DOCX:  https://stackoverflow.com/questions/22959642/pyqt4-how-to-read-a-doc-file-with-all-formatting-settings-using-python
 #   SYNTAX HIGHLIGHTING GUIDE:  https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
 #                               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
-#   
+#   QSCINTILLA DOC:             https://qscintilla.com/#home
 #
 #   LIVING LEGENDS:      https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
 #                        https://github.com/goldsborough
 #                        https://github.com/zhiyiYo
 #                        https://github.com/Fus3n
-#                        https://github.com/alexpdev?tab=repositories
+#                        https://github.com/alexpdev
+#                        https://github.com/matkuki
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####################
 
@@ -98,7 +99,7 @@ class MainWindow(qtw.QMainWindow):
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
         self.save_action.setShortcut("Ctrl+S")
-        self.exit_action.setShortcut("Ctrl+Q")
+        self.exit_action.setShortcut("Ctrl+Shift+Q")
         self.export_as_odt_action.setShortcut("Alt+O")
         self.export_as_pdf_action.setShortcut("Alt+P")
 
