@@ -575,7 +575,7 @@ class MainWindow(qtw.QMainWindow):
 
     def file_save_as_odt(self):
             filename, _ = qtw.QFileDialog.getSaveFileName(self, "Save as", self.strippedName(self.filename).replace(".html",""),
-                "OpenOffice-Files (*.odt)")
+                "OpenOffice document (*.odt)")
 
             if not filename:
                 return False
@@ -596,15 +596,21 @@ class MainWindow(qtw.QMainWindow):
 
     def strippedName(self, fullFileName): 
         return qtc.QFileInfo(fullFileName).fileName()
-    
-    def export_as_pdf(self):
-            newname = self.strippedName(self.filename).replace(".html", ".pdf") 
-            filename, _ = qtw.QFileDialog.getSaveFileName(self,
-                    "PDF files (*.pdf);;All Files (*)", (qtc.QDir.homePath() + "/PDF/" + newname))
-            printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
-            printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
-            printer.setOutputFileName(filename)
-            self.current_editor.document().print_(printer)
+
+    def export_as_pdf(self): 
+        file_dialog = qtw.QFileDialog(self, "Export PDF")
+        file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
+        file_dialog.setMimeTypeFilters(["application/pdf"])
+        file_dialog.setDefaultSuffix("pdf")
+        if file_dialog.exec() != qtw.QDialog.Accepted:
+            return
+        pdf_file_name = file_dialog.selectedFiles()[0]
+        printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
+        printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
+        printer.setOutputFileName(pdf_file_name)
+        self.current_editor.document().print_(printer)
+        native_fn = qtc.QDir.toNativeSeparators(pdf_file_name)
+        self.statusBar().showMessage(f'Exported "{native_fn}"')
 
     def select_all_document(self): 
         self.current_editor.selectAll()
