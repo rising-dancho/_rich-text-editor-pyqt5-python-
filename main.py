@@ -20,6 +20,7 @@
 #                        https://github.com/goldsborough
 #                        https://github.com/zhiyiYo
 #                        https://github.com/Fus3n
+#                        https://github.com/alexpdev?tab=repositories
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####################
 
@@ -105,8 +106,8 @@ class MainWindow(qtw.QMainWindow):
         self.open_action.setStatusTip("Open a file")
         self.save_action.setStatusTip("Save a file")
         self.exit_action.setStatusTip("Exit Program")
-        self.export_as_odt_action.setStatusTip("Export as OpenOffice Document")
-        self.export_as_pdf_action.setStatusTip("Export as PDF Document")
+        self.export_as_odt_action.setStatusTip("Export your file as an OpenOffice document")
+        self.export_as_pdf_action.setStatusTip("Export your file as PDF document")
 
         # EDIT MENU
         self.select_all_action = qtw.QAction(qtg.QIcon(":/images/select_all.png"), "Select All", self)
@@ -576,10 +577,8 @@ class MainWindow(qtw.QMainWindow):
     def file_save_as_odt(self):
             filename, _ = qtw.QFileDialog.getSaveFileName(self, "Save as", self.strippedName(self.filename).replace(".html",""),
                 "OpenOffice document (*.odt)")
-
             if not filename:
                 return False
-
             lfn = filename.lower()
             if not lfn.endswith(('.odt')):
                 filename += '.odt'
