@@ -6,8 +6,8 @@
 #   UI GUIDE:                   https://realpython.com/python-menus-toolbars/
 #   TEXT EDITOR GUIDE:          https://www.binpress.com/building-text-editor-pyqt-1/
 #   QT TEXT EDITOR DOC:         https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
-#   TABBED EDITOR:              https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
-#   TEXT EDITOR REFERENCE 1:
+#   MY TABBED EDITOR:           https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
+#   TEXT EDITOR REFERENCE 1:    https://gist.github.com/Axel-Erfurt/e33608124a4e47167ba76f4d62cba9ca
 #   TEXT EDITOR REFERENCE 2:    https://github.com/goldsborough/Writer
 #   QRC RESOURCES GUIDE:        https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
 #   SYNTAX HIGHLIGHTING GUIDE:  https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
@@ -88,7 +88,7 @@ class MainWindow(qtw.QMainWindow):
         self.open_action = qtw.QAction(qtg.QIcon(":/images/folder.png"),"Open", self)
         self.save_action = qtw.QAction(qtg.QIcon(":/images/save.png"),"Save", self)
         self.exit_action = qtw.QAction(qtg.QIcon(":/images/close.png"), "Exit", self)
-        self.save_as_odt_action = qtw.QAction(qtg.QIcon(":/images/odt_file.png"), ".ODT", self)
+        self.save_as_odt_action = qtw.QAction(qtg.QIcon(":/images/odt_file.png"), "Save as OpenOffice Document", self)
  
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
