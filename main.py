@@ -35,6 +35,7 @@ from PyQt5 import QtPrintSupport
 
 import resources 
 
+
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -47,7 +48,7 @@ class MainWindow(qtw.QMainWindow):
         self.filename = ""
         self.changesSaved = False
 
-        self.comboFont =  qtw.QFontComboBox()
+        self.combo_font =  qtw.QFontComboBox()
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
@@ -146,9 +147,10 @@ class MainWindow(qtw.QMainWindow):
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
         
         # font style combobox
-        self.comboFont.activated[str].connect(self.textFamily)
+        self.combo_font.textActivated.connect(self.text_family)
         self.font_family_action = qtw.QWidgetAction(self)
-        self.font_family_action.setDefaultWidget(self.comboFont)
+        self.font_family_action.setDefaultWidget(self.combo_font)
+        
         # -- [end] -- 
 
         # self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
@@ -233,11 +235,12 @@ class MainWindow(qtw.QMainWindow):
         # color for toolbar
         pix = qtg.QPixmap(20, 20)
         pix.fill(qtc.Qt.black) 
-        self.actionTextColor = qtw.QAction(qtg.QIcon(pix), "Colors", self,
+        self.text_color_action = qtw.QAction(qtg.QIcon(pix), "Colors", self,
                 triggered=self.textColor)
-        self.actionTextColor.setShortcut("Ctrl+Shift+C")
-        self.actionTextColor.setStatusTip("Allows users to pick a color of their choice")
-        format_menu.addAction(self.actionTextColor)
+        self.text_color_action.setShortcut("Ctrl+Shift+C")
+        self.text_color_action.setStatusTip("Allows users to pick a color of their choice")
+        format_menu.addAction(self.text_color_action)
+        format_menu.addAction(self.font_family_action)
        
   
        
@@ -366,12 +369,11 @@ class MainWindow(qtw.QMainWindow):
         self.font_toolbar = qtw.QToolBar(self)
         self.font_toolbar.setIconSize(qtc.QSize(20,20))
         # self.font_toolbar.setMovable(False)
-        self.comboFont =  qtw.QFontComboBox(self.font_toolbar)
-        self.comboFont.setCurrentFont(qtg.QFont("Consolas"))
-        self.comboFont.activated[str].connect(self.textFamily)
-        self.font_toolbar.addSeparator()
-        self.font_toolbar.addWidget(self.comboFont)
-        
+        self.combo_font = qtw.QFontComboBox(self.font_toolbar)
+        self.combo_font.setCurrentFont(qtg.QFont("Consolas"))
+        self.font_toolbar.addWidget(self.combo_font)
+        self.combo_font.textActivated.connect(self.text_family)
+   
         # prevent letter inputs in the font size combobox
         validator = qtg.QIntValidator()
         self.comboSize = qtw.QComboBox(self.font_toolbar)
@@ -418,12 +420,7 @@ class MainWindow(qtw.QMainWindow):
     def colorChanged(self, color):
         pix = qtg.QPixmap(16, 16)
         pix.fill(color)
-        self.actionTextColor.setIcon(qtg.QIcon(pix))
-
-    def textFamily(self, family): 
-        fmt = qtg.QTextCharFormat()
-        fmt.setFontFamily(family)
-        self.mergeFormatOnWordOrSelection(fmt)
+        self.text_color_action.setIcon(qtg.QIcon(pix))
 
     def textSize(self, pointSize):
         pointSize = int(self.comboSize.currentText())
@@ -439,6 +436,12 @@ class MainWindow(qtw.QMainWindow):
             cursor.select(qtg.QTextCursor.WordUnderCursor)
         cursor.mergeCharFormat(format)
         self.current_editor.mergeCurrentCharFormat(format)
+
+    @qtc.pyqtSlot(str)
+    def text_family(self, f):
+        fmt = qtg.QTextCharFormat()
+        fmt.setFontFamilies({f})
+        self.mergeFormatOnWordOrSelection(fmt)
     
     def bold_text(self): 
         fmt = qtg.QTextCharFormat()
@@ -586,7 +589,6 @@ class MainWindow(qtw.QMainWindow):
     def strippedName(self, fullFileName): 
         return qtc.QFileInfo(fullFileName).fileName()
 
-
     def export_as_pdf(self): 
         if self.current_editor.toPlainText() == "":
             self.statusBar().showMessage("There are no texts to export as a PDF document!")
@@ -728,21 +730,17 @@ class MainWindow(qtw.QMainWindow):
                 background: #1c2028;
                 border: 0px;
             }
-
             QMainWindow
             {
                 background: #1c2028;
             }
-
             QStatusBar 
             {
                 background: #1c2028;
             }
-
             QTabBar {
                 background: #1c2028;
             }
-
             QTabBar::tab:selected {
                 color: #e1af4b;
                 background: #161a21;
@@ -750,7 +748,6 @@ class MainWindow(qtw.QMainWindow):
                 border-top-right-radius: 5px;
                 border-bottom: 2px solid #d3d3d3;
                 
-
                 border:1px;
                 border-color: #161a21;
                 border-top-style: solid;
@@ -758,14 +755,12 @@ class MainWindow(qtw.QMainWindow):
                 border-left-style: solid;
                 padding: 10px 10px 10px 10px;
             }
-
             QTabBar::tab:!selected{
                 background: #1c2028;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
                 border-bottom: 2px solid #d3d3d3;
                 
-
                 border:1px;
                 border-color: #1c2028;
                 border-top-style: solid;
@@ -774,15 +769,12 @@ class MainWindow(qtw.QMainWindow):
                 border-left-style: solid;
                 padding: 10px 10px 10px 10px;
                 }
-
             QTabBar::close-button {
                 image: url(:/images/close_default.png);
             }
-
             QTabBar::close-button:hover {
                 image: url(:/images/close_active.png);
             }
-
         """
 
 if __name__ == "__main__":
