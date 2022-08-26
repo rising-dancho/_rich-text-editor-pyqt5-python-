@@ -47,8 +47,6 @@ class MainWindow(qtw.QMainWindow):
         # self.setWindowOpacity(0.98)
         self.filename = ""
         self.changesSaved = False
-
-        self.combo_font =  qtw.QFontComboBox()
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
@@ -81,9 +79,10 @@ class MainWindow(qtw.QMainWindow):
             self.current_editor = self.text_editors[index]
 
     def remove_editor(self, index):
-        # this line prevents the user from more tabs if there is no more tabs to close
-        if self.tabs.count() < 1:
-             return
+        # this line prevents the user from closing more tabs if there is no more tabs to close
+        if self.tabs.count() < 2:
+            return
+        
         self.tabs.removeTab(index)
         if index < len(self.text_editors):
             del self.text_editors[index]
@@ -145,14 +144,9 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
+        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Font (applies globally)", self)
         
-        # font style combobox
-        self.combo_font.textActivated.connect(self.text_family)
-        self.font_family_action = qtw.QWidgetAction(self)
-        self.font_family_action.setDefaultWidget(self.combo_font)
-        
-        # -- [end] -- 
-
+    
         # self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
         # self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
         # self.zoom_default_action = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
@@ -167,6 +161,7 @@ class MainWindow(qtw.QMainWindow):
         self.align_right_action.setShortcut("Ctrl+R")
         self.align_center_action.setShortcut("Ctrl+E")
         self.align_justify_action.setShortcut("Ctrl+J")
+        self.font_dialog_action.setShortcut("Ctrl+Shift+F")
         # self.zoom_in_action.setShortcut("Ctrl+=") 
         # self.zoom_out_action.setShortcut("Ctrl+-") 
         # self.zoom_default_action.setShortcut("Ctrl+0")
@@ -181,7 +176,8 @@ class MainWindow(qtw.QMainWindow):
         self.align_right_action.setStatusTip("Aligns with the right edge")
         self.align_center_action.setStatusTip("Centers horizontally in the available space")
         self.align_justify_action.setStatusTip("Justifies the text in the available space")
-        self.color_action.setStatusTip("Allows users to pick a color of their choice")
+        self.color_action.setStatusTip("Pick a color of their choice")
+        self.font_dialog_action.setStatusTip("Set a font for all texts")
         # self.zoom_in_action.setStatusTip("Zoom In") 
         # self.zoom_out_action.setStatusTip("Zoom Out") 
         # self.zoom_default_action.setStatusTip("Restore to the default font size")
@@ -240,7 +236,10 @@ class MainWindow(qtw.QMainWindow):
         self.text_color_action.setShortcut("Ctrl+Shift+C")
         self.text_color_action.setStatusTip("Allows users to pick a color of their choice")
         format_menu.addAction(self.text_color_action)
-        format_menu.addAction(self.font_family_action)
+        format_menu.addAction(self.font_dialog_action)
+
+       
+     
        
   
        
@@ -307,6 +306,7 @@ class MainWindow(qtw.QMainWindow):
         # self.zoom_default_action.triggered.connect( self.set_default_font_size)
 
         self.color_action.triggered.connect( self.color_dialog)
+        self.font_dialog_action.triggered.connect( self.font_dialog)
         self.view_status_action.triggered.connect(self.toggleMenu)
 
 
@@ -406,7 +406,12 @@ class MainWindow(qtw.QMainWindow):
         # magnify_toolbar.addAction(self.zoom_in_action)
         # magnify_toolbar.addAction(self.zoom_out_action)
         # magnify_toolbar.addAction(self.zoom_default_action)
-   
+    
+    def font_dialog(self):
+        font, ok =qtw.QFontDialog.getFont()
+        if ok:
+            self.current_editor.setFont(font)
+
     # toolbar update display color depending on color selected
     def textColor(self):
         col = qtw.QColorDialog.getColor(self.current_editor.textColor(), self)
@@ -424,7 +429,6 @@ class MainWindow(qtw.QMainWindow):
 
     def textSize(self, pointSize):
         pointSize = int(self.comboSize.currentText())
-        # self.counterFontSize = pointSize
         if pointSize > 0:
             fmt = qtg.QTextCharFormat()
             fmt.setFontPointSize(pointSize)
@@ -489,7 +493,6 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.setCurrentCharFormat(fmt)
 
     def subScript(self):
-
         # Grab the current format
         fmt = self.current_editor.currentCharFormat()
         # And get the vertical alignment property
@@ -561,7 +564,7 @@ class MainWindow(qtw.QMainWindow):
 
     def export_as_odt(self):
             if self.current_editor.toPlainText() == "":
-                self.statusBar().showMessage("There are no texts to export as an OpenOffice document!")
+                self.statusBar().showMessage("There are no texts to export!")
                 # Append extension if not there yet
             else:
                 if not self.filename:
@@ -591,7 +594,7 @@ class MainWindow(qtw.QMainWindow):
 
     def export_as_pdf(self): 
         if self.current_editor.toPlainText() == "":
-            self.statusBar().showMessage("There are no texts to export as a PDF document!")
+            self.statusBar().showMessage("There are no texts to export!")
         else:
             # Append extension if not there yet
             if not self.filename:
