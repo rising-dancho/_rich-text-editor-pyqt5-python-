@@ -80,8 +80,9 @@ class MainWindow(qtw.QMainWindow):
             self.current_editor = self.text_editors[index]
 
     def remove_editor(self, index):
-        if self.tabs.count() < 2:
-            return
+        # this line prevents the user from more tabs if there is no more tabs to close
+        if self.tabs.count() < 1:
+             return
         self.tabs.removeTab(index)
         if index < len(self.text_editors):
             del self.text_editors[index]
