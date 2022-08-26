@@ -143,7 +143,6 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
-        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Fonts (applies globally)", self)
         
         # font style combobox
         self.comboFont.activated[str].connect(self.textFamily)
@@ -165,7 +164,6 @@ class MainWindow(qtw.QMainWindow):
         self.align_right_action.setShortcut("Ctrl+R")
         self.align_center_action.setShortcut("Ctrl+E")
         self.align_justify_action.setShortcut("Ctrl+J")
-        self.font_dialog_action.setShortcut("Ctrl+Shift+F")
         # self.zoom_in_action.setShortcut("Ctrl+=") 
         # self.zoom_out_action.setShortcut("Ctrl+-") 
         # self.zoom_default_action.setShortcut("Ctrl+0")
@@ -181,7 +179,6 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action.setStatusTip("Centers horizontally in the available space")
         self.align_justify_action.setStatusTip("Justifies the text in the available space")
         self.color_action.setStatusTip("Allows users to pick a color of their choice")
-        self.font_dialog_action.setStatusTip("Allows users to pick a font of their choice")
         # self.zoom_in_action.setStatusTip("Zoom In") 
         # self.zoom_out_action.setStatusTip("Zoom Out") 
         # self.zoom_default_action.setStatusTip("Restore to the default font size")
@@ -240,7 +237,7 @@ class MainWindow(qtw.QMainWindow):
         self.actionTextColor.setShortcut("Ctrl+Shift+C")
         self.actionTextColor.setStatusTip("Allows users to pick a color of their choice")
         format_menu.addAction(self.actionTextColor)
-        format_menu.addAction(self.font_dialog_action)
+       
   
        
     def _connectActions(self):
@@ -306,7 +303,6 @@ class MainWindow(qtw.QMainWindow):
         # self.zoom_default_action.triggered.connect( self.set_default_font_size)
 
         self.color_action.triggered.connect( self.color_dialog)
-        self.font_dialog_action.triggered.connect( self.font_dialog)
         self.view_status_action.triggered.connect(self.toggleMenu)
 
 
@@ -369,8 +365,6 @@ class MainWindow(qtw.QMainWindow):
         self.font_toolbar = qtw.QToolBar(self)
         self.font_toolbar.setIconSize(qtc.QSize(20,20))
         # self.font_toolbar.setMovable(False)
-        self.font_toolbar.setWindowTitle("Font Toolbar")
-        
         self.comboFont =  qtw.QFontComboBox(self.font_toolbar)
         self.comboFont.setCurrentFont(qtg.QFont("Consolas"))
         self.comboFont.activated[str].connect(self.textFamily)
@@ -639,11 +633,6 @@ class MainWindow(qtw.QMainWindow):
         if not color.isValid():
             return
         self.current_editor.setTextColor(color)
-    
-    def font_dialog(self):
-        font, ok =qtw.QFontDialog.getFont()
-        if ok:
-            self.current_editor.setFont(font)
 
     def align_left(self):
         self.current_editor.setAlignment(qtc.Qt.AlignLeft)
@@ -715,12 +704,13 @@ class MainWindow(qtw.QMainWindow):
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
-
+    
+    
     def myStyleSheet(self):
         return """
             QTextEdit
             {
-                font: 10pt "Consolas";
+                font: "Consolas";
                 background: #161a21;
                 selection-background-color: #ffb454;
                 selection-color: #000000;
