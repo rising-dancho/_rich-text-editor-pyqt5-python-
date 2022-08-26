@@ -34,7 +34,6 @@ from PyQt5 import QtPrintSupport
 # from BlurWindow.blurWindow import blur
 
 import resources 
-is_document_already_saved = False
 
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
@@ -45,12 +44,13 @@ class MainWindow(qtw.QMainWindow):
         # hWnd = self.winId()
         # blur(hWnd)
         # self.setWindowOpacity(0.98)
+        self.filename = ""
+        self.changesSaved = False
 
         self.comboFont =  qtw.QFontComboBox()
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
-        self.filename = ""
 
         self.statusbar = self.statusBar()
         self.statusbar.showMessage("Ready")    
@@ -243,7 +243,7 @@ class MainWindow(qtw.QMainWindow):
     def _connectActions(self):
         # Connect File actions
         self.new_action.triggered.connect(self.new_tab)
-        self.open_action.triggered.connect(self.open_document1)
+        self.open_action.triggered.connect(self.open_document)
         self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
         self.export_as_odt_action.triggered.connect(self.export_as_odt)
@@ -512,67 +512,51 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.addTab(self.current_editor, title)
         self.tabs.setCurrentWidget(self.current_editor)
 
-    def openFile(self):
-        options = qtw.QFileDialog.Options()
-        filenames, _ = qtw.QFileDialog.getOpenFileNames(
-            self, 'Open a file', '',
-            'All Files (*);;Python Files (*.py);;Text Files (*.txt)',
-            options=options
-        )
-        if filenames:
-            for filename in filenames:
-                with open(filename, 'r') as file_o:
-                    content = file_o.read()
-                    editor = qtw.QTextEdit()   # construct new text edit widget
-                    self.tabs.addTab(editor, str(filename))   # use that widget as the new tab
-                    editor.setPlainText(content)  # set the contents of the file as the text
-
-    def open_document1(self):
-        options = qtw.QFileDialog.Options()
-        filenames, _ = qtw.QFileDialog.getOpenFileNames(
-            self, "Open a file", "",
-            "All Files (*);;Python Files (*.py);;Text Files (*.txt)",
-            options=options
-        )
-        if filenames:
-            for filename in filenames:
-                with open(filename, "r") as file_o:
-                    content = file_o.read()
-                    self.current_editor = self.create_editor() 
-                    # editor = qtw.QTextEdit()   # construct new text edit widget
-                    currentIndex = self.tabs.addTab(self.current_editor, str(filename))   # use that widget as the new tab
-                    self.current_editor.setPlainText(content)  # set the contents of the file as the text
-                    self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
-    
-
-
     def open_document(self):
         options = qtw.QFileDialog.Options()
         # Get filename and show only .notes files
-        #PYQT5 Returns a tuple in PyQt5, we only need the filename
-        self.filename, _ = qtw.QFileDialog.getOpenFileName(self, 'Open File',"(*.notes);;Python Files (*.py);;Text Files (*.txt)",options=options)
+        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
+        self.filename, _ = qtw.QFileDialog.getOpenFileName(
+            self, 'Open File',".",
+            "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
+            options=options
+        )
         if self.filename:
             with open(self.filename,"rt") as file:
-                self.current_editor.setText(file.read())
+                content = file.read()
+                self.current_editor = self.create_editor() 
+                currentIndex = self.tabs.addTab(self.current_editor, str(self.filename))   # use that widget as the new tab
+                self.current_editor.setText(content) # set the contents of the file as the text
+                self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
 
     def save_document (self):
-        text = self.current_editor.toPlainText()
-        filename, _ = qtw.QFileDialog.getSaveFileName(self, 'Save file', None, 'Text files(*.txt)')
-        global is_document_already_saved
-        if is_document_already_saved == False:
-            print(is_document_already_saved)
-            if filename:
-                with open(filename, "w") as handle:
-                    handle.write(text)
-                    print(self.tabs.currentIndex())
-                    print(str(filename))
-                    self.tabs.setTabText(self.tabs.currentIndex(), str(filename)) # renames the current tabs with the filename
-                    self.statusBar().showMessage(f"Saved to {filename}")
-                    is_document_already_saved = True
-                    print(is_document_already_saved)
+        # Only open dialog if there is no filename yet
+        #PYQT5 Returns a tuple in PyQt5, we only need the filename
+        if not self.filename:
+          self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0]
+        
+        if self.filename:
 
+            # Append extension if not there yet
+            if not self.filename.endswith(".notes"):
+              self.filename += ".notes"
+
+            # We just store the contents of the text file along with the
+            # format in html, which Qt does in a very nice way for us
+            with open(self.filename,"wt") as file:
+                file.write(self.current_editor.toHtml())
+                print(self.tabs.currentIndex())
+                print(str(self.filename))
+                self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
+                self.statusBar().showMessage(f"Saved to {self.filename}")
+                
+            self.changesSaved = True
 
     def export_as_odt(self):
+            # Append extension if not there yet
+            if not self.filename:
+                self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0]
+
             filename, _ = qtw.QFileDialog.getSaveFileName(self, "Export as OpenOffice Document", self.strippedName(self.filename).replace(".html",""),
                 "OpenOffice document (*.odt)")
             if not filename:
@@ -588,6 +572,7 @@ class MainWindow(qtw.QMainWindow):
         if success:
             self.statusBar().showMessage("saved file '" + filename + "'")
             self.tabs.setTabText(self.tabs.currentIndex(), str(filename)) # renames the current tabs with the filename
+            self.changesSaved = True
             self.statusBar().showMessage(f"Exported {filename}")
         return success
 
@@ -595,6 +580,10 @@ class MainWindow(qtw.QMainWindow):
         return qtc.QFileInfo(fullFileName).fileName()
 
     def export_as_pdf(self): 
+        # Append extension if not there yet
+        if not self.filename:
+                self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0]
+
         file_dialog = qtw.QFileDialog(self, "Export PDF")
         file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
         file_dialog.setMimeTypeFilters(["application/pdf"])
@@ -607,6 +596,7 @@ class MainWindow(qtw.QMainWindow):
         printer.setOutputFileName(pdf_file_name)
         self.current_editor.document().print_(printer)
         native_fn = qtc.QDir.toNativeSeparators(pdf_file_name)
+        self.changesSaved = True
         self.statusBar().showMessage(f'Exported "{native_fn}"')
         self.tabs.setTabText(self.tabs.currentIndex(), str(native_fn)) # renames the current tabs with the filename
 
@@ -691,7 +681,7 @@ class MainWindow(qtw.QMainWindow):
     def maybe_save(self):
         if not self.current_editor.document().isModified():
             return True
-        if is_document_already_saved == True:
+        if  self.changesSaved == True:
             qtw.QApplication.quit() 
         else:    
             reply = qtw.QMessageBox.warning(self, qtc.QCoreApplication.applicationName(),
