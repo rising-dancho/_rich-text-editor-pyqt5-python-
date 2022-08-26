@@ -531,42 +531,48 @@ class MainWindow(qtw.QMainWindow):
                 self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
 
     def save_document (self):
-        # Only open dialog if there is no filename yet
-        #PYQT5 Returns a tuple in PyQt5, we only need the filename
-        if not self.filename:
-          self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0]
-        
-        if self.filename:
-
-            # Append extension if not there yet
-            if not self.filename.endswith(".notes"):
-              self.filename += ".notes"
-
-            # We just store the contents of the text file along with the
-            # format in html, which Qt does in a very nice way for us
-            with open(self.filename,"wt") as file:
-                file.write(self.current_editor.toHtml())
-                print(self.tabs.currentIndex())
-                print(str(self.filename))
-                self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
-                self.statusBar().showMessage(f"Saved to {self.filename}")
-                
-            self.changesSaved = True
-
-    def export_as_odt(self):
-            # Append extension if not there yet
+        if self.current_editor.toPlainText() == "":
+            self.statusBar().showMessage("There are no texts to be saved!")
+        else:
+            # Only open dialog if there is no filename yet
+            #PYQT5 Returns a tuple in PyQt5, we only need the filename
             if not self.filename:
                 self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0]
+            
+            if self.filename:
 
-            filename, _ = qtw.QFileDialog.getSaveFileName(self, "Export as OpenOffice Document", self.strippedName(self.filename).replace(".html",""),
-                "OpenOffice document (*.odt)")
-            if not filename:
-                return False
-            lfn = filename.lower()
-            if not lfn.endswith(('.odt')):
-                filename += '.odt'
-            return self.file_export_odt(filename)
+                # Append extension if not there yet
+                if not self.filename.endswith(".notes"):
+                    self.filename += ".notes"
 
+                # We just store the contents of the text file along with the
+                # format in html, which Qt does in a very nice way for us
+                with open(self.filename,"wt") as file:
+                    file.write(self.current_editor.toHtml())
+                    print(self.tabs.currentIndex())
+                    print(str(self.filename))
+                    self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
+                    self.statusBar().showMessage(f"Saved to {self.filename}")
+                    
+                self.changesSaved = True
+
+    def export_as_odt(self):
+            if self.current_editor.toPlainText() == "":
+                self.statusBar().showMessage("There are no texts to export as an OpenOffice document!")
+                # Append extension if not there yet
+            else:
+                if not self.filename:
+                    self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0]
+
+                filename, _ = qtw.QFileDialog.getSaveFileName(self, "Export as OpenOffice Document", self.strippedName(self.filename).replace(".html",""),
+                    "OpenOffice document (*.odt)")
+                if not filename:
+                    return False
+                lfn = filename.lower()
+                if not lfn.endswith(('.odt')):
+                    filename += '.odt'
+                return self.file_export_odt(filename)
+    
     def file_export_odt(self, filename): 
         writer = qtg.QTextDocumentWriter(filename)
         success = writer.write(self.current_editor.document())
@@ -580,26 +586,30 @@ class MainWindow(qtw.QMainWindow):
     def strippedName(self, fullFileName): 
         return qtc.QFileInfo(fullFileName).fileName()
 
-    def export_as_pdf(self): 
-        # Append extension if not there yet
-        if not self.filename:
-                self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0]
 
-        file_dialog = qtw.QFileDialog(self, "Export PDF")
-        file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
-        file_dialog.setMimeTypeFilters(["application/pdf"])
-        file_dialog.setDefaultSuffix("pdf")
-        if file_dialog.exec() != qtw.QDialog.Accepted:
-            return
-        pdf_file_name = file_dialog.selectedFiles()[0]
-        printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
-        printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
-        printer.setOutputFileName(pdf_file_name)
-        self.current_editor.document().print_(printer)
-        native_fn = qtc.QDir.toNativeSeparators(pdf_file_name)
-        self.changesSaved = True
-        self.statusBar().showMessage(f'Exported "{native_fn}"')
-        self.tabs.setTabText(self.tabs.currentIndex(), str(native_fn)) # renames the current tabs with the filename
+    def export_as_pdf(self): 
+        if self.current_editor.toPlainText() == "":
+            self.statusBar().showMessage("There are no texts to export as a PDF document!")
+        else:
+            # Append extension if not there yet
+            if not self.filename:
+                    self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0]
+
+            file_dialog = qtw.QFileDialog(self, "Export PDF")
+            file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
+            file_dialog.setMimeTypeFilters(["application/pdf"])
+            file_dialog.setDefaultSuffix("pdf")
+            if file_dialog.exec() != qtw.QDialog.Accepted:
+                return
+            pdf_file_name = file_dialog.selectedFiles()[0]
+            printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
+            printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
+            printer.setOutputFileName(pdf_file_name)
+            self.current_editor.document().print_(printer)
+            native_fn = qtc.QDir.toNativeSeparators(pdf_file_name)
+            self.changesSaved = True
+            self.statusBar().showMessage(f'Exported "{native_fn}"')
+            self.tabs.setTabText(self.tabs.currentIndex(), str(native_fn)) # renames the current tabs with the filename
 
     def select_all_document(self): 
         self.current_editor.selectAll()
