@@ -263,6 +263,11 @@ class MainWindow(qtw.QMainWindow):
         self.text_color_action.setStatusTip("Allows users to pick a color of their choice")
         format_menu.addAction(self.text_color_action)
         format_menu.addAction(self.font_dialog_action)
+
+        view_menu = self.menubar.addMenu("View")
+        view_menu.addAction(self.fullscreen_action) 
+        view_menu.addSeparator()
+        view_menu.addAction(self.view_status_action)
        
     def _connectActions(self):
         # Connect File actions
@@ -348,7 +353,7 @@ class MainWindow(qtw.QMainWindow):
 
         # print toolbar
         print_toolbar = self.addToolBar("Print")
-        print_toolbar.setIconSize(qtc.QSize(23,23))
+        print_toolbar.setIconSize(qtc.QSize(22,22))
         print_toolbar.addAction(self.print_action)
         print_toolbar.addAction(self.preview_action)
 
@@ -431,9 +436,7 @@ class MainWindow(qtw.QMainWindow):
         # color for toolbar
         self.font_toolbar.addAction(self.color_action)
 
-        view_menu = self.menubar.addMenu("View")
-        view_menu.addAction(self.fullscreen_action) 
-        view_menu.addAction(self.view_status_action) 
+        
   
         # magnify_toolbar = self.addToolBar("Magnify") 
         # magnify_toolbar.setIconSize(qtc.QSize(25,25))
