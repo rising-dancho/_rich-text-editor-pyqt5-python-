@@ -949,8 +949,8 @@ class MainWindow(qtw.QMainWindow):
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     main = MainWindow()
-    main.resize(650,500)
-    main.setMinimumSize(600,450)
+    main.resize(680,550)
+    main.setMinimumSize(665,500)
     main.setWindowTitle("Notes_")
     main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
     main.show()
