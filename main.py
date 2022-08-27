@@ -15,6 +15,7 @@
 #                               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
 #   QSCINTILLA DOC:             https://qscintilla.com/#home
 #   EXECUTING PYTHON SCRIPT:    https://www.pythonguis.com/tutorials/qprocess-external-programs/
+#   QFILEDIALOG:                https://learndataanalysis.org/source-code-how-to-use-qfiledialog-file-dialog-in-pyqt5/
 #
 #   LIVING LEGENDS:      https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
@@ -144,7 +145,7 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
-        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Font (applies globally)", self)
+        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Font (applies as default)", self)
         
     
         # self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
@@ -307,7 +308,7 @@ class MainWindow(qtw.QMainWindow):
 
         self.color_action.triggered.connect( self.color_dialog)
         self.font_dialog_action.triggered.connect( self.font_dialog)
-        self.view_status_action.triggered.connect(self.toggleMenu)
+        self.view_status_action.triggered.connect(self.toggle_menu)
 
 
     def _createToolBars(self):
@@ -537,7 +538,7 @@ class MainWindow(qtw.QMainWindow):
                 self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
 
     def save_document (self):
-        if self.current_editor.toPlainText() == "":
+        if not self.current_editor.document().isModified():
             self.statusBar().showMessage("There are no texts to be saved!")
         else:
             # Only open dialog if there is no filename yet
@@ -567,7 +568,7 @@ class MainWindow(qtw.QMainWindow):
     
 
     def export_as_odt(self):
-            if self.current_editor.toPlainText() == "":
+            if not self.current_editor.document().isModified():
                 self.statusBar().showMessage("There are no texts to export!")
                 # Append extension if not there yet
             else:
@@ -597,7 +598,7 @@ class MainWindow(qtw.QMainWindow):
         return qtc.QFileInfo(fullFileName).fileName()
 
     def export_as_pdf(self): 
-        if self.current_editor.toPlainText() == "":
+        if not self.current_editor.document().isModified():
             self.statusBar().showMessage("There are no texts to export!")
         else:
             if not self.filename:
@@ -685,7 +686,7 @@ class MainWindow(qtw.QMainWindow):
     #     self.counterFontSize = self.defaultFontSize
     #     self.comboSize.setCurrentText(str(self.counterFontSize))
 
-    def toggleMenu(self, state):
+    def toggle_menu(self, state):
             if state:
                 self.statusbar.show()
             else:
