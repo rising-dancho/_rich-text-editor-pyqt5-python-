@@ -631,16 +631,11 @@ class MainWindow(qtw.QMainWindow):
                     
                 self.changesSaved = True
 
-    
-
     def export_as_odt(self):
             if not self.current_editor.document().isModified():
                 self.statusBar().showMessage("There are no texts to export!")
                 # Append extension if not there yet
             else:
-                if not self.filename:
-                    self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0] # zero index is required, otherwise it would throw an error if no selection was made
-
                 filename, _ = qtw.QFileDialog.getSaveFileName(self, "Export as OpenOffice Document", self.strippedName(self.filename).replace(".html",""),
                     "OpenOffice document (*.odt)")
                 if not filename:
@@ -667,9 +662,6 @@ class MainWindow(qtw.QMainWindow):
         if not self.current_editor.document().isModified():
             self.statusBar().showMessage("There are no texts to export!")
         else:
-            if not self.filename:
-                    self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0] # zero index is required, otherwise it would throw an error if no selection was made
-
             file_dialog = qtw.QFileDialog(self, "Export PDF")
             file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
             file_dialog.setMimeTypeFilters(["application/pdf"])
