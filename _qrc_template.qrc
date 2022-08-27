@@ -39,5 +39,7 @@
     <file>bullet_list.png</file>
     <file>print.png</file>
     <file>preview.png</file>
+    <file>indent.png</file>
+    <file>unindent.png</file>
 </qresource>
 </RCC>

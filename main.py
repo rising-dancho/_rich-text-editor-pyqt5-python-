@@ -79,6 +79,9 @@ class MainWindow(qtw.QMainWindow):
   
     def create_editor(self):
         current_editor = qtw.QTextEdit()
+        # Set the tab stop width to around 33 pixels which is
+        # about 8 spaces
+        current_editor.setTabStopWidth(33)
         return current_editor
 
     def change_text_editor(self, index):
@@ -156,10 +159,14 @@ class MainWindow(qtw.QMainWindow):
         self.align_right_action = qtw.QAction(qtg.QIcon(":/images/right_align.png"), "Align Right", self)
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
+        self.indent_action = qtw.QAction(qtg.QIcon(":/images/indent.png"), "Indent", self)
+        self.unindent_action = qtw.QAction(qtg.QIcon(":/images/unindent.png"), "Unindent", self)
+
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
         self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Font (becomes the default)", self)
         self.number_list_action = qtw.QAction(qtg.QIcon(":/images/number_list.png"), "Numbering", self)
         self.bullet_list_action = qtw.QAction(qtg.QIcon(":/images/bullet_list.png"), "Bullets", self)
+
     
         # self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
         # self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
@@ -178,6 +185,8 @@ class MainWindow(qtw.QMainWindow):
         self.font_dialog_action.setShortcut("Ctrl+Shift+F")
         self.number_list_action.setShortcut("Alt+1")
         self.bullet_list_action.setShortcut("Alt+.")
+        self.indent_action.setShortcut("Ctrl+Tab")
+        self.unindent_action.setShortcut("Shift+Tab")
         # self.zoom_in_action.setShortcut("Ctrl+=") 
         # self.zoom_out_action.setShortcut("Ctrl+-") 
         # self.zoom_default_action.setShortcut("Ctrl+0")
@@ -196,6 +205,8 @@ class MainWindow(qtw.QMainWindow):
         self.font_dialog_action.setStatusTip("Set a font for all texts")
         self.number_list_action.setStatusTip("Create bulleted list")
         self.bullet_list_action.setStatusTip("Create numbered list")
+        self.indent_action.setStatusTip("Indent selection")
+        self.unindent_action.setStatusTip("Unindent selection")
         # self.zoom_in_action.setStatusTip("Zoom In") 
         # self.zoom_out_action.setStatusTip("Zoom Out") 
         # self.zoom_default_action.setStatusTip("Restore to the default font size")
@@ -253,6 +264,8 @@ class MainWindow(qtw.QMainWindow):
         format_menu.addAction(self.align_right_action)
         format_menu.addAction(self.align_center_action)
         format_menu.addAction(self.align_justify_action)
+        format_menu.addAction(self.indent_action)
+        format_menu.addAction(self.unindent_action)
         format_menu.addSeparator()
         # color for toolbar
         pix = qtg.QPixmap(20, 20)
@@ -323,7 +336,6 @@ class MainWindow(qtw.QMainWindow):
         self.number_list_action.setCheckable(True)
         self.bullet_list_action.triggered.connect(self.bulletList)
         self.bullet_list_action.setCheckable(True)
-
         self.align_left_action.triggered.connect(self.align_left)
         self.align_left_action.setCheckable(True)
         self.align_right_action.triggered.connect(self.align_right)
@@ -332,7 +344,9 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action.setCheckable(True)
         self.align_justify_action.triggered.connect(self.align_justify)
         self.align_justify_action.setCheckable(True)
-
+        self.indent_action.triggered.connect(self.indent)
+        self.unindent_action.triggered.connect(self.unindent)
+    
         # self.zoom_in_action.triggered.connect( self.increment_font_size)
         # self.zoom_out_action.triggered.connect( self.decrement_font_size)
         # self.zoom_default_action.triggered.connect( self.set_default_font_size)
@@ -392,6 +406,9 @@ class MainWindow(qtw.QMainWindow):
         alignment_toolbar.addAction(self.align_right_action)
         alignment_toolbar.addAction(self.align_center_action)
         alignment_toolbar.addAction(self.align_justify_action)
+        alignment_toolbar.addAction(self.indent_action)
+        alignment_toolbar.addAction(self.unindent_action)
+        
 
         font_weight_toolbar = self.addToolBar("Font Weight") 
         font_weight_toolbar.setIconSize(qtc.QSize(18,18))
@@ -445,6 +462,93 @@ class MainWindow(qtw.QMainWindow):
         # magnify_toolbar.addAction(self.zoom_out_action)
         # magnify_toolbar.addAction(self.zoom_default_action)
     
+    def indent(self):
+
+        # Grab the cursor
+        cursor = self.current_editor.textCursor()
+
+        if cursor.hasSelection():
+
+            # Store the current line/block number
+            temp = cursor.blockNumber()
+
+            # Move to the selection's end
+            cursor.setPosition(cursor.anchor())
+
+            # Calculate range of selection
+            diff = cursor.blockNumber() - temp
+
+            direction = qtg.QTextCursor.Up if diff > 0 else qtg.QTextCursor.Down
+
+            # Iterate over lines (diff absolute value)
+            for n in range(abs(diff) + 1):
+
+                # Move to start of each line
+                cursor.movePosition(qtg.QTextCursor.StartOfLine)
+
+                # Insert tabbing
+                cursor.insertText("\t")
+
+                # And move back up
+                cursor.movePosition(direction)
+
+        # If there is no selection, just insert a tab
+        else:
+
+            cursor.insertText("\t")
+
+    def handleDedent(self,cursor):
+
+        cursor.movePosition(qtg.QTextCursor.StartOfLine)
+
+        # Grab the current line
+        line = cursor.block().text()
+
+        # If the line starts with a tab character, delete it
+        if line.startswith("\t"):
+
+            # Delete next character
+            cursor.deleteChar()
+
+        # Otherwise, delete all spaces until a non-space character is met
+        else:
+            for char in line[:8]:
+
+                if char != " ":
+                    break
+
+                cursor.deleteChar()
+
+    def unindent(self):
+
+        cursor = self.current_editor.textCursor()
+
+        if cursor.hasSelection():
+
+            # Store the current line/block number
+            temp = cursor.blockNumber()
+
+            # Move to the selection's last line
+            cursor.setPosition(cursor.anchor())
+
+            # Calculate range of selection
+            diff = cursor.blockNumber() - temp
+
+            direction = qtg.QTextCursor.Up if diff > 0 else qtg.QTextCursor.Down
+
+            # Iterate over lines
+            for n in range(abs(diff) + 1):
+
+                self.handleDedent(cursor)
+
+                # Move up
+                cursor.movePosition(direction)
+
+        else:
+            self.handleDedent(cursor)
+
+
+
     def preview(self):
 
         # Open preview dialog
