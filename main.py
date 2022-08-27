@@ -16,6 +16,12 @@
 #   QSCINTILLA DOC:             https://qscintilla.com/#home
 #   EXECUTING PYTHON SCRIPT:    https://www.pythonguis.com/tutorials/qprocess-external-programs/
 #   QFILEDIALOG:                https://learndataanalysis.org/source-code-how-to-use-qfiledialog-file-dialog-in-pyqt5/
+#   
+#   RECOLORABLE ICONS:          https://icons8.com/icons/set/list-number
+#   RESIZING IMG TO ICON SIZE:  https://www.img2go.com/resize-image
+#   TRANSPARENT BACKGROUND:     https://www.remove.bg/
+#   CREATE YOUR OWN ICONS:      https://github.com/rising-dancho/custom_minimize_maximize_and_close_window_icons-java-netbeans-
+#       
 #
 #   LIVING LEGENDS:      https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
@@ -96,6 +102,8 @@ class MainWindow(qtw.QMainWindow):
         self.exit_action = qtw.QAction(qtg.QIcon(":/images/close.png"), "Exit", self)
         self.export_as_odt_action = qtw.QAction(qtg.QIcon(":/images/odt.png"), "Export as OpenOffice Document", self)
         self.export_as_pdf_action = qtw.QAction(qtg.QIcon(":/images/pdf.png"), "Export as PDF Document", self)
+        self.print_action = qtw.QAction(qtg.QIcon(":/images/print.png"), "Print Document", self)
+        self.preview_action = qtw.QAction(qtg.QIcon(":/images/preview.png"), "Page View", self)
 
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
@@ -103,6 +111,8 @@ class MainWindow(qtw.QMainWindow):
         self.exit_action.setShortcut("Ctrl+Shift+Q")
         self.export_as_odt_action.setShortcut("Alt+O")
         self.export_as_pdf_action.setShortcut("Alt+P")
+        self.print_action.setShortcut("Ctrl+P")
+        self.preview_action.setShortcut("Ctrl+Shift+P")
 
         self.new_action.setStatusTip("New file")
         self.open_action.setStatusTip("Open a file")
@@ -110,6 +120,8 @@ class MainWindow(qtw.QMainWindow):
         self.exit_action.setStatusTip("Exit Program")
         self.export_as_odt_action.setStatusTip("Export your file as an OpenOffice document")
         self.export_as_pdf_action.setStatusTip("Export your file as PDF document")
+        self.print_action.setStatusTip("Print document")
+        self.preview_action.setStatusTip("Preview page before printing")
 
         # EDIT MENU
         self.select_all_action = qtw.QAction(qtg.QIcon(":/images/select_all.png"), "Select All", self)
@@ -145,8 +157,9 @@ class MainWindow(qtw.QMainWindow):
         self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
         self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
-        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Font (applies as default)", self)
-        
+        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Font (becomes the default)", self)
+        self.number_list_action = qtw.QAction(qtg.QIcon(":/images/number_list.png"), "Numbering", self)
+        self.bullet_list_action = qtw.QAction(qtg.QIcon(":/images/bullet_list.png"), "Bullets", self)
     
         # self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
         # self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
@@ -156,13 +169,15 @@ class MainWindow(qtw.QMainWindow):
         self.italic_text_action.setShortcut("Ctrl+I")
         self.underline_text_action.setShortcut("Ctrl+U")
         self.strike_out_text_action.setShortcut("Ctrl+/")
-        self.superscript_text_action.setShortcut("") # superscript shortcut does not work
-        self.subscript_text_action.setShortcut("")  # subscript shortcut does not work
+        self.superscript_text_action.setShortcut("") # for some reason, superscript shortcut does not work 
+        self.subscript_text_action.setShortcut("")  # for some reason, subscript shortcut does not work
         self.align_left_action.setShortcut("Ctrl+L")
         self.align_right_action.setShortcut("Ctrl+R")
         self.align_center_action.setShortcut("Ctrl+E")
         self.align_justify_action.setShortcut("Ctrl+J")
         self.font_dialog_action.setShortcut("Ctrl+Shift+F")
+        self.number_list_action.setShortcut("Alt+1")
+        self.bullet_list_action.setShortcut("Alt+.")
         # self.zoom_in_action.setShortcut("Ctrl+=") 
         # self.zoom_out_action.setShortcut("Ctrl+-") 
         # self.zoom_default_action.setShortcut("Ctrl+0")
@@ -179,6 +194,8 @@ class MainWindow(qtw.QMainWindow):
         self.align_justify_action.setStatusTip("Justifies the text in the available space")
         self.color_action.setStatusTip("Pick a color of their choice")
         self.font_dialog_action.setStatusTip("Set a font for all texts")
+        self.number_list_action.setStatusTip("Create bulleted list")
+        self.bullet_list_action.setStatusTip("Create numbered list")
         # self.zoom_in_action.setStatusTip("Zoom In") 
         # self.zoom_out_action.setStatusTip("Zoom Out") 
         # self.zoom_default_action.setStatusTip("Restore to the default font size")
@@ -200,10 +217,15 @@ class MainWindow(qtw.QMainWindow):
         file_menu.addAction(self.new_action)
         file_menu.addAction(self.open_action)
         file_menu.addAction(self.save_action)
+        file_menu.addSeparator()
         file_menu.addAction(self.export_as_odt_action)
         file_menu.addAction(self.export_as_pdf_action)
         file_menu.addSeparator()
+        file_menu.addAction(self.print_action)
+        file_menu.addAction(self.preview_action)
+        file_menu.addSeparator()
         file_menu.addAction(self.exit_action)
+        
 
         edit_menu = self.menubar.addMenu("Edit")
         edit_menu.addAction(self.select_all_action)
@@ -220,9 +242,12 @@ class MainWindow(qtw.QMainWindow):
         format_menu.addAction(self.bold_text_action)
         format_menu.addAction(self.italic_text_action)
         format_menu.addAction(self.underline_text_action)
-       
+        format_menu.addSeparator()
         format_menu.addAction(self.superscript_text_action)
         format_menu.addAction(self.subscript_text_action)
+        format_menu.addSeparator()
+        format_menu.addAction(self.number_list_action)
+        format_menu.addAction(self.bullet_list_action)
         format_menu.addSeparator()
         format_menu.addAction(self.align_left_action)
         format_menu.addAction(self.align_right_action)
@@ -238,11 +263,6 @@ class MainWindow(qtw.QMainWindow):
         self.text_color_action.setStatusTip("Allows users to pick a color of their choice")
         format_menu.addAction(self.text_color_action)
         format_menu.addAction(self.font_dialog_action)
-
-       
-     
-       
-  
        
     def _connectActions(self):
         # Connect File actions
@@ -252,6 +272,8 @@ class MainWindow(qtw.QMainWindow):
         self.exit_action.triggered.connect(self.close)
         self.export_as_odt_action.triggered.connect(self.export_as_odt)
         self.export_as_pdf_action.triggered.connect(self.export_as_pdf)
+        self.print_action.triggered.connect(self.print_handler)
+        self.preview_action.triggered.connect(self.preview)
 
         # Connect Edit actions
         self.select_all_action.triggered.connect(self.select_all_document)
@@ -292,6 +314,10 @@ class MainWindow(qtw.QMainWindow):
         self.superscript_text_action.setCheckable(True)
         self.subscript_text_action.triggered.connect(self.subScript)
         self.subscript_text_action.setCheckable(True)
+        self.number_list_action.triggered.connect(self.numberList)
+        self.number_list_action.setCheckable(True)
+        self.bullet_list_action.triggered.connect(self.bulletList)
+        self.bullet_list_action.setCheckable(True)
 
         self.align_left_action.triggered.connect(self.align_left)
         self.align_left_action.setCheckable(True)
@@ -319,6 +345,12 @@ class MainWindow(qtw.QMainWindow):
         file_toolbar.addAction(self.new_action)
         file_toolbar.addAction(self.open_action)
         file_toolbar.addAction(self.save_action)
+
+        # print toolbar
+        print_toolbar = self.addToolBar("Print")
+        print_toolbar.setIconSize(qtc.QSize(23,23))
+        print_toolbar.addAction(self.print_action)
+        print_toolbar.addAction(self.preview_action)
 
         # export pdf and odt
         export_toolbar = self.addToolBar("Export")
@@ -366,6 +398,8 @@ class MainWindow(qtw.QMainWindow):
        
         font_weight_toolbar.addAction(self.superscript_text_action)
         font_weight_toolbar.addAction(self.subscript_text_action)
+        font_weight_toolbar.addAction(self.bullet_list_action)
+        font_weight_toolbar.addAction(self.number_list_action)
 
         self.font_toolbar = qtw.QToolBar(self)
         self.font_toolbar.setIconSize(qtc.QSize(20,20))
@@ -408,6 +442,24 @@ class MainWindow(qtw.QMainWindow):
         # magnify_toolbar.addAction(self.zoom_out_action)
         # magnify_toolbar.addAction(self.zoom_default_action)
     
+    def preview(self):
+
+        # Open preview dialog
+        preview = QtPrintSupport.QPrintPreviewDialog()
+
+        # If a print is requested, open print dialog
+        preview.paintRequested.connect(lambda p: self.current_editor.print_(p))
+
+        preview.exec_()
+
+    def print_handler(self):
+
+        # Open printing dialog
+        dialog = QtPrintSupport.QPrintDialog()
+
+        if dialog.exec_() == qtw.QDialog.Accepted:
+            self.current_editor.document().print_(dialog.printer())
+
     def font_dialog(self):
         font, ok =qtw.QFontDialog.getFont()
         if ok:
@@ -506,6 +558,21 @@ class MainWindow(qtw.QMainWindow):
         # Set the new format
         self.current_editor.setCurrentCharFormat(fmt)
 
+    def bulletList(self):
+
+        cursor = self.current_editor.textCursor()
+
+        # Insert bulleted list
+        cursor.insertList(qtg.QTextListFormat.ListDisc)
+
+    def numberList(self):
+
+        cursor = self.current_editor.textCursor()
+
+        # Insert list with numbers
+        cursor.insertList(qtg.QTextListFormat.ListDecimal)
+    
+
     def closeTab(self):
         close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
         close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
@@ -546,13 +613,9 @@ class MainWindow(qtw.QMainWindow):
             options = qtw.QFileDialog.Options()
             file_filter = 'Notes_ file (*.notes);; Text file (*.txt);; Python file (*.py)'
             if not self.filename:
-                self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File',".",file_filter,'Notes Files (*.notes)')[0] # zero index is required, otherwise it would throw an error if no selection
+                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Notes Files (*.notes)')[0] # zero index is required, otherwise it would throw an error if no selection was made
             
             if self.filename:
-
-                # Append extension if not there yet
-                if not self.filename.endswith(".notes"):
-                    self.filename += ".notes"
 
                 # We just store the contents of the text file along with the
                 # format in html, which Qt does in a very nice way for us
@@ -573,7 +636,7 @@ class MainWindow(qtw.QMainWindow):
                 # Append extension if not there yet
             else:
                 if not self.filename:
-                    self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0] # zero index is required, otherwise it would throw an error if no selection
+                    self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0] # zero index is required, otherwise it would throw an error if no selection was made
 
                 filename, _ = qtw.QFileDialog.getSaveFileName(self, "Export as OpenOffice Document", self.strippedName(self.filename).replace(".html",""),
                     "OpenOffice document (*.odt)")
@@ -602,7 +665,7 @@ class MainWindow(qtw.QMainWindow):
             self.statusBar().showMessage("There are no texts to export!")
         else:
             if not self.filename:
-                    self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0] # zero index is required, otherwise it would throw an error if no selection
+                    self.filename = qtw.QFileDialog.getSaveFileName(self, 'Save File')[0] # zero index is required, otherwise it would throw an error if no selection was made
 
             file_dialog = qtw.QFileDialog(self, "Export PDF")
             file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
@@ -788,7 +851,7 @@ if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     main = MainWindow()
     main.resize(650,500)
-    main.setMinimumSize(590,450)
+    main.setMinimumSize(600,450)
     main.setWindowTitle("Notes_")
     main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
     main.show()
