@@ -13,17 +13,20 @@
 #   INFO ABOUT SAVING AS DOCX:      https://stackoverflow.com/questions/22959642/pyqt4-how-to-read-a-doc-file-with-all-formatting-settings-using-python
 #   SYNTAX HIGHLIGHTING GUIDE:      https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
 #                                   https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
+#   
 #   QSCINTILLA DOC:                 https://qscintilla.com/#home
 #   EXECUTING PYTHON SCRIPT:        https://www.pythonguis.com/tutorials/qprocess-external-programs/
 #   QFILEDIALOG:                    https://learndataanalysis.org/source-code-how-to-use-qfiledialog-file-dialog-in-pyqt5/
-#   
 #   RECOLORABLE ICONS:              https://icons8.com/icons/set/list-number
 #   RESIZING IMG TO ICON SIZE:      https://www.img2go.com/resize-image
 #   TRANSPARENT BACKGROUND:         https://www.remove.bg/
 #   CREATE YOUR OWN ICONS:          https://github.com/rising-dancho/custom_minimize_maximize_and_close_window_icons-java-netbeans-
 #   FUSION DARK THEME:              https://stackoverflow.com/questions/48256772/dark-theme-for-qt-widgets
 #   CUSTOM TITLE BAR WINDOW:        https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application
-#   COMBINED TITLEBAR + MENUBAR:    https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
+#   COMBINED MENUBAR ON TITLEBAR:   https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
+#                                   https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/tree/main/_prototype
+#       
+#   RESIZE ON EDGE DRAG:            https://stackoverflow.com/questions/64784966/resizing-custom-widget-by-dragging-the-edges-in-pyqt5
 #   BLUR WINDOW:                    https://stackoverflow.com/questions/54807743/transparent-window-with-blur-behind-with-pyqt    
 #
 #   LIVING LEGENDS:      https://github.com/alandmoore
@@ -41,7 +44,7 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtPrintSupport
-from BlurWindow.blurWindow import blur
+# from BlurWindow.blurWindow import blur
 
 import resources 
 
@@ -51,9 +54,9 @@ class MainWindow(qtw.QMainWindow):
         super().__init__()
         
         # BLUR EXPERIMENT
-        self.setAttribute(qtc.Qt.WA_TranslucentBackground)
-        hWnd = self.winId()
-        blur(hWnd)
+        # self.setAttribute(qtc.Qt.WA_TranslucentBackground)
+        # hWnd = self.winId()
+        # blur(hWnd)
         # self.setWindowOpacity(0.98)
         self.filename = ""
         self.changesSaved = False
@@ -961,8 +964,8 @@ if __name__ == "__main__":
     palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
     palette.setColor(qtg.QPalette.BrightText, qtc.Qt.red)
     palette.setColor(qtg.QPalette.Link, qtg.QColor("#ffb454"))
-    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#5B5D6E"))
-    palette.setColor(qtg.QPalette.HighlightedText, qtc.Qt.white)
+    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#ffb454"))
+    palette.setColor(qtg.QPalette.HighlightedText, qtc.Qt.black)
     app.setPalette(palette)
     main = MainWindow()
     main.resize(710,590)
