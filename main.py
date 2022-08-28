@@ -25,10 +25,10 @@
 #   CUSTOM TITLE BAR WINDOW:        https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application
 #   COMBINED MENUBAR ON TITLEBAR:   https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
 #                                   https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/tree/main/_prototype
-#       
+#   TAB QSS STYLE:                  https://gist.github.com/espdev/4f1565b18497a42d317cdf2531b7ef05    
 #   RESIZE ON EDGE DRAG:            https://stackoverflow.com/questions/64784966/resizing-custom-widget-by-dragging-the-edges-in-pyqt5
 #   BLUR WINDOW:                    https://stackoverflow.com/questions/54807743/transparent-window-with-blur-behind-with-pyqt    
-#
+#   
 #   LIVING LEGENDS:      https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
 #                        https://github.com/goldsborough
@@ -923,27 +923,96 @@ class MainWindow(qtw.QMainWindow):
                 color: #BFBDB6;
                 background: #1c2028;
             }
-            QTabBar {
-                border: none;
-                background: #1c2028;
-                border-style: none;
-                padding: 0px;
+           QTabWidget::pane {
+                border: 1px solid black;
+                background: white;
             }
+
+            QTabWidget::tab-bar:top {
+                top: 1px;
+            }
+
+            QTabWidget::tab-bar:bottom {
+                bottom: 1px;
+            }
+
+            QTabWidget::tab-bar:left {
+                right: 1px;
+            }
+
+            QTabWidget::tab-bar:right {
+                left: 1px;
+            }
+
+            QTabBar::tab {
+                border: 1px solid black;
+            }
+
             QTabBar::tab:selected {
-                border: none;
-                color: #e1af4b;
-                background: #161a21;
-                padding: 10px 10px 10px 10px;
+                background: white;
             }
-            QTabWidget::pane{
-                border:none
+
+            QTabBar::tab:!selected {
+                background: silver;
             }
-            QTabBar::tab:!selected{
-                border: none;
-                color: #BFBDB6;
-                background: #1c2028;
-                padding: 10px 10px 10px 10px;
-                }
+
+            QTabBar::tab:!selected:hover {
+                background: #999;
+            }
+
+            QTabBar::tab:top:!selected {
+                margin-top: 3px;
+            }
+
+            QTabBar::tab:bottom:!selected {
+                margin-bottom: 3px;
+            }
+
+            QTabBar::tab:top, QTabBar::tab:bottom {
+                min-width: 8ex;
+                margin-right: -1px;
+                padding: 5px 10px 5px 10px;
+            }
+
+            QTabBar::tab:top:selected {
+                border-bottom-color: none;
+            }
+
+            QTabBar::tab:bottom:selected {
+                border-top-color: none;
+            }
+
+            QTabBar::tab:top:last, QTabBar::tab:bottom:last,
+            QTabBar::tab:top:only-one, QTabBar::tab:bottom:only-one {
+                margin-right: 0;
+            }
+
+            QTabBar::tab:left:!selected {
+                margin-right: 3px;
+            }
+
+            QTabBar::tab:right:!selected {
+                margin-left: 3px;
+            }
+
+            QTabBar::tab:left, QTabBar::tab:right {
+                min-height: 8ex;
+                margin-bottom: -1px;
+                padding: 10px 5px 10px 5px;
+            }
+
+            QTabBar::tab:left:selected {
+                border-left-color: none;
+            }
+
+            QTabBar::tab:right:selected {
+                border-right-color: none;
+            }
+
+            QTabBar::tab:left:last, QTabBar::tab:right:last,
+            QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
+                margin-bottom: 0;
+            }
             QTabBar::close-button { image: url(:/images/close_default.png); }
             QTabBar::close-button:hover { image: url(:/images/close_active.png); }
         """
