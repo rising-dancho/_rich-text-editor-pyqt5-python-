@@ -21,7 +21,8 @@
 #   RESIZING IMG TO ICON SIZE:  https://www.img2go.com/resize-image
 #   TRANSPARENT BACKGROUND:     https://www.remove.bg/
 #   CREATE YOUR OWN ICONS:      https://github.com/rising-dancho/custom_minimize_maximize_and_close_window_icons-java-netbeans-
-#       
+#   FUSION DARK THEME:          https://stackoverflow.com/questions/48256772/dark-theme-for-qt-widgets
+#   BORDERLESS WINDOW:          https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application    
 #
 #   LIVING LEGENDS:      https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
@@ -57,6 +58,8 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
+
+        self.setContentsMargins(qtc.QMargins())
 
         self.statusbar = self.statusBar()
         self.statusbar.showMessage("Ready")    
@@ -360,7 +363,7 @@ class MainWindow(qtw.QMainWindow):
         # File toolbar
         file_toolbar = self.addToolBar("File")
         file_toolbar.setIconSize(qtc.QSize(22,22))
-        # file_toolbar.setMovable(False)
+        file_toolbar.setMovable(False)
         file_toolbar.addAction(self.new_action)
         file_toolbar.addAction(self.open_action)
         file_toolbar.addAction(self.save_action)
@@ -368,13 +371,14 @@ class MainWindow(qtw.QMainWindow):
         # print toolbar
         print_toolbar = self.addToolBar("Print")
         print_toolbar.setIconSize(qtc.QSize(22,22))
+        print_toolbar.setMovable(False)
         print_toolbar.addAction(self.print_action)
         print_toolbar.addAction(self.preview_action)
 
         # export pdf and odt
         export_toolbar = self.addToolBar("Export")
         export_toolbar.setIconSize(qtc.QSize(25,25))
-        # export_toolbar.setMovable(False)
+        export_toolbar.setMovable(False)
         export_toolbar.addAction(self.export_as_odt_action)
         export_toolbar.addAction(self.export_as_pdf_action)
    
@@ -382,7 +386,7 @@ class MainWindow(qtw.QMainWindow):
         # Select all, cut, copy, paste toolbar
         clipboard_toolbar = self.addToolBar("Clipboard")
         clipboard_toolbar.setIconSize(qtc.QSize(25,25))
-        # clipboard_toolbar.setMovable(False)
+        clipboard_toolbar.setMovable(False)
         clipboard_toolbar.addAction(self.select_all_action)
         clipboard_toolbar.addAction(self.cut_action)
         clipboard_toolbar.addAction(self.copy_action)
@@ -391,8 +395,7 @@ class MainWindow(qtw.QMainWindow):
         # Select all, cut, copy, paste toolbar
         undo_redo_toolbar = self.addToolBar("Undo Redo")
         undo_redo_toolbar.setIconSize(qtc.QSize(28,28))
-        # clipboard_toolbar.setMovable(False)
-
+        undo_redo_toolbar.setMovable(False)
         undo_redo_toolbar.addAction(self.undo_action)
         undo_redo_toolbar.addAction(self.redo_action)
 
@@ -401,7 +404,7 @@ class MainWindow(qtw.QMainWindow):
         # Alignment toolbar
         alignment_toolbar = self.addToolBar("Alignment") 
         alignment_toolbar.setIconSize(qtc.QSize(20,20))
-        # alignment_toolbar.setMovable(False)
+        alignment_toolbar.setMovable(False)
         alignment_toolbar.addAction(self.align_left_action)
         alignment_toolbar.addAction(self.align_right_action)
         alignment_toolbar.addAction(self.align_center_action)
@@ -412,7 +415,7 @@ class MainWindow(qtw.QMainWindow):
 
         font_weight_toolbar = self.addToolBar("Font Weight") 
         font_weight_toolbar.setIconSize(qtc.QSize(18,18))
-        # font_weight_toolbar.setMovable(False)
+        font_weight_toolbar.setMovable(False)
         font_weight_toolbar.addAction(self.strike_out_text_action)
         font_weight_toolbar.addAction(self.bold_text_action)
         font_weight_toolbar.addAction(self.italic_text_action)
@@ -425,7 +428,7 @@ class MainWindow(qtw.QMainWindow):
 
         self.font_toolbar = qtw.QToolBar(self)
         self.font_toolbar.setIconSize(qtc.QSize(20,20))
-        # self.font_toolbar.setMovable(False)
+        self.font_toolbar.setMovable(False)
         self.combo_font = qtw.QFontComboBox(self.font_toolbar)
         self.combo_font.setCurrentFont(qtg.QFont("Consolas"))
         self.font_toolbar.addWidget(self.combo_font)
@@ -882,35 +885,52 @@ class MainWindow(qtw.QMainWindow):
         return """
             QTextEdit
             {
+                border: none;
                 font: "Consolas";
+                color: #AFAFAA;
                 background: #161a21;
                 selection-background-color: #ffb454;
                 selection-color: #000000;
             }
-            
             QMenuBar
             {
+                color: #AFAFAA;
                 background: #1c2028;
                 border: 0px;
             }
-            
+            QMenuBar::item:selected 
+            { 
+                color: #AFAFAA;
+                background: #1c2028; 
+            } 
+            QMenuBar::item:pressed 
+            {  
+                color: #AFAFAA;
+                background: #1c2028; 
+            }
+            QMenuBar::item 
+            { 
+                color: #AFAFAA;
+                background: #1c2028; 
+            }
             QToolBar
             {
                 background: #1c2028;
                 border: 0px;
             }
-            QMainWindow
-            {
-                background: #1c2028;
-            }
+            QMainWindow{ background: #1c2028; }
             QStatusBar 
             {
+                color: #AFAFAA;
                 background: #1c2028;
             }
             QTabBar {
+                border: transparent;
                 background: #1c2028;
+                border-style: none;
             }
             QTabBar::tab:selected {
+                border: none;
                 color: #e1af4b;
                 background: #161a21;
                 border-top-left-radius: 5px;
@@ -925,6 +945,8 @@ class MainWindow(qtw.QMainWindow):
                 padding: 10px 10px 10px 10px;
             }
             QTabBar::tab:!selected{
+                border: none;
+                color: #AFAFAA;
                 background: #1c2028;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
@@ -938,16 +960,29 @@ class MainWindow(qtw.QMainWindow):
                 border-left-style: solid;
                 padding: 10px 10px 10px 10px;
                 }
-            QTabBar::close-button {
-                image: url(:/images/close_default.png);
-            }
-            QTabBar::close-button:hover {
-                image: url(:/images/close_active.png);
-            }
+            QTabBar::close-button { image: url(:/images/close_default.png); }
+            QTabBar::close-button:hover { image: url(:/images/close_active.png); }
         """
 
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
+    app.setStyle("Fusion")
+  # Now use a palette to switch to dark colors:
+    palette = qtg.QPalette()
+    palette.setColor(qtg.QPalette.Window, qtg.QColor(53, 53, 53))
+    palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#AFAFAA"))
+    palette.setColor(qtg.QPalette.Base, qtg.QColor(25, 25, 25))
+    palette.setColor(qtg.QPalette.AlternateBase, qtg.QColor(53, 53, 53))
+    palette.setColor(qtg.QPalette.ToolTipBase, qtc.Qt.black)
+    palette.setColor(qtg.QPalette.ToolTipText, qtg.QColor("#AFAFAA"))
+    palette.setColor(qtg.QPalette.Text, qtg.QColor("#AFAFAA"))
+    palette.setColor(qtg.QPalette.Button, qtg.QColor(53, 53, 53))
+    palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#AFAFAA"))
+    palette.setColor(qtg.QPalette.BrightText, qtc.Qt.red)
+    palette.setColor(qtg.QPalette.Link, qtg.QColor("#ffb454"))
+    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#ffb454"))
+    palette.setColor(qtg.QPalette.HighlightedText, qtc.Qt.black)
+    app.setPalette(palette)
     main = MainWindow()
     main.resize(680,550)
     main.setMinimumSize(665,500)
