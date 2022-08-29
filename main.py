@@ -980,7 +980,7 @@ class MainWindow(qtw.QMainWindow):
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     app.setStyle("Fusion")
-  # Now use a palette to switch to dark colors:
+    # Now use a palette to switch to dark colors:
     palette = qtg.QPalette()
     palette.setColor(qtg.QPalette.Window, qtg.QColor("#1c2028"))
     palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#BFBDB6"))
@@ -992,8 +992,8 @@ if __name__ == "__main__":
     palette.setColor(qtg.QPalette.Button, qtg.QColor("#1c2028"))
     palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
     palette.setColor(qtg.QPalette.BrightText, qtc.Qt.red)
-    palette.setColor(qtg.QPalette.Link, qtg.QColor("#ffb454"))
-    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#ffb454"))
+    palette.setColor(qtg.QPalette.Link, qtg.QColor("#0086b6"))
+    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#0086b6"))
     palette.setColor(qtg.QPalette.HighlightedText, qtc.Qt.black)
     app.setPalette(palette)
     main = MainWindow()
