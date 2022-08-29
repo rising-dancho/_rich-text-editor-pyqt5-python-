@@ -28,7 +28,8 @@
 #   TAB QSS STYLE:                  https://gist.github.com/espdev/4f1565b18497a42d317cdf2531b7ef05    
 #   RESIZE ON EDGE DRAG:            https://stackoverflow.com/questions/64784966/resizing-custom-widget-by-dragging-the-edges-in-pyqt5
 #   BLUR WINDOW:                    https://stackoverflow.com/questions/54807743/transparent-window-with-blur-behind-with-pyqt    
-#   
+#   WHITE BORDER ON TAB BAR ISSUE:  https://forum.qt.io/topic/42265/qtabwidget-stylesheet-white-top-border/7
+#
 #   LIVING LEGENDS:      https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
 #                        https://github.com/goldsborough
@@ -70,8 +71,8 @@ class MainWindow(qtw.QMainWindow):
         self.statusbar.showMessage("Ready")    
         self.tabs = qtw.QTabWidget(self)
         self.tabs.setTabsClosable(True)
-        self.tabs.setDocumentMode(True)
-        self.tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
+        # self.tabs.setDocumentMode(True) # let's you double click tab bar to create new tabs
+        # self.tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
         self.tabs.tabCloseRequested.connect(self.remove_editor)
         self.tabs.currentChanged.connect(self.change_text_editor)
         self.tabs.tabBar().setMovable(True)
@@ -403,8 +404,8 @@ class MainWindow(qtw.QMainWindow):
         alignment_toolbar.setIconSize(qtc.QSize(20,20))
         alignment_toolbar.setMovable(False)
         alignment_toolbar.addAction(self.align_left_action)
-        alignment_toolbar.addAction(self.align_right_action)
         alignment_toolbar.addAction(self.align_center_action)
+        alignment_toolbar.addAction(self.align_right_action)
         alignment_toolbar.addAction(self.align_justify_action)
         alignment_toolbar.addAction(self.indent_action)
         alignment_toolbar.addAction(self.unindent_action)
@@ -684,9 +685,9 @@ class MainWindow(qtw.QMainWindow):
         close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
         close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
     
-    def tab_open_doubleclick(self, index):
-        if index == -1:
-            self.new_tab()
+    # def tab_open_doubleclick(self, index):
+    #     if index == -1:
+    #         self.new_tab()
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
         self.current_editor = self.create_editor()
@@ -880,6 +881,11 @@ class MainWindow(qtw.QMainWindow):
     
     def myStyleSheet(self):
         return """
+            QMainWindow{ background: #1c2028; border-style: none;}
+            QStatusBar { color: #BFBDB6; background: #1c2028; }
+            QMenuBar::item:pressed {  color: #BFBDB6; background: #1c2028; }
+            QMenuBar::item { color: #BFBDB6; background: #1c2028; }
+
             QTextEdit
             {
                 border: none;
@@ -889,83 +895,51 @@ class MainWindow(qtw.QMainWindow):
                 selection-background-color: #ffb454;
                 selection-color: #000000;
             }
-            QMainWindow { border: none; border-color: transparent }
+
             QMenuBar
             {
                 color: #BFBDB6;
                 background: #1c2028;
                 border: 0px;
             }
+
             QMenuBar::item:selected 
             { 
                 color: #BFBDB6;
                 background: #1c2028; 
             } 
-            QMenuBar::item:pressed 
-            {  
-                color: #BFBDB6;
-                background: #1c2028; 
-            }
-            QMenuBar::item 
-            { 
-                color: #BFBDB6;
-                background: #1c2028; 
-            }
+
             QToolBar
             {
                 background: #1c2028;
                 border: none;
                 border-style: none;
             }
-            QMainWindow{ background: #1c2028; border-style: none;}
-            QStatusBar 
-            {
-                color: #BFBDB6;
-                background: #1c2028;
-            }
-           QTabWidget::pane {
-                border: 1px solid black;
-                background: white;
-            }
-
-            QTabWidget::tab-bar:top {
-                top: 1px;
-            }
-
-            QTabWidget::tab-bar:bottom {
-                bottom: 1px;
-            }
-
-            QTabWidget::tab-bar:left {
-                right: 1px;
-            }
-
-            QTabWidget::tab-bar:right {
-                left: 1px;
-            }
-
-            QTabBar::tab {
-                border: 1px solid black;
-            }
+            
+            QTabWidget::pane { border: none; }
+            QTabWidget::tab-bar:top { top: 1px; }
+            QTabWidget::tab-bar:bottom { bottom: 1px; }
+            QTabWidget::tab-bar:left { right: 1px; }
+            QTabWidget::tab-bar:right { left: 1px; }
+            
+            QTabBar::tab { border: none; }
+            QTabBar::tab:!selected:hover { background: #1c2028; }
+            QTabBar::tab:top:!selected { background: #1c2028; }
+            QTabBar::tab:bottom:!selected { margin-bottom: 3px; }
+            QTabBar::close-button { image: url(:/images/close_default.png); }
+            QTabBar::close-button:hover { image: url(:/images/close_active.png); }
 
             QTabBar::tab:selected {
-                background: white;
+                color: #e1af4b;
+                background: #161a21;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
             }
 
             QTabBar::tab:!selected {
                 background: silver;
-            }
-
-            QTabBar::tab:!selected:hover {
-                background: #999;
-            }
-
-            QTabBar::tab:top:!selected {
-                margin-top: 3px;
-            }
-
-            QTabBar::tab:bottom:!selected {
-                margin-bottom: 3px;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
             }
 
             QTabBar::tab:top, QTabBar::tab:bottom {
@@ -973,48 +947,7 @@ class MainWindow(qtw.QMainWindow):
                 margin-right: -1px;
                 padding: 5px 10px 5px 10px;
             }
-
-            QTabBar::tab:top:selected {
-                border-bottom-color: none;
-            }
-
-            QTabBar::tab:bottom:selected {
-                border-top-color: none;
-            }
-
-            QTabBar::tab:top:last, QTabBar::tab:bottom:last,
-            QTabBar::tab:top:only-one, QTabBar::tab:bottom:only-one {
-                margin-right: 0;
-            }
-
-            QTabBar::tab:left:!selected {
-                margin-right: 3px;
-            }
-
-            QTabBar::tab:right:!selected {
-                margin-left: 3px;
-            }
-
-            QTabBar::tab:left, QTabBar::tab:right {
-                min-height: 8ex;
-                margin-bottom: -1px;
-                padding: 10px 5px 10px 5px;
-            }
-
-            QTabBar::tab:left:selected {
-                border-left-color: none;
-            }
-
-            QTabBar::tab:right:selected {
-                border-right-color: none;
-            }
-
-            QTabBar::tab:left:last, QTabBar::tab:right:last,
-            QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
-                margin-bottom: 0;
-            }
-            QTabBar::close-button { image: url(:/images/close_default.png); }
-            QTabBar::close-button:hover { image: url(:/images/close_active.png); }
+            
         """
 
 if __name__ == "__main__":
