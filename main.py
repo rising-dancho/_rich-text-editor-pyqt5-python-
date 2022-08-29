@@ -142,7 +142,7 @@ class MainWindow(qtw.QMainWindow):
         self.paste_action = qtw.QAction(qtg.QIcon(":/images/paste.png"), "Paste", self)
         self.undo_action = qtw.QAction(qtg.QIcon(":/images/undo.png"), "Undo", self)
         self.redo_action = qtw.QAction(qtg.QIcon(":/images/redo.png"), "Redo", self)
-
+        
         self.select_all_action.setShortcut("Ctrl+A")
         self.cut_action.setShortcut("Ctrl+X")
         self.copy_action.setShortcut("Ctrl+C")
@@ -156,6 +156,12 @@ class MainWindow(qtw.QMainWindow):
         self.paste_action.setStatusTip("Pastes the clipboard text into the text editor")
         self.undo_action.setStatusTip("Undo the previous operation")
         self.redo_action.setStatusTip("Redo the previous operation")
+
+        # MISC MENU
+        self.insert_image_action = qtw.QAction(qtg.QIcon(":/images/insert_image.png"),"Insert image",self)
+        self.insert_image_action.setStatusTip("Insert image")
+        self.insert_image_action.setShortcut("Ctrl+Shift+I")
+        
 
         # FORMAT MENU
         self.bold_text_action = qtw.QAction(qtg.QIcon(":/images/bold.png"), "Bold", self)
@@ -245,7 +251,6 @@ class MainWindow(qtw.QMainWindow):
         file_menu.addAction(self.preview_action)
         file_menu.addSeparator()
         file_menu.addAction(self.exit_action)
-        
 
         edit_menu = self.menubar.addMenu("Edit")
         edit_menu.addAction(self.select_all_action)
@@ -286,6 +291,9 @@ class MainWindow(qtw.QMainWindow):
         format_menu.addAction(self.text_color_action)
         format_menu.addAction(self.font_dialog_action)
 
+        insert_menu = self.menubar.addMenu("Insert")
+        insert_menu.addAction(self.insert_image_action) 
+
         view_menu = self.menubar.addMenu("View")
         view_menu.addAction(self.fullscreen_action) 
         view_menu.addSeparator()
@@ -312,6 +320,9 @@ class MainWindow(qtw.QMainWindow):
 
         # Connect Format actions
         self.fullscreen_action.triggered.connect(self.fullscreen)
+
+        # Connect Insert actions
+        self.insert_image_action.triggered.connect(self.insert_image)
         
         self.bold_text_action.triggered.connect(self.bold_text)
         bold_font = qtg.QFont()
@@ -361,7 +372,7 @@ class MainWindow(qtw.QMainWindow):
         # File toolbar
         file_toolbar = self.addToolBar("File")
         file_toolbar.setIconSize(qtc.QSize(22,22))
-        file_toolbar.setMovable(False)
+        # file_toolbar.setMovable(False)
         file_toolbar.addAction(self.new_action)
         file_toolbar.addAction(self.open_action)
         file_toolbar.addAction(self.save_action)
@@ -376,7 +387,7 @@ class MainWindow(qtw.QMainWindow):
         # export pdf and odt
         export_toolbar = self.addToolBar("Export")
         export_toolbar.setIconSize(qtc.QSize(25,25))
-        export_toolbar.setMovable(False)
+        # export_toolbar.setMovable(False)
         export_toolbar.addAction(self.export_as_odt_action)
         export_toolbar.addAction(self.export_as_pdf_action)
    
@@ -384,7 +395,7 @@ class MainWindow(qtw.QMainWindow):
         # Select all, cut, copy, paste toolbar
         clipboard_toolbar = self.addToolBar("Clipboard")
         clipboard_toolbar.setIconSize(qtc.QSize(25,25))
-        clipboard_toolbar.setMovable(False)
+        # clipboard_toolbar.setMovable(False)
         clipboard_toolbar.addAction(self.select_all_action)
         clipboard_toolbar.addAction(self.cut_action)
         clipboard_toolbar.addAction(self.copy_action)
@@ -393,16 +404,22 @@ class MainWindow(qtw.QMainWindow):
         # Select all, cut, copy, paste toolbar
         undo_redo_toolbar = self.addToolBar("Undo Redo")
         undo_redo_toolbar.setIconSize(qtc.QSize(28,28))
-        undo_redo_toolbar.setMovable(False)
+        # undo_redo_toolbar.setMovable(False)
         undo_redo_toolbar.addAction(self.undo_action)
         undo_redo_toolbar.addAction(self.redo_action)
+
+        # Insert toolbar
+        insert_toolbar = self.addToolBar("Insert")
+        insert_toolbar.setIconSize(qtc.QSize(23,23))
+        # insert_toolbar.setMovable(False)
+        insert_toolbar.addAction(self.insert_image_action)
 
         self.addToolBarBreak()
 
         # Alignment toolbar
         alignment_toolbar = self.addToolBar("Alignment") 
         alignment_toolbar.setIconSize(qtc.QSize(20,20))
-        alignment_toolbar.setMovable(False)
+        # alignment_toolbar.setMovable(False)
         alignment_toolbar.addAction(self.align_left_action)
         alignment_toolbar.addAction(self.align_center_action)
         alignment_toolbar.addAction(self.align_right_action)
@@ -410,10 +427,9 @@ class MainWindow(qtw.QMainWindow):
         alignment_toolbar.addAction(self.indent_action)
         alignment_toolbar.addAction(self.unindent_action)
         
-
         font_weight_toolbar = self.addToolBar("Font Weight") 
         font_weight_toolbar.setIconSize(qtc.QSize(18,18))
-        font_weight_toolbar.setMovable(False)
+        # font_weight_toolbar.setMovable(False)
         font_weight_toolbar.addAction(self.strike_out_text_action)
         font_weight_toolbar.addAction(self.bold_text_action)
         font_weight_toolbar.addAction(self.italic_text_action)
@@ -426,7 +442,7 @@ class MainWindow(qtw.QMainWindow):
 
         self.font_toolbar = qtw.QToolBar(self)
         self.font_toolbar.setIconSize(qtc.QSize(20,20))
-        self.font_toolbar.setMovable(False)
+        # self.font_toolbar.setMovable(False)
         self.combo_font = qtw.QFontComboBox(self.font_toolbar)
         self.combo_font.setCurrentFont(qtg.QFont("Consolas"))
         self.font_toolbar.addWidget(self.combo_font)
@@ -453,8 +469,6 @@ class MainWindow(qtw.QMainWindow):
         
         # color for toolbar
         self.font_toolbar.addAction(self.color_action)
-
-        
   
         # magnify_toolbar = self.addToolBar("Magnify") 
         # magnify_toolbar.setIconSize(qtc.QSize(25,25))
@@ -463,6 +477,27 @@ class MainWindow(qtw.QMainWindow):
         # magnify_toolbar.addAction(self.zoom_out_action)
         # magnify_toolbar.addAction(self.zoom_default_action)
     
+    def insert_image(self):
+        # Get image file name
+        #PYQT5 Returns a tuple in PyQt5
+        filename = qtw.QFileDialog.getOpenFileName(self, 'Insert image',".","Images (*.png *.xpm *.jpg *.bmp *.gif)")[0]
+
+        if filename:
+            # Create image object
+            image = qtg.QImage(filename)
+            # Error if unloadable
+            if image.isNull():
+
+                popup = qtw.QMessageBox(qtw.QMessageBox.Critical,
+                                          "Image load error",
+                                          "Could not load image file!",
+                                          qtw.QMessageBox.Ok,
+                                          self)
+                popup.show()
+            else:
+                cursor = self.current_editor.textCursor()
+                cursor.insertImage(image,filename)
+
     def indent(self):
 
         # Grab the cursor
@@ -547,8 +582,6 @@ class MainWindow(qtw.QMainWindow):
 
         else:
             self.handleDedent(cursor)
-
-
 
     def preview(self):
 
@@ -917,15 +950,9 @@ class MainWindow(qtw.QMainWindow):
             }
             
             QTabWidget::pane { border: none; }
-            QTabWidget::tab-bar:top { top: 1px; }
-            QTabWidget::tab-bar:bottom { bottom: 1px; }
-            QTabWidget::tab-bar:left { right: 1px; }
-            QTabWidget::tab-bar:right { left: 1px; }
-            
             QTabBar::tab { border: none; }
             QTabBar::tab:!selected:hover { background: #1c2028; }
             QTabBar::tab:top:!selected { background: #1c2028; }
-            QTabBar::tab:bottom:!selected { margin-bottom: 3px; }
             QTabBar::close-button { image: url(:/images/close_default.png); }
             QTabBar::close-button:hover { image: url(:/images/close_active.png); }
 
@@ -971,8 +998,11 @@ if __name__ == "__main__":
     app.setPalette(palette)
     main = MainWindow()
     main.resize(710,590)
-    main.setMinimumSize(680,550)
-    main.setWindowTitle("Notes_")
-    main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
+    main.setMinimumSize(700,550)
+    main.setWindowTitle(" ") 
+    QPixmap = qtg.QPixmap( 32, 32 )
+    QPixmap.fill( qtc.Qt.transparent ) 
+    main.setWindowIcon(qtg.QIcon(QPixmap))
+    # main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
     main.show()
     sys.exit(app.exec_())
