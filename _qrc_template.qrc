@@ -41,5 +41,6 @@
     <file>preview.png</file>
     <file>indent.png</file>
     <file>unindent.png</file>
+    <file>insert_image.png</file>
 </qresource>
 </RCC>
