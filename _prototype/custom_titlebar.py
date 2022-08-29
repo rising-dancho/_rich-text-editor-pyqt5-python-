@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import QTextEdit
 from PyQt5.QtGui import QPalette
 from PyQt5.QtCore import QSize
 
-# SOURCE: https://stackoverflow.com/questions/44241612/custom-titlebar-with-frame-in-pyqt5
+# SOURCE: https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -144,3 +144,4 @@ if __name__ == "__main__":
     mw.show()
     mw.setWindowTitle('My custom window with a very, very long title')
     sys.exit(app.exec_())
+
