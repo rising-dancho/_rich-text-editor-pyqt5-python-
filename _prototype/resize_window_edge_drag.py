@@ -1,147 +1,219 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QCursor, QPalette, QBrush, QColor, QScreen
+from PyQt5.QtWidgets import QWidget, QApplication
 
-Left, Right = 1, 2
-Top, Bottom = 4, 8
-TopLeft = Top|Left
-TopRight = Top|Right
-BottomRight = Bottom|Right
-BottomLeft = Bottom|Left
+# SOURCE: https://github.com/yjg30737/pyqt-frameless-window/blob/main/pyqt_frameless_window/framelessWindow.py
 
-class ResizableLabel(QtWidgets.QWidget):
-    resizeMargin = 4
-    # note that the Left, Top, Right, Bottom constants cannot be used as class
-    # attributes if you want to use list comprehension for better performance,
-    # and that's due to the variable scope behavior on Python 3
-    sections = [x|y for x in (Left, Right) for y in (Top, Bottom)]
-    cursors = {
-        Left: QtCore.Qt.SizeHorCursor, 
-        Top|Left: QtCore.Qt.SizeFDiagCursor, 
-        Top: QtCore.Qt.SizeVerCursor, 
-        Top|Right: QtCore.Qt.SizeBDiagCursor, 
-        Right: QtCore.Qt.SizeHorCursor, 
-        Bottom|Right: QtCore.Qt.SizeFDiagCursor, 
-        Bottom: QtCore.Qt.SizeVerCursor, 
-        Bottom|Left: QtCore.Qt.SizeBDiagCursor, 
-    }
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.startPos = self.section = None
-        self.rects = {section:QtCore.QRect() for section in self.sections}
-
-        # mandatory for cursor updates
-        self.setMouseTracking(True)
-
-        # just for demonstration purposes
-        background = QtGui.QPixmap(3, 3)
-        background.fill(QtCore.Qt.transparent)
-        qp = QtGui.QPainter(background)
-        pen = QtGui.QPen(QtCore.Qt.darkGray, .5)
-        qp.setPen(pen)
-        qp.drawLine(0, 2, 2, 0)
-        qp.end()
-        self.background = QtGui.QBrush(background)
-
-    def updateCursor(self, pos):
-        for section, rect in self.rects.items():
-            if pos in rect:
-                self.setCursor(self.cursors[section])
-                self.section = section
-                return section
-        self.unsetCursor()
-
-    def adjustSize(self):
-        del self._sizeHint
-        super().adjustSize()
-
-    def minimumSizeHint(self):
-        try:
-            return self._sizeHint
-        except:
-            return super().minimumSizeHint()
-
-    def mousePressEvent(self, event):
-        if event.button() == QtCore.Qt.LeftButton:
-            if self.updateCursor(event.pos()):
-                self.startPos = event.pos()
-                return
-        super().mousePressEvent(event)
-
-    def mouseMoveEvent(self, event):
-        if self.startPos is not None:
-            delta = event.pos() - self.startPos
-            if self.section & Left:
-                delta.setX(-delta.x())
-            elif not self.section & (Left|Right):
-                delta.setX(0)
-            if self.section & Top:
-                delta.setY(-delta.y())
-            elif not self.section & (Top|Bottom):
-                delta.setY(0)
-            newSize = QtCore.QSize(self.width() + delta.x(), self.height() + delta.y())
-            self._sizeHint = newSize
-            self.startPos = event.pos()
-            self.updateGeometry()
-        elif not event.buttons():
-            self.updateCursor(event.pos())
-        super().mouseMoveEvent(event)
-        self.update()
-
-    def mouseReleaseEvent(self, event):
-        super().mouseReleaseEvent(event)
-        self.updateCursor(event.pos())
-        self.startPos = self.section = None
-        self.setMinimumSize(0, 0)
-
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        outRect = self.rect()
-        inRect = self.rect().adjusted(self.resizeMargin, self.resizeMargin, -self.resizeMargin, -self.resizeMargin)
-        self.rects[Left] = QtCore.QRect(outRect.left(), inRect.top(), self.resizeMargin, inRect.height())
-        self.rects[TopLeft] = QtCore.QRect(outRect.topLeft(), inRect.topLeft())
-        self.rects[Top] = QtCore.QRect(inRect.left(), outRect.top(), inRect.width(), self.resizeMargin)
-        self.rects[TopRight] = QtCore.QRect(inRect.right(), outRect.top(), self.resizeMargin, self.resizeMargin)
-        self.rects[Right] = QtCore.QRect(inRect.right(), self.resizeMargin, self.resizeMargin, inRect.height())
-        self.rects[BottomRight] = QtCore.QRect(inRect.bottomRight(), outRect.bottomRight())
-        self.rects[Bottom] = QtCore.QRect(inRect.left(), inRect.bottom(), inRect.width(), self.resizeMargin)
-        self.rects[BottomLeft] = QtCore.QRect(outRect.bottomLeft(), inRect.bottomLeft()).normalized()
-
-    # ---- optional, mostly for demonstration purposes ----
-
-    def paintEvent(self, event):
-        super().paintEvent(event)
-        qp = QtGui.QPainter(self)
-        if self.underMouse() and self.section:
-            qp.save()
-            qp.setPen(QtCore.Qt.lightGray)
-            qp.setBrush(self.background)
-            qp.drawRect(self.rect().adjusted(0, 0, -1, -1))
-            qp.restore()
-        qp.drawText(self.rect(), QtCore.Qt.AlignCenter, '{}x{}'.format(self.width(), self.height()))
-
-    def enterEvent(self, event):
-        self.update()
-
-    def leaveEvent(self, event):
-        self.update()
-
-
-class Test(QtWidgets.QWidget):
+class FramelessWindow(QWidget):
     def __init__(self):
         super().__init__()
-        layout = QtWidgets.QGridLayout(self)
+        self._resizing = False
+        self._resizable = True
 
-        for row in range(3):
-            for column in range(3):
-                if (row, column) == (1, 1):
-                    continue
-                layout.addWidget(QtWidgets.QPushButton(), row, column)
+        self.margin = 3
+        self._cursor = QCursor()
+        self._pressToMove = False
 
-        label = ResizableLabel()
-        layout.addWidget(label, 1, 1)
+        self._verticalExpandedEnabled = False
+        self._verticalExpanded = False
+        self._originalY = 0
+        self._originalHeightBeforeExpand = 0
 
-if __name__ == '__main__':
+        self.initPosition()
+        self.initBasicUi()
+
+    def initBasicUi(self):
+        self.setMinimumSize(self.widthMM(), self.heightMM())
+        self.setMouseTracking(True)
+        self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
+
+    # init the edge direction for set correct reshape cursor based on it
+    def initPosition(self):
+        self.top = False
+        self.bottom = False
+        self.left = False
+        self.right = False
+
+    def setCursorShapeForCurrentPoint(self, p):
+        if self.isResizable():
+            if self.isMaximized() or self.isFullScreen():
+                pass
+            else:
+                # give the margin to reshape cursor shape
+                rect = self.rect()
+                rect.setX(self.rect().x() + self.margin)
+                rect.setY(self.rect().y() + self.margin)
+                rect.setWidth(self.rect().width() - self.margin * 2)
+                rect.setHeight(self.rect().height() - self.margin * 2)
+
+                self._resizing = rect.contains(p)
+                if self._resizing:
+                    # resize end
+                    self.unsetCursor()
+                    self._cursor = self.cursor()
+                    self.initPosition()
+                else:
+                    # resize start
+                    x = p.x()
+                    y = p.y()
+
+                    x1 = self.rect().x()
+                    y1 = self.rect().y()
+                    x2 = self.rect().width()
+                    y2 = self.rect().height()
+
+                    self.left = abs(x - x1) <= self.margin # if mouse cursor is at the almost far left
+                    self.top = abs(y - y1) <= self.margin # far top
+                    self.right = abs(x - (x2 + x1)) <= self.margin # far right
+                    self.bottom = abs(y - (y2 + y1)) <= self.margin # far bottom
+
+                    # set the cursor shape based on flag above
+                    if self.top and self.left:
+                        self._cursor.setShape(Qt.SizeFDiagCursor)
+                    elif self.top and self.right:
+                        self._cursor.setShape(Qt.SizeBDiagCursor)
+                    elif self.bottom and self.left:
+                        self._cursor.setShape(Qt.SizeBDiagCursor)
+                    elif self.bottom and self.right:
+                        self._cursor.setShape(Qt.SizeFDiagCursor)
+                    elif self.left:
+                        self._cursor.setShape(Qt.SizeHorCursor)
+                    elif self.top:
+                        self._cursor.setShape(Qt.SizeVerCursor)
+                    elif self.right:
+                        self._cursor.setShape(Qt.SizeHorCursor)
+                    elif self.bottom:
+                        self._cursor.setShape(Qt.SizeVerCursor)
+                    self.setCursor(self._cursor)
+
+                self._resizing = not self._resizing
+
+    def mousePressEvent(self, e):
+        if e.button() == Qt.LeftButton:
+            if self._resizing:
+                self.resize()
+            else:
+                if self._pressToMove:
+                    self.move()
+        return super().mousePressEvent(e)
+
+    def mouseDoubleClickEvent(self, e):
+        if self._verticalExpandedEnabled:
+            p = e.pos()
+
+            rect = self.rect()
+            rect.setX(self.rect().x() + self.margin)
+            rect.setY(self.rect().y() + self.margin)
+            rect.setWidth(self.rect().width() - self.margin * 2)
+            rect.setHeight(self.rect().height() - self.margin * 2)
+
+            y = p.y()
+
+            y1 = self.rect().y()
+            y2 = self.rect().height()
+
+            top = abs(y - y1) <= self.margin # far top
+            bottom = abs(y - (y2 + y1)) <= self.margin # far bottom
+
+            ag = QScreen().availableGeometry()
+
+            # fixme minor bug - resizing after expand can lead to inappropriate result when in comes to expanding again, it should be fixed
+            # vertical expanding when double-clicking either top or bottom edge
+            # back to normal
+            if self._verticalExpanded:
+                if top or bottom:
+                    self.move(self.x(), self._originalY)
+                    self.resize(self.width(), self._originalHeightBeforeExpand)
+                    self._verticalExpanded = False
+            # expand vertically
+            else:
+                if top or bottom:
+                    self._verticalExpanded = True
+                    min_size = self.minimumSize()
+                    max_size = self.maximumSize()
+                    geo = self.geometry()
+                    self._originalY = geo.y()
+                    self._originalHeightBeforeExpand = geo.height()
+                    geo.moveTop(0)
+                    self.setGeometry(geo)
+                    self.setFixedHeight(ag.height()-2)
+                    self.setMinimumSize(min_size)
+                    self.setMaximumSize(max_size)
+
+        return super().mouseDoubleClickEvent(e)
+
+    def mouseMoveEvent(self, e):
+        self.setCursorShapeForCurrentPoint(e.pos())
+        return super().mouseMoveEvent(e)
+
+    # prevent accumulated cursor shape bug
+    def enterEvent(self, e):
+        self.setCursorShapeForCurrentPoint(e.pos())
+        return super().enterEvent(e)
+
+    def resize(self):
+        window = self.window().windowHandle()
+        # reshape cursor for resize
+        if self._cursor.shape() == Qt.SizeHorCursor:
+            if self.left:
+                window.startSystemResize(Qt.LeftEdge)
+            elif self.right:
+                window.startSystemResize(Qt.RightEdge)
+        elif self._cursor.shape() == Qt.SizeVerCursor:
+            if self.top:
+                window.startSystemResize(Qt.TopEdge)
+            elif self.bottom:
+                window.startSystemResize(Qt.BottomEdge)
+        elif self._cursor.shape() == Qt.SizeBDiagCursor:
+            if self.top and self.right:
+                window.startSystemResize(Qt.TopEdge | Qt.RightEdge)
+            elif self.bottom and self.left:
+                window.startSystemResize(Qt.BottomEdge | Qt.LeftEdge)
+        elif self._cursor.shape() == Qt.SizeFDiagCursor:
+            if self.top and self.left:
+                window.startSystemResize(Qt.TopEdge | Qt.LeftEdge)
+            elif self.bottom and self.right:
+                window.startSystemResize(Qt.BottomEdge | Qt.RightEdge)
+
+    def move(self):
+        window = self.window().windowHandle()
+        window.startSystemMove()
+
+    def setMargin(self, margin: int):
+        self.margin = margin
+        self.layout().setContentsMargins(self.margin, self.margin, self.margin, self.margin)
+
+    def isResizable(self) -> bool:
+        return self._resizable
+
+    def setResizable(self, f: bool):
+        self._resizable = f
+
+    def isPressToMove(self) -> bool:
+        return self._pressToMove
+
+    def setPressToMove(self, f: bool):
+        self._pressToMove = f
+
+    def setFrameColor(self, color):
+        if isinstance(color, str):
+            color = QColor(color)
+        p = QPalette()
+        b = QBrush(color)
+        p.setBrush(QPalette.Window, b)
+        self.setPalette(p)
+
+    def getFrameColor(self) -> QColor:
+        return self.palette().color(QPalette.Window)
+
+    def setVerticalExpandedEnabled(self, f: bool):
+        self._verticalExpandedEnabled = f
+
+
+if __name__ == "__main__":
     import sys
-    app = QtWidgets.QApplication(sys.argv)
-    w = Test()
-    w.show()
+
+    app = QApplication(sys.argv)
+    ex = FramelessWindow()
+    ex.show()
     sys.exit(app.exec_())
