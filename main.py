@@ -2,33 +2,41 @@
 # NOTE: 
 # here are some resources that may be helpful to those that will inherit the work and love
 # .. that was poured in here. goodluck, my child - adfinem_rising
-# 
-#   UI GUIDE:                       https://realpython.com/python-menus-toolbars/
-#   TEXT EDITOR GUIDE:              https://www.binpress.com/building-text-editor-pyqt-1/
-#   QT TEXT EDITOR DOC:             https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
-#   MY TABBED EDITOR:               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
-#   TEXT EDITOR REFERENCE 1:        https://gist.github.com/Axel-Erfurt/e33608124a4e47167ba76f4d62cba9ca
-#   TEXT EDITOR REFERENCE 2:        https://github.com/goldsborough/Writer
-#   QRC RESOURCES GUIDE:            https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
-#   INFO ABOUT SAVING AS DOCX:      https://stackoverflow.com/questions/22959642/pyqt4-how-to-read-a-doc-file-with-all-formatting-settings-using-python
-#   SYNTAX HIGHLIGHTING GUIDE:      https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
-#                                   https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
 #   
-#   QSCINTILLA DOC:                 https://qscintilla.com/#home
-#   EXECUTING PYTHON SCRIPT:        https://www.pythonguis.com/tutorials/qprocess-external-programs/
-#   QFILEDIALOG:                    https://learndataanalysis.org/source-code-how-to-use-qfiledialog-file-dialog-in-pyqt5/
-#   RECOLORABLE ICONS:              https://icons8.com/icons/set/list-number
-#   RESIZING IMG TO ICON SIZE:      https://www.img2go.com/resize-image
-#   TRANSPARENT BACKGROUND:         https://www.remove.bg/
-#   CREATE YOUR OWN ICONS:          https://github.com/rising-dancho/custom_minimize_maximize_and_close_window_icons-java-netbeans-
-#   FUSION DARK THEME:              https://stackoverflow.com/questions/48256772/dark-theme-for-qt-widgets
-#   CUSTOM TITLE BAR WINDOW:        https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application
-#   COMBINED MENUBAR ON TITLEBAR:   https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
-#                                   https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/tree/main/_prototype
-#   TAB QSS STYLE:                  https://gist.github.com/espdev/4f1565b18497a42d317cdf2531b7ef05    
-#   RESIZE ON EDGE DRAG:            https://stackoverflow.com/questions/64784966/resizing-custom-widget-by-dragging-the-edges-in-pyqt5
-#   BLUR WINDOW:                    https://stackoverflow.com/questions/54807743/transparent-window-with-blur-behind-with-pyqt    
-#   WHITE BORDER ON TAB BAR ISSUE:  https://forum.qt.io/topic/42265/qtabwidget-stylesheet-white-top-border/7
+#   GETTING STARTED                     1:  https://www.freecodecamp.org/news/how-to-read-your-way-to-becoming-a-better-developer-b6432fa5bc0c/ 
+#   MINDSET WHEN READING DOCUMENTATION  2:  https://blog.techtalentsouth.com/8-tips-to-reading-documentation-a-newbies-guide
+#   MINDSET WHEN READING DOCUMENTATION  3:  https://medium.com/@laymanExplained/layman-explained-reading-documentation-36c450e77e6b
+#   MINDSET WHEN READING DOCUMENTATION  4:  https://www.youtube.com/watch?v=lwqeNnboh_4
+#   PRACTICALS ON READING DOCUMENTATION 5:  https://www.youtube.com/watch?v=s1PLS3SQHQ0
+#   SHORT TUTORIAL ON READING DOCS      6:  https://www.youtube.com/watch?v=vYuvEWiffts
+#   
+#   UI GUIDE:                               https://realpython.com/python-menus-toolbars/
+#   TEXT EDITOR GUIDE:                      https://www.binpress.com/building-text-editor-pyqt-1/
+#   QT TEXT EDITOR DOC:                     https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
+#   MY TABBED EDITOR:                       https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
+#   TEXT EDITOR REFERENCE 1:                https://gist.github.com/Axel-Erfurt/e33608124a4e47167ba76f4d62cba9ca
+#   TEXT EDITOR REFERENCE 2:                https://github.com/goldsborough/Writer
+#   QRC RESOURCES GUIDE:                    https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
+#   INFO ABOUT SAVING AS DOCX:              https://stackoverflow.com/questions/22959642/pyqt4-how-to-read-a-doc-file-with-all-formatting-settings-using-python
+#   SYNTAX HIGHLIGHTING GUIDE:              https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
+#                                           https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
+#   
+#   QSCINTILLA DOC:                         https://qscintilla.com/#home
+#   EXECUTING PYTHON SCRIPT:                https://www.pythonguis.com/tutorials/qprocess-external-programs/
+#   QFILEDIALOG:                            https://learndataanalysis.org/source-code-how-to-use-qfiledialog-file-dialog-in-pyqt5/
+#   RECOLORABLE ICONS:                      https://icons8.com/icons/set/list-number
+#   RESIZING IMG TO ICON SIZE:              https://www.img2go.com/resize-image
+#   TRANSPARENT BACKGROUND:                 https://www.remove.bg/
+#   CREATE YOUR OWN ICONS:                  https://github.com/rising-dancho/custom_minimize_maximize_and_close_window_icons-java-netbeans-
+#   FUSION DARK THEME:                      https://stackoverflow.com/questions/48256772/dark-theme-for-qt-widgets
+#   CUSTOM TITLE BAR WINDOW:                https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application
+#   COMBINED MENUBAR ON TITLEBAR:           https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
+#                                           https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/tree/main/_prototype
+#   
+#   TAB QSS STYLE:                          https://gist.github.com/espdev/4f1565b18497a42d317cdf2531b7ef05    
+#   RESIZE ON EDGE DRAG:                    https://stackoverflow.com/questions/64784966/resizing-custom-widget-by-dragging-the-edges-in-pyqt5
+#   BLUR WINDOW:                            https://stackoverflow.com/questions/54807743/transparent-window-with-blur-behind-with-pyqt    
+#   WHITE BORDER ON TAB BAR ISSUE:          https://forum.qt.io/topic/42265/qtabwidget-stylesheet-white-top-border/7
 #
 #   LIVING LEGENDS:      https://github.com/alandmoore
 #                        https://github.com/Axel-Erfurt
@@ -65,7 +73,7 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.setFocus()
         self.text_editors = []
 
-        self.setContentsMargins(qtc.QMargins())
+        # self.setContentsMargins(qtc.QMargins())
 
         self.statusbar = self.statusBar()
         self.statusbar.showMessage("Ready")    
@@ -98,13 +106,67 @@ class MainWindow(qtw.QMainWindow):
             self.current_editor = self.text_editors[index]
 
     def remove_editor(self, index):
-        # this line prevents the user from closing more tabs if there is no more tabs to close
         if self.tabs.count() < 2:
             return
         
         self.tabs.removeTab(index)
         if index < len(self.text_editors):
             del self.text_editors[index]
+
+    def closeTab(self):
+        close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
+        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
+    
+    # def tab_open_doubleclick(self, index):
+    #     if index == -1:
+    #         self.new_tab()
+
+    def new_tab(self, checked = False, title = "Untitled.txt"):
+        self.current_editor = self.create_editor()
+        self.text_editors.append(self.current_editor)
+        self.tabs.addTab(self.current_editor, title)
+        self.tabs.setCurrentWidget(self.current_editor)
+
+    def open_document(self):
+        options = qtw.QFileDialog.Options()
+        # Get filename and show only .notes files
+        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
+        self.filename, _ = qtw.QFileDialog.getOpenFileName(
+            self, 'Open File',".",
+            "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
+            options=options
+        )
+        if self.filename:
+            with open(self.filename,"rt") as file:
+                content = file.read()
+                self.current_editor = self.create_editor() 
+                currentIndex = self.tabs.addTab(self.current_editor, str(self.filename))   # use that widget as the new tab
+                self.current_editor.setText(content) # set the contents of the file as the text
+                self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
+
+    def save_document (self):
+        if not self.current_editor.document().isModified():
+            self.statusBar().showMessage("There are no texts to be saved!")
+        else:
+            # Only open dialog if there is no filename yet
+            #PYQT5 Returns a tuple in PyQt5, we only need the filename
+            options = qtw.QFileDialog.Options()
+            file_filter = 'Notes_ file (*.notes);; Text file (*.txt);; Python file (*.py)'
+            if not self.filename:
+                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Notes Files (*.notes)')[0] # zero index is required, otherwise it would throw an error if no selection was made
+            
+            if self.filename:
+
+                # We just store the contents of the text file along with the
+                # format in html, which Qt does in a very nice way for us
+                with open(self.filename,"wt") as file:
+                    file.write(self.current_editor.toHtml())
+                    print(self.tabs.currentIndex())
+                    print(str(self.filename))
+                    self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
+                    self.statusBar().showMessage(f"Saved to {self.filename}")
+                    
+                self.changesSaved = True
 
     def _createActions(self):
         # FILE MENU
@@ -162,7 +224,6 @@ class MainWindow(qtw.QMainWindow):
         self.insert_image_action.setStatusTip("Insert image")
         self.insert_image_action.setShortcut("Ctrl+Shift+I")
         
-
         # FORMAT MENU
         self.bold_text_action = qtw.QAction(qtg.QIcon(":/images/bold.png"), "Bold", self)
         self.italic_text_action = qtw.QAction(qtg.QIcon(":/images/italic.png"), "Italic", self)
@@ -178,11 +239,10 @@ class MainWindow(qtw.QMainWindow):
         self.unindent_action = qtw.QAction(qtg.QIcon(":/images/unindent.png"), "Unindent", self)
 
         self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
-        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Font (becomes the default)", self)
+        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Default Font", self)
         self.number_list_action = qtw.QAction(qtg.QIcon(":/images/number_list.png"), "Numbering", self)
         self.bullet_list_action = qtw.QAction(qtg.QIcon(":/images/bullet_list.png"), "Bullets", self)
 
-    
         # self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
         # self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
         # self.zoom_default_action = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
@@ -218,8 +278,8 @@ class MainWindow(qtw.QMainWindow):
         self.align_justify_action.setStatusTip("Justifies the text in the available space")
         self.color_action.setStatusTip("Pick a color of their choice")
         self.font_dialog_action.setStatusTip("Set a font for all texts")
-        self.number_list_action.setStatusTip("Create bulleted list")
-        self.bullet_list_action.setStatusTip("Create numbered list")
+        self.number_list_action.setStatusTip("Create numbered list")
+        self.bullet_list_action.setStatusTip("Create bulleted list")
         self.indent_action.setStatusTip("Indent selection")
         self.unindent_action.setStatusTip("Unindent selection")
         # self.zoom_in_action.setStatusTip("Zoom In") 
@@ -275,8 +335,8 @@ class MainWindow(qtw.QMainWindow):
         format_menu.addAction(self.bullet_list_action)
         format_menu.addSeparator()
         format_menu.addAction(self.align_left_action)
-        format_menu.addAction(self.align_right_action)
         format_menu.addAction(self.align_center_action)
+        format_menu.addAction(self.align_right_action)
         format_menu.addAction(self.align_justify_action)
         format_menu.addAction(self.indent_action)
         format_menu.addAction(self.unindent_action)
@@ -486,8 +546,8 @@ class MainWindow(qtw.QMainWindow):
             # Create image object
             image = qtg.QImage(filename)
             # Error if unloadable
+            
             if image.isNull():
-
                 popup = qtw.QMessageBox(qtw.QMessageBox.Critical,
                                           "Image load error",
                                           "Could not load image file!",
@@ -502,84 +562,60 @@ class MainWindow(qtw.QMainWindow):
 
         # Grab the cursor
         cursor = self.current_editor.textCursor()
-
         if cursor.hasSelection():
-
             # Store the current line/block number
             temp = cursor.blockNumber()
-
             # Move to the selection's end
             cursor.setPosition(cursor.anchor())
-
             # Calculate range of selection
             diff = cursor.blockNumber() - temp
-
             direction = qtg.QTextCursor.Up if diff > 0 else qtg.QTextCursor.Down
-
             # Iterate over lines (diff absolute value)
+            
             for n in range(abs(diff) + 1):
-
                 # Move to start of each line
                 cursor.movePosition(qtg.QTextCursor.StartOfLine)
-
                 # Insert tabbing
                 cursor.insertText("\t")
-
                 # And move back up
                 cursor.movePosition(direction)
 
         # If there is no selection, just insert a tab
         else:
-
             cursor.insertText("\t")
 
     def handleDedent(self,cursor):
 
         cursor.movePosition(qtg.QTextCursor.StartOfLine)
-
         # Grab the current line
         line = cursor.block().text()
-
         # If the line starts with a tab character, delete it
         if line.startswith("\t"):
-
             # Delete next character
             cursor.deleteChar()
-
         # Otherwise, delete all spaces until a non-space character is met
         else:
             for char in line[:8]:
-
                 if char != " ":
                     break
-
                 cursor.deleteChar()
 
     def unindent(self):
 
         cursor = self.current_editor.textCursor()
-
         if cursor.hasSelection():
-
             # Store the current line/block number
             temp = cursor.blockNumber()
-
             # Move to the selection's last line
             cursor.setPosition(cursor.anchor())
-
             # Calculate range of selection
             diff = cursor.blockNumber() - temp
-
             direction = qtg.QTextCursor.Up if diff > 0 else qtg.QTextCursor.Down
-
             # Iterate over lines
             for n in range(abs(diff) + 1):
-
                 self.handleDedent(cursor)
-
                 # Move up
                 cursor.movePosition(direction)
-
         else:
             self.handleDedent(cursor)
 
@@ -587,17 +623,14 @@ class MainWindow(qtw.QMainWindow):
 
         # Open preview dialog
         preview = QtPrintSupport.QPrintPreviewDialog()
-
         # If a print is requested, open print dialog
         preview.paintRequested.connect(lambda p: self.current_editor.print_(p))
-
         preview.exec_()
 
     def print_handler(self):
 
         # Open printing dialog
         dialog = QtPrintSupport.QPrintDialog()
-
         if dialog.exec_() == qtw.QDialog.Accepted:
             self.current_editor.document().print_(dialog.printer())
 
@@ -702,72 +735,17 @@ class MainWindow(qtw.QMainWindow):
     def bulletList(self):
 
         cursor = self.current_editor.textCursor()
-
         # Insert bulleted list
         cursor.insertList(qtg.QTextListFormat.ListDisc)
 
     def numberList(self):
 
         cursor = self.current_editor.textCursor()
-
         # Insert list with numbers
         cursor.insertList(qtg.QTextListFormat.ListDecimal)
     
 
-    def closeTab(self):
-        close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
-        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
-    
-    # def tab_open_doubleclick(self, index):
-    #     if index == -1:
-    #         self.new_tab()
-
-    def new_tab(self, checked = False, title = "Untitled.txt"):
-        self.current_editor = self.create_editor()
-        self.text_editors.append(self.current_editor)
-        self.tabs.addTab(self.current_editor, title)
-        self.tabs.setCurrentWidget(self.current_editor)
-
-    def open_document(self):
-        options = qtw.QFileDialog.Options()
-        # Get filename and show only .notes files
-        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
-        self.filename, _ = qtw.QFileDialog.getOpenFileName(
-            self, 'Open File',".",
-            "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
-            options=options
-        )
-        if self.filename:
-            with open(self.filename,"rt") as file:
-                content = file.read()
-                self.current_editor = self.create_editor() 
-                currentIndex = self.tabs.addTab(self.current_editor, str(self.filename))   # use that widget as the new tab
-                self.current_editor.setText(content) # set the contents of the file as the text
-                self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
-
-    def save_document (self):
-        if not self.current_editor.document().isModified():
-            self.statusBar().showMessage("There are no texts to be saved!")
-        else:
-            # Only open dialog if there is no filename yet
-            #PYQT5 Returns a tuple in PyQt5, we only need the filename
-            options = qtw.QFileDialog.Options()
-            file_filter = 'Notes_ file (*.notes);; Text file (*.txt);; Python file (*.py)'
-            if not self.filename:
-                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Notes Files (*.notes)')[0] # zero index is required, otherwise it would throw an error if no selection was made
-            
-            if self.filename:
-
-                # We just store the contents of the text file along with the
-                # format in html, which Qt does in a very nice way for us
-                with open(self.filename,"wt") as file:
-                    file.write(self.current_editor.toHtml())
-                    print(self.tabs.currentIndex())
-                    print(str(self.filename))
-                    self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
-                    self.statusBar().showMessage(f"Saved to {self.filename}")
-                    
-                self.changesSaved = True
+   
 
     def export_as_odt(self):
             if not self.current_editor.document().isModified():
@@ -918,7 +896,8 @@ class MainWindow(qtw.QMainWindow):
             QStatusBar { color: #BFBDB6; background: #1c2028; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #1c2028; }
             QMenuBar::item { color: #BFBDB6; background: #1c2028; }
-
+         
+       
             QTextEdit
             {
                 border: none;
@@ -933,7 +912,8 @@ class MainWindow(qtw.QMainWindow):
             {
                 color: #BFBDB6;
                 background: #1c2028;
-                border: 0px;
+                border: none;
+                border-style: none;
             }
 
             QMenuBar::item:selected 
@@ -978,20 +958,22 @@ class MainWindow(qtw.QMainWindow):
         """
 
 if __name__ == "__main__":
-    app = qtw.QApplication(sys.argv)
-    app.setStyle("Fusion")
+    app = qtw.QApplication(sys.argv) 
+    app.setStyle(qtw.QStyleFactory.create("Fusion")) # Oxygen, Windows, Fusion etc.
     # Now use a palette to switch to dark colors:
     palette = qtg.QPalette()
-    palette.setColor(qtg.QPalette.Window, qtg.QColor("#1c2028"))
+    palette.setColor(qtg.QPalette.Window, qtg.QColor("#161a21"))
     palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.Base, qtg.QColor("#1c2028"))
-    palette.setColor(qtg.QPalette.AlternateBase, qtg.QColor("#1c2028"))
+    palette.setColor(qtg.QPalette.AlternateBase, qtg.QColor("#161a21"))
     palette.setColor(qtg.QPalette.ToolTipBase, qtc.Qt.black)
     palette.setColor(qtg.QPalette.ToolTipText, qtg.QColor("#BFBDB6"))
     palette.setColor(qtg.QPalette.Text, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.Button, qtg.QColor("#1c2028"))
+    
+    palette.setColor(qtg.QPalette.Button, qtg.QColor("#161a21")) # button color
+    palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # textedit
+  
     palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.BrightText, qtc.Qt.red)
+    palette.setColor(qtg.QPalette.BrightText, qtc.Qt.white)
     palette.setColor(qtg.QPalette.Link, qtg.QColor("#0086b6"))
     palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#0086b6"))
     palette.setColor(qtg.QPalette.HighlightedText, qtc.Qt.black)

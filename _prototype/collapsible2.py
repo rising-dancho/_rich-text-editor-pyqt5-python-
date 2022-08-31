@@ -308,36 +308,36 @@ class MainWindow(QMainWindow):
         self.LABEL_STYLE = str(self.LABEL_STYLE)
 
         # -- QPushButton stylesheet ---------------------
-        self.BUTTON_STYLE = s1 = QStyleSheet()
+        # self.BUTTON_STYLE = s1 = QStyleSheet()
 
-        s1.setStyles(cls=QPushButton, 
-                    color='white', 
-                    font_weight=400,
-                    border_style='solid',
-                    padding='4px',
-                    background_color=self.LIGHT_BLUE)
+        # s1.setStyles(cls=QPushButton, 
+        #             color='white', 
+        #             font_weight=400,
+        #             border_style='solid',
+        #             padding='4px',
+        #             background_color=self.LIGHT_BLUE)
 
-        s1.setStyles(cls=QPushButton, psuedo=':pressed',
-                    background_color=self.PALE_SALMON)
+        # s1.setStyles(cls=QPushButton, psuedo=':pressed',
+        #             background_color=self.PALE_SALMON)
 
-        s1.setStyles(cls=QPushButton, psuedo=':focus-pressed',
-                    background_color=self.PALE_SALMON)
+        # s1.setStyles(cls=QPushButton, psuedo=':focus-pressed',
+        #             background_color=self.PALE_SALMON)
 
-        s1.setStyles(cls=QPushButton, psuedo=':disabled',
-                    background_color=self.LIGHT_GREY)
+        # s1.setStyles(cls=QPushButton, psuedo=':disabled',
+        #             background_color=self.LIGHT_GREY)
 
-        s1.setStyles(cls=QPushButton, psuedo=':checked',
-                    background_color=self.PALE_SALMON)
+        # s1.setStyles(cls=QPushButton, psuedo=':checked',
+        #             background_color=self.PALE_SALMON)
 
-        s1.setStyles(cls=QPushButton, psuedo=':hover:!pressed:!checked',
-                    background_color=self.MED_BLUE)
-        self.BUTTON_STYLE = str(self.BUTTON_STYLE)
+        # s1.setStyles(cls=QPushButton, psuedo=':hover:!pressed:!checked',
+        #             background_color=self.MED_BLUE)
+        # self.BUTTON_STYLE = str(self.BUTTON_STYLE)
 
-        self.BUTTON_GROUPBOX_STYLE = QStyleSheet(QGroupBox, border='none', font_weight='bold', color='white')
-        self.BUTTON_GROUPBOX_STYLE = str(self.BUTTON_GROUPBOX_STYLE)
+        # self.BUTTON_GROUPBOX_STYLE = QStyleSheet(QGroupBox, border='none', font_weight='bold', color='white')
+        # self.BUTTON_GROUPBOX_STYLE = str(self.BUTTON_GROUPBOX_STYLE)
 
-        self.TEXT_EDIT_STYLE = QStyleSheet(QTextEdit, color='white', border=f'1px solid {self.LIGHT_BLUE}', background_color=self.MED_BLUE)
-        self.TEXT_EDIT_STYLE = str(self.TEXT_EDIT_STYLE)
+        # self.TEXT_EDIT_STYLE = QStyleSheet(QTextEdit, color='white', border=f'1px solid {self.LIGHT_BLUE}', background_color=self.MED_BLUE)
+        # self.TEXT_EDIT_STYLE = str(self.TEXT_EDIT_STYLE)
 
         self.initUI()
 
@@ -361,7 +361,7 @@ class MainWindow(QMainWindow):
         for _id, text in enumerate(('small', 'medium', 'large')):
             btn = QPushButton(text)
             btn.setCheckable(True)
-            btn.setStyleSheet(self.BUTTON_STYLE)
+            # btn.setStyleSheet(self.BUTTON_STYLE)
             button_group.addButton(btn)
             button_group.setId(btn, _id)
             button_hbox.addWidget(btn)
@@ -370,13 +370,13 @@ class MainWindow(QMainWindow):
 
         text_area = QTextEdit()
         text_area.setPlaceholderText('Type a greeting here')
-        text_area.setStyleSheet(self.TEXT_EDIT_STYLE)
+        # text_area.setStyleSheet(self.TEXT_EDIT_STYLE)
 
         contents_vbox.addLayout(label_box)
         contents_vbox.addLayout(button_hbox)
         contents_vbox.addWidget(text_area)
 
-        collapsible = Expander(self, 'Expander')
+        collapsible = Expander(self)
         collapsible.setToggleButtonStyles({'padding': '4px', 'background-color': 'white'})
         collapsible.setContentAreaStyles({'background-color': 'white'})
         collapsible.setLayout(contents_vbox)
