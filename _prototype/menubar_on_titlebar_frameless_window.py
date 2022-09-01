@@ -16,7 +16,10 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QCursor
 # RESIZING FRAMELESS WINDOW:        https://stackoverflow.com/questions/7128238/implement-resize-option-to-qt-frameless-widget
 # PYQT CUSTOM WINDOWS:              https://www.youtube.com/watch?v=CA6bOJLf7Pw
 # OOP TUTORIAL:                     https://www.youtube.com/watch?v=e4fwY9ZsxPw&list=PLhQjrBD2T3817j24-GogXmWqO5Q5vYy0V&index=10
-# frameless-window (yjg30737):      https://github.com/yjg30737/pyqt-frameless-window/blob/main/pyqt_frameless_window/framelessWindow.py
+# CORNER DRAG RESIZE (musicamante): https://stackoverflow.com/questions/62807295/how-to-resize-a-window-from-the-edges-after-adding-the-property-qtcore-qt-framel
+# CORNER DRAG RESIZE PROTOTYPE:     https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/blob/main/_prototype/musicamante_resize_window_with_corners_simple.py
+# EDGE DRAG RESIZE (yjg30737):      https://github.com/yjg30737/pyqt-frameless-window/blob/main/pyqt_frameless_window/framelessWindow.py
+# EDGE DRAG RESIZE PROTOTYPE:       https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/blob/main/_prototype/yjg30737_resize_window_with_edges.py
 # ABOUT "->":                       https://stackoverflow.com/questions/14379753/what-does-mean-in-python-function-definitions
 
 
