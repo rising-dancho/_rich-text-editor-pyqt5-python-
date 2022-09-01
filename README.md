@@ -5,7 +5,7 @@ the project is still very much in progress, but it made learning pyqt5 an enjoya
 
 EDIT:
 - lmao!! hahahahaa!!! i just now realized the difference between a rich text editor (eg. microsoft word) vs. a text editor (like notepad). big difference!!
-a rich text editor produces a file that can handle fancy colors, tables, bullets, highlighting, etc. while a text editor cannot! simple text editors can only read plain text files and nothing else, just purely undecorated texts!! (so that's why when you try to open a .docx file in notepad you get gibberish letters because it can't parse those to .txt format) 
+a rich text editor produces a file that can handle fancy colors, tables, bullets, highlighting, etc. while a text editor cannot! simple text editors can only read and create plain text files and nothing else, just purely undecorated texts!! (so that's why when you try to open a .docx file in notepad you get gibberish letters because it can't parse those to .txt format) 
 
 damn.. but luckily i can save the file as .odt, .pdf, or .html extensions which allows a rich form for text editing. all this time i was thinking that i was creating something that can replace the boring notepad, but i was wrong. i didn't even understand clearly the capabilities of both.
 
