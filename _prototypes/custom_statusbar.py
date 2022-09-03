@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (QMainWindow, QApplication, QToolButton, QHBoxLayo
                              QLabel, QSizeGrip, QMenuBar, QStyleFactory, QSizePolicy)
 # from PyQt5.QtGui import QIcon, QPalette, QColor, QCursor
 
-# how to install PySide6? just open you command prompt and type the ff:
+# how to install PySide6? just open you command prompt and type the ff: (you should have python installed of course)
 # pip install PySide6
 # alternatively, go here: https://pypi.org/project/PySide6/
 
