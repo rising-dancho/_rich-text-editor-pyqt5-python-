@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (QMainWindow, QApplication, QToolButton, QHBoxLayo
 
 # PySide6 has clearer QEvent type explanation as compared to PyQt5, that's we i used pyside instead.
 # TUTORIAL ABOUT MOUSE EVENTS: https://www.youtube.com/watch?v=imqz8JuFxyo
+# EVENT FILTERS DOCS: https://doc.qt.io/qtforpython/PySide6/QtCore/QEvent.html?highlight=event%20type#PySide6.QtCore.PySide6.QtCore.QEvent.type
 
 class MainWindow(QWidget):
     def __init__(self):
