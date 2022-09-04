@@ -29,8 +29,6 @@
     <file>fullscreen.png</file>
     <file>text.png</file>
     <file>close.png</file>
-    <file>close_active.png</file>
-    <file>close_default.png</file>
     <file>superscript.png</file>
     <file>subscript.png</file>
     <file>odt.png</file>
@@ -42,5 +40,20 @@
     <file>indent.png</file>
     <file>unindent.png</file>
     <file>insert_image.png</file>
+
+    <file>close_active.png</file>
+    <file>close_default.png</file>
+
+    <file>colored_maximize.png</file>
+    <file>colored_minimize.png</file>
+    <file>colored_close.png</file>
+    <file>colored_normal.png</file>
+
+    <file>nav_maximize.png</file>
+    <file>nav_minimize.png</file>
+    <file>nav_close.png</file>
+    <file>nav_normal.png</file>
+
+
 </qresource>
 </RCC>

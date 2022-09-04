@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtCore import pyqtSlot, QPoint, Qt, QRect, QSize
+from PyQt5.QtCore import pyqtSlot, QPoint, Qt, QRect, QSize, QEvent
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QToolButton, QHBoxLayout,
                              QVBoxLayout, QTabWidget, QWidget, QAction,
                              QLabel, QSizeGrip, QMenuBar, QStyleFactory, qApp, QSizePolicy)
@@ -29,7 +29,10 @@ import resources
 # EDGE DRAG RESIZE (yjg30737):      https://github.com/yjg30737/pyqt-frameless-window/blob/main/pyqt_frameless_window/framelessWindow.py
 # EDGE DRAG RESIZE PROTOTYPE:       https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/blob/main/_prototype/yjg30737_resize_window_with_edges.py
 # ABOUT "->":                       https://stackoverflow.com/questions/14379753/what-does-mean-in-python-function-definitions
-
+# ADD TOOLBAR FOR A QWIDGET:        https://forum.qt.io/topic/52022/solved-how-can-i-add-a-toolbar-for-a-qwidget-not-qmainwindow
+# DISPLAY MESSAGE ON MOUSE HOVER:   https://stackoverflow.com/questions/52291734/pyqt5-mouse-hover-functions
+# EVENT FILTER FOR MOUSE EVENT:     https://www.youtube.com/watch?v=imqz8JuFxyo
+# MAKE ICONS USING FIGMA:           https://www.youtube.com/watch?v=10fSci2vXtE
 
 class TitleBar(QWidget):
     height = 35
@@ -45,31 +48,31 @@ class TitleBar(QWidget):
             }
            
             QLabel[accessibleName="lbl_title"]{
-                background-color: #242526; 
+                background-color: #161a21; 
                 font-size: 13px;
                 font: "Consolas";
                 padding-right: 425px;
             }
             QToolButton[accessibleName="btn_close"] {
-                image: url(./icons/close_def.png);
-                background: #242526;
+                image: url(:/images/nav_close.png);
+                background: #161a21;
                 border: none;
                
             }
             QToolButton[accessibleName="btn_close"]:hover {
-                image: url(./icons/close.png);
-                background: #242526;
+                image: url(:/images/colored_close.png);
+                background: #161a21;
                 border: none;
             }    
             QToolButton[accessibleName="btn_min"] {
-                image: url(./icons/minimize_def.png);
-                background: #242526;
+                image: url(:/images/nav_minimize.png);
+                background: #161a21;
                 border: none;
                 padding-right: 3px;
             }
             QToolButton[accessibleName="btn_min"]:hover {
-                image: url(./icons/minimize.png);
-                background: #242526;
+                image: url(:/images/colored_minimize.png);
+                background: #161a21;
                 border: none;
                 padding-right: 3px;
             }
@@ -78,28 +81,28 @@ class TitleBar(QWidget):
         """
         self.css_maximize ="""
             QToolButton[accessibleName="btn_max"] {
-                image: url(./icons/maximize_def.png);
-                background: #242526;
+                image: url(:/images/nav_maximize.png);
+                background: #161a21;
                 border: nobutton_stylene;
                 padding-right: 3px; 
             }
             QToolButton[accessibleName="btn_max"]:hover {
-                image: url(./icons/maximize.png);
-                background: #242526;
+                image: url(:/images/colored_maximize.png);
+                background: #161a21;
                 border: none;
             }
         
         """
         self.css_collapse ="""
             QToolButton[accessibleName="btn_max"]{
-                image: url(./icons/collapse_def.png);
-                background: #242526;
+                image: url(:/images/nav_normal.png);
+                background: #161a21;
                 border: none;
                 
             }
             QToolButton[accessibleName="btn_max"]:hover{
-                image: url(./icons/restore.png);
-                background: #242526;
+                image: url(:/images/colored_normal.png);
+                background: #161a21;
                 border: none;
                 
             }
@@ -160,7 +163,7 @@ class TitleBar(QWidget):
         self.text_color_action = qtw.QAction(qtg.QIcon(pix), "Colors", self,
                 triggered=self.textColor)
         self.text_color_action.setShortcut("Ctrl+Shift+C")
-        self.text_color_action.setStatusTip("Allows users to pick a color of their choice")
+        self.text_color_action.setToolTip("Allows users to pick a color of their choice")
         format_menu.addAction(self.text_color_action)
         format_menu.addAction(self.font_dialog_action)
 
@@ -221,6 +224,8 @@ class TitleBar(QWidget):
         self.grip_topRight.setStyleSheet(css_invisible_gripSize)
 
     def _createActions(self):
+        self.status_bar = StatusBar(self)
+       
         # FILE MENU
         self.new_action = qtw.QAction(qtg.QIcon(":/images/new_file.png"),"New", self)
         self.open_action = qtw.QAction(qtg.QIcon(":/images/folder.png"),"Open", self)
@@ -239,15 +244,16 @@ class TitleBar(QWidget):
         self.export_as_pdf_action.setShortcut("Alt+P")
         self.print_action.setShortcut("Ctrl+P")
         self.preview_action.setShortcut("Ctrl+Shift+P")
-
-        self.new_action.setStatusTip("New file")
-        self.open_action.setStatusTip("Open a file")
-        self.save_action.setStatusTip("Save a file")
-        self.exit_action.setStatusTip("Exit Program")
-        self.export_as_odt_action.setStatusTip("Export your file as an OpenOffice document")
-        self.export_as_pdf_action.setStatusTip("Export your file as PDF document")
-        self.print_action.setStatusTip("Print document")
-        self.preview_action.setStatusTip("Preview page before printing")
+        
+        self.new_action.setToolTip("New file")
+        self.open_action.setToolTip("Open a file")
+        self.save_action.setToolTip("Save a file")
+        self.exit_action.setToolTip("Exit Program")
+        
+        self.export_as_odt_action.setToolTip("Export your file as an OpenOffice document")
+        self.export_as_pdf_action.setToolTip("Export your file as PDF document")
+        self.print_action.setToolTip("Print document")
+        self.preview_action.setToolTip("Preview page before printing")
 
         # EDIT MENU
         self.select_all_action = qtw.QAction(qtg.QIcon(":/images/select_all.png"), "Select All", self)
@@ -264,16 +270,16 @@ class TitleBar(QWidget):
         self.undo_action.setShortcut("Ctrl+Z")
         self.redo_action.setShortcut("Ctrl+Y")
 
-        self.select_all_action.setStatusTip("Selects all texts")
-        self.cut_action.setStatusTip("Cuts the selected text and copies it to the clipboard")
-        self.copy_action.setStatusTip("Copies the selected text to the clipboard")
-        self.paste_action.setStatusTip("Pastes the clipboard text into the text editor")
-        self.undo_action.setStatusTip("Undo the previous operation")
-        self.redo_action.setStatusTip("Redo the previous operation")
+        self.select_all_action.setToolTip("Selects all texts")
+        self.cut_action.setToolTip("Cuts the selected text and copies it to the clipboard")
+        self.copy_action.setToolTip("Copies the selected text to the clipboard")
+        self.paste_action.setToolTip("Pastes the clipboard text into the text editor")
+        self.undo_action.setToolTip("Undo the previous operation")
+        self.redo_action.setToolTip("Redo the previous operation")
 
         # MISC MENU
         self.insert_image_action = qtw.QAction(qtg.QIcon(":/images/insert_image.png"),"Insert image",self)
-        self.insert_image_action.setStatusTip("Insert image")
+        self.insert_image_action.setToolTip("Insert image")
         self.insert_image_action.setShortcut("Ctrl+Shift+I")
         
         # FORMAT MENU
@@ -318,25 +324,25 @@ class TitleBar(QWidget):
         # self.zoom_out_action.setShortcut("Ctrl+-") 
         # self.zoom_default_action.setShortcut("Ctrl+0")
  
-        self.bold_text_action.setStatusTip("Toggle whether the font weight is bold or not")
-        self.italic_text_action.setStatusTip("Toggle whether the font is italic or not")
-        self.underline_text_action.setStatusTip("Toggle whether the font is underlined or not")
-        self.strike_out_text_action.setStatusTip("Toggle whether the font is striked out or not")
+        self.bold_text_action.setToolTip("Toggle whether the font weight is bold or not")
+        self.italic_text_action.setToolTip("Toggle whether the font is italic or not")
+        self.underline_text_action.setToolTip("Toggle whether the font is underlined or not")
+        self.strike_out_text_action.setToolTip("Toggle whether the font is striked out or not")
         self.superscript_text_action.setShortcut("Type very small letters just above the line of text")
         self.subscript_text_action.setShortcut("Type very small letters just below the line of text")
-        self.align_left_action.setStatusTip("Aligns with the left edge")
-        self.align_right_action.setStatusTip("Aligns with the right edge")
-        self.align_center_action.setStatusTip("Centers horizontally in the available space")
-        self.align_justify_action.setStatusTip("Justifies the text in the available space")
-        self.color_action.setStatusTip("Pick a color of their choice")
-        self.font_dialog_action.setStatusTip("Set a font for all texts")
-        self.number_list_action.setStatusTip("Create numbered list")
-        self.bullet_list_action.setStatusTip("Create bulleted list")
-        self.indent_action.setStatusTip("Indent selection")
-        self.unindent_action.setStatusTip("Unindent selection")
-        # self.zoom_in_action.setStatusTip("Zoom In") 
-        # self.zoom_out_action.setStatusTip("Zoom Out") 
-        # self.zoom_default_action.setStatusTip("Restore to the default font size")
+        self.align_left_action.setToolTip("Aligns with the left edge")
+        self.align_right_action.setToolTip("Aligns with the right edge")
+        self.align_center_action.setToolTip("Centers horizontally in the available space")
+        self.align_justify_action.setToolTip("Justifies the text in the available space")
+        self.color_action.setToolTip("Pick a color of their choice")
+        self.font_dialog_action.setToolTip("Set a font for all texts")
+        self.number_list_action.setToolTip("Create numbered list")
+        self.bullet_list_action.setToolTip("Create bulleted list")
+        self.indent_action.setToolTip("Indent selection")
+        self.unindent_action.setToolTip("Unindent selection")
+        # self.zoom_in_action.setToolTip("Zoom In") 
+        # self.zoom_out_action.setToolTip("Zoom Out") 
+        # self.zoom_default_action.setToolTip("Restore to the default font size")
 
         # VIEW MENU
         self.fullscreen_action = qtw.QAction(qtg.QIcon(":/images/fullscreen.png"), "Fullscreen", self)
@@ -345,8 +351,8 @@ class TitleBar(QWidget):
         self.fullscreen_action.setShortcut("F11")
         self.view_status_action.setShortcut("")
 
-        self.fullscreen_action.setStatusTip("Toggles the full screen mode")
-        self.view_status_action.setStatusTip('Toggle the status bar to be visible or not')
+        self.fullscreen_action.setToolTip("Toggles the full screen mode")
+        self.view_status_action.setToolTip('Toggle the status bar to be visible or not')
         self.view_status_action.setChecked(True)
 
     # toolbar update display color depending on color selected
@@ -366,47 +372,41 @@ class TitleBar(QWidget):
             main.showNormal()
             self.maxNormal= False
             print('nomalscreen: maximize icon showing')
-            self.maxButton.setStyleSheet("""
-                QToolButton[accessibleName="btn_max"]{
-                    image: url(./icons/maximize_def.png);
-                    background: #242526;
-                    border: none;
-                
-                }
-                QToolButton[accessibleName="btn_max"]:hover{
-                    image: url(./icons/maximize.png);
-                    background: #242526;
-                    border: none;
-                
-                }
-            """
-            )
-            
+            self.maxButton.setStyleSheet(self.css_maximize)     
         else:
             main.showMaximized()
             self.maxNormal=  True
             print('fullscreen: collapse icon showing')
-            self.maxButton.setStyleSheet("""
-                QToolButton[accessibleName="btn_max"]{
-                    image: url(./icons/collapse_def.png);
-                    background: #242526;
-                    border: none;
-                
-                }
-                QToolButton[accessibleName="btn_max"]:hover{
-                    image: url(./icons/restore.png);
-                    background: #242526;
-                    border: none;
-                
-                }
-            """
-            )
+            self.maxButton.setStyleSheet(self.css_collapse)
 
     def on_click_maximize(self):
         self.maximaze = not self.maximaze
         if self.maximaze:    main.setWindowState(Qt.WindowNoState)
         if not self.maximaze:
             main.setWindowState(Qt.WindowMaximized)
+    
+    def eventFilter(self, obj, event):
+        print(obj.objectName())
+        # print(dir(event))
+        # print(event.type())
+        if event.type() == QEvent.ToolTip:
+            print(event.type())
+            return True
+            # self.status_info.setText(self.btn.toolTip())
+        if event.type() == QEvent.Leave:
+            print(event.type())
+            #self.status_info.setText(" ")
+            self.status_info.setText(self.default)
+
+        if event.type() == QEvent.Enter:
+            print(event.type()) 
+            self.status_info.setText(self.btn.toolTip()) 
+        if event.type() == QEvent.HoverEnter:
+            print(event.type())    
+        
+        # if obj == self.btn and event.type() == QEvent.HoverEnter:
+        #     self.onHovered()
+        # return super(MainWindow, self).eventFilter(obj, event)
 
     def on_click_close(self):
         main.close()
@@ -444,7 +444,7 @@ class StatusBar(QWidget):
                 background-color: transparent; 
         """
         self.initUI()
-        self.showMessage("showMessage: Hello world!")
+        self.showMessage("")
 
         self.gripSize = 20
         self.grip_bottomLeft = QSizeGrip(self)
@@ -469,7 +469,7 @@ class StatusBar(QWidget):
         self.label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.label.setStyleSheet(""" 
             QLabel {
-                background-color: #242526;
+                background-color: #161a21;
                 font: "Consolas";
                 font-size: 12px;
                 padding-left: 3px;
@@ -486,16 +486,23 @@ class StatusBar(QWidget):
     def showMessage(self, text):
         self.label.setText(text)
 
+    
+
 
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-
+        # WINDOW FLAGS: https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-windowflags-example.html?highlight=windowminimizebuttonhint
         self.setMinimumSize(400,250)
         self.resize(700,500)
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)        
-        self.setStyleSheet("background-color: #242526;")
+        self.setWindowFlags(self.windowFlags() 
+                            | qtc.Qt.FramelessWindowHint 
+                            | qtc.Qt.WindowMinimizeButtonHint
+                            | qtc.Qt.WindowMaximizeButtonHint
+                            | qtc.Qt.WindowCloseButtonHint)
+
+        self.setStyleSheet("background-color: #161a21;")
         self.setWindowTitle('Code Maker')
 
         self.title_bar  = TitleBar(self) 
