@@ -9,14 +9,14 @@ from PySide6.QtWidgets import (QMainWindow, QApplication, QToolButton, QHBoxLayo
 # pip install PySide6
 # alternatively, go here: https://pypi.org/project/PySide6/
 
-# PySide6 has clearer QEvent type explanation as compared to PyQt5, that's we i used pyside instead.
+# PySide6 has clearer QEvent type console explanations as compared to PyQt5, that's why we i used PySide6 instead.
 # TUTORIAL ABOUT MOUSE EVENTS: https://www.youtube.com/watch?v=imqz8JuFxyo
 # EVENT FILTERS DOCS: https://doc.qt.io/qtforpython/PySide6/QtCore/QEvent.html?highlight=event%20type#PySide6.QtCore.PySide6.QtCore.QEvent.type
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setGeometry(400, 100, 300, 300)
+        self.setGeometry(400, 100, 300, 50)
 
         hlay = QHBoxLayout()
         # hlay.addStretch(1)
@@ -42,6 +42,7 @@ class MainWindow(QWidget):
         pass
     
     def eventFilter(self, obj, event):
+        # print(dir(event))
         # print(event.type())
         if event.type() == QEvent.ToolTip:
             print(event.type())
