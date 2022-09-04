@@ -357,41 +357,13 @@ class TitleBar(QWidget):
             main.showNormal()
             self.maxNormal= False
             print('nomalscreen: maximize icon showing')
-            self.maxButton.setStyleSheet("""
-                QToolButton[accessibleName="btn_max"]{
-                    image: url(./icons/maximize_def.png);
-                    background: #161a21;
-                    border: none;
-                
-                }
-                QToolButton[accessibleName="btn_max"]:hover{
-                    image: url(./icons/maximize.png);
-                    background: #161a21;
-                    border: none;
-                
-                }
-            """
-            )
+            self.maxButton.setStyleSheet(self.css_maximize)
             
         else:
             main.showMaximized()
             self.maxNormal=  True
             print('fullscreen: collapse icon showing')
-            self.maxButton.setStyleSheet("""
-                QToolButton[accessibleName="btn_max"]{
-                    image: url(./icons/collapse_def.png);
-                    background: #161a21;
-                    border: none;
-                
-                }
-                QToolButton[accessibleName="btn_max"]:hover{
-                    image: url(./icons/restore.png);
-                    background: #161a21;
-                    border: none;
-                
-                }
-            """
-            )
+            self.maxButton.setStyleSheet(self.css_collapse)
 
     def on_click_maximize(self):
         self.maximaze = not self.maximaze
