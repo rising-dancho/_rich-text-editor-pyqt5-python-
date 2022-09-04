@@ -3,7 +3,11 @@
 # here are some resources that may be helpful to those that will inherit the work and love
 # .. that was poured in here. goodluck, my child - adfinem_rising
 #   
-#   GETTING STARTED                     1:  https://www.freecodecamp.org/news/how-to-read-your-way-to-becoming-a-better-developer-b6432fa5bc0c/ 
+#   GETTING STARTED:                        https://www.youtube.com/watch?v=a7iFHz70J1I&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=7
+#   GETTING STARTED CODING:                 https://doc.qt.io/qtforpython/gettingstarted.html
+#   FINDING CODE EXAMPLES:                  https://www.programcreek.com/python/
+#
+#   MINDSET WHEN READING DOCUMENTATION  1:  https://www.freecodecamp.org/news/how-to-read-your-way-to-becoming-a-better-developer-b6432fa5bc0c/ 
 #   MINDSET WHEN READING DOCUMENTATION  2:  https://blog.techtalentsouth.com/8-tips-to-reading-documentation-a-newbies-guide
 #   MINDSET WHEN READING DOCUMENTATION  3:  https://medium.com/@laymanExplained/layman-explained-reading-documentation-36c450e77e6b
 #   MINDSET WHEN READING DOCUMENTATION  4:  https://www.youtube.com/watch?v=lwqeNnboh_4
@@ -19,30 +23,37 @@
 #   QRC RESOURCES GUIDE:                    https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
 #   INFO ABOUT SAVING AS DOCX:              https://stackoverflow.com/questions/22959642/pyqt4-how-to-read-a-doc-file-with-all-formatting-settings-using-python
 #   SYNTAX HIGHLIGHTING GUIDE:              https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
-#                                           https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
+#   SYNTAX HIGHLIGHTING CODE:               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
 #   
+#   RECOLORABLE ICONS:                      https://icons8.com/icons/set/list-number
+#   RESIZING IMG TO ICON SIZE:              https://www.img2go.com/resize-image
+#   TRANSPARENT BACKGROUND IMAGES:          https://www.remove.bg/
+#   CREATE YOUR OWN ICONS:                  https://github.com/rising-dancho/custom_minimize_maximize_and_close_window_icons-java-netbeans-
+#
 #   QSCINTILLA DOC:                         https://qscintilla.com/#home
 #   EXECUTING PYTHON SCRIPT:                https://www.pythonguis.com/tutorials/qprocess-external-programs/
 #   QFILEDIALOG:                            https://learndataanalysis.org/source-code-how-to-use-qfiledialog-file-dialog-in-pyqt5/
-#   RECOLORABLE ICONS:                      https://icons8.com/icons/set/list-number
-#   RESIZING IMG TO ICON SIZE:              https://www.img2go.com/resize-image
-#   TRANSPARENT BACKGROUND:                 https://www.remove.bg/
-#   CREATE YOUR OWN ICONS:                  https://github.com/rising-dancho/custom_minimize_maximize_and_close_window_icons-java-netbeans-
 #   FUSION DARK THEME:                      https://stackoverflow.com/questions/48256772/dark-theme-for-qt-widgets
 #   CUSTOM TITLE BAR WINDOW:                https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application
-#   COMBINED MENUBAR ON TITLEBAR:           https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
-#                                           https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/tree/main/_prototype
-#   
+#   COMBINED MENUBAR ON TITLEBAR 1:         https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
+#   COMBINED MENUBAR ON TITLEBAR 2:         https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/tree/main/_prototype
 #   TAB QSS STYLE:                          https://gist.github.com/espdev/4f1565b18497a42d317cdf2531b7ef05    
 #   RESIZE ON EDGE DRAG:                    https://stackoverflow.com/questions/64784966/resizing-custom-widget-by-dragging-the-edges-in-pyqt5
 #   BLUR WINDOW:                            https://stackoverflow.com/questions/54807743/transparent-window-with-blur-behind-with-pyqt    
 #   WHITE BORDER ON TAB BAR ISSUE:          https://forum.qt.io/topic/42265/qtabwidget-stylesheet-white-top-border/7
-#
+#   DESIGN CUSTOM BLINKING CURSOR:          https://www.youtube.com/watch?v=9STObkCGq-Y
+#   CHANGING BLINKING CURSOR:               https://stackoverflow.com/questions/55136056/is-it-possible-to-create-a-custom-cursor-using-pyqt
+#   
 #   LIVING LEGENDS:      https://github.com/alandmoore
+#                        https://github.com/eyllanesc
+#                        https://github.com/892768447
+#                        https://github.com/yjg30737
 #                        https://github.com/Axel-Erfurt
 #                        https://github.com/goldsborough
 #                        https://github.com/zhiyiYo
 #                        https://github.com/Fus3n
+#                        https://github.com/marcel-goldschen-ohm
+#                        https://github.com/joshuawillman
 #                        https://github.com/alexpdev
 #                        https://github.com/matkuki
 #
@@ -53,7 +64,7 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtPrintSupport
-# from BlurWindow.blurWindow import blur
+# from BlurWindow.blurWindow import blur 
 
 import resources 
 
@@ -968,10 +979,8 @@ if __name__ == "__main__":
     palette.setColor(qtg.QPalette.ToolTipBase, qtc.Qt.black)
     palette.setColor(qtg.QPalette.ToolTipText, qtg.QColor("#BFBDB6"))
     palette.setColor(qtg.QPalette.Text, qtg.QColor("#BFBDB6"))
-    
     palette.setColor(qtg.QPalette.Button, qtg.QColor("#161a21")) # button color
     palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # textedit
-  
     palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
     palette.setColor(qtg.QPalette.BrightText, qtc.Qt.white)
     palette.setColor(qtg.QPalette.Link, qtg.QColor("#0086b6"))
