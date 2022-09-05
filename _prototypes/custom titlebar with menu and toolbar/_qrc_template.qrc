@@ -1,0 +1,59 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="images">
+    <file>new_file.png</file>
+    <file>folder.png</file>
+    <file>save.png</file>
+    <file>save_as.png</file>
+    <file>select_all.png</file>
+    <file>search.png</file>
+    <file>search_disabled.png</file>
+    <file>copy.png</file>
+    <file>paste.png</file>
+    <file>cut.png</file>
+    <file>undo.png</file>
+    <file>redo.png</file>
+    <file>notepad.png</file>
+    <file>zoom_in.png</file>
+    <file>zoom_out.png</file>
+    <file>reset.png</file>
+    <file>left_align.png</file>
+    <file>right_align.png</file>
+    <file>center_align.png</file>
+    <file>justify.png</file>
+    <file>bold.png</file>
+    <file>italic.png</file>
+    <file>underline.png</file>
+    <file>strikeout.png</file>
+    <file>color.png</file>
+    <file>colour.png</file>
+    <file>fullscreen.png</file>
+    <file>text.png</file>
+    <file>close.png</file>
+    <file>superscript.png</file>
+    <file>subscript.png</file>
+    <file>odt.png</file>
+    <file>pdf.png</file>
+    <file>number_list.png</file>
+    <file>bullet_list.png</file>
+    <file>print.png</file>
+    <file>preview.png</file>
+    <file>indent.png</file>
+    <file>unindent.png</file>
+    <file>insert_image.png</file>
+
+    <file>close_active.png</file>
+    <file>close_default.png</file>
+
+    <file>colored_maximize.png</file>
+    <file>colored_minimize.png</file>
+    <file>colored_close.png</file>
+    <file>colored_normal.png</file>
+
+    <file>nav_maximize.png</file>
+    <file>nav_minimize.png</file>
+    <file>nav_close.png</file>
+    <file>nav_normal.png</file>
+
+
+</qresource>
+</RCC>

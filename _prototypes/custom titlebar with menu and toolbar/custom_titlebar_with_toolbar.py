@@ -1,9 +1,4 @@
-import sys
-from PyQt5.QtCore import pyqtSlot, QPoint, Qt, QRect, QSize, QEvent
-from PyQt5.QtWidgets import (QMainWindow, QApplication, QToolButton, QHBoxLayout,
-                             QVBoxLayout, QTabWidget, QWidget, QAction,
-                             QLabel, QSizeGrip, QMenuBar, QStyleFactory, qApp, QSizePolicy)
-from PyQt5.QtGui import QIcon, QPalette, QColor, QCursor
+
 
 # TITLEBAR + MENU:                  https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
 # CUSTOM TITLEBAR1:                 https://stackoverflow.com/questions/44241612/custom-titlebar-with-frame-in-pyqt5
@@ -20,7 +15,6 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QCursor
 # CORNER DRAG RESIZE PROTOTYPE:     https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/blob/main/_prototype/musicamante_resize_window_with_corners_simple.py
 # EDGE DRAG RESIZE (yjg30737):      https://github.com/yjg30737/pyqt-frameless-window/blob/main/pyqt_frameless_window/framelessWindow.py
 # EDGE DRAG RESIZE PROTOTYPE:       https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/blob/main/_prototype/yjg30737_resize_window_with_edges.py
-# ABOUT "->":                       https://stackoverflow.com/questions/14379753/what-does-mean-in-python-function-definitions
 # ADD TOOLBAR FOR A QWIDGET:        https://forum.qt.io/topic/52022/solved-how-can-i-add-a-toolbar-for-a-qwidget-not-qmainwindow
 # DISPLAY MESSAGE ON MOUSE HOVER:   https://stackoverflow.com/questions/52291734/pyqt5-mouse-hover-functions
 # EVENT FILTER FOR MOUSE EVENT:     https://www.youtube.com/watch?v=imqz8JuFxyo
@@ -39,7 +33,7 @@ from PyQt5 import QtGui as qtg
 import resources
 
 
-class TitleBar(QWidget):
+class TitleBar(qtw.QWidget):
     height = 35
     def __init__(self, parent):
         super(TitleBar, self).__init__()
@@ -114,9 +108,9 @@ class TitleBar(QWidget):
         """
         self._createActions()
         
-        self.layout = QHBoxLayout()
+        self.layout = qtw.QHBoxLayout()
         self.layout.setContentsMargins(0,0,10,0)
-        self.menubar = QMenuBar()
+        self.menubar = qtw.QMenuBar()
         self.menubar.setStyleSheet(css)  
         
         file_menu = self.menubar.addMenu('File')
@@ -182,27 +176,27 @@ class TitleBar(QWidget):
         
         self.layout.addWidget(self.menubar) 
 
-        self.window_title = QLabel("Visual Studio Code")
-        self.window_title.setAlignment(Qt.AlignCenter)
+        self.window_title = qtw.QLabel("Visual Studio Code")
+        self.window_title.setAlignment(qtc.Qt.AlignCenter)
         self.window_title.setAccessibleName("lbl_title") 
         self.window_title.setFixedHeight(self.height)
         self.layout.addWidget(self.window_title)
-        self.window_title.setStyleSheet(css)
+        self.window_title.setStyleSheet(css) 
 
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.setSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Fixed)
         self.maxNormal=False
        
-        self.closeButton = QToolButton() 
+        self.closeButton = qtw.QToolButton() 
         self.closeButton.setAccessibleName("btn_close")                           
         self.closeButton.setStyleSheet(css)
         self.closeButton.clicked.connect(self.on_click_close)
 
-        self.maxButton = QToolButton()
+        self.maxButton = qtw.QToolButton()
         self.maxButton.setAccessibleName("btn_max")  
         self.maxButton.setStyleSheet(self.css_maximize)
         self.maxButton.clicked.connect(self.showMaxRestore)
 
-        self.hideButton = QToolButton()
+        self.hideButton = qtw.QToolButton()
         self.hideButton.setAccessibleName("btn_min")  
         self.hideButton.clicked.connect(self.on_click_hide)
         self.hideButton.setStyleSheet(css)
@@ -210,9 +204,9 @@ class TitleBar(QWidget):
         self.layout.addWidget(self.hideButton)
         self.layout.addWidget(self.maxButton)
         self.layout.addWidget(self.closeButton)
-        self.setLayout(self.layout)
+        self.setLayout(self.layout) 
 
-        self.start = QPoint(0, 0)
+        self.start = qtc.QPoint(0, 0)
         self.pressing = False
         self.maxNormal=False
 
@@ -220,11 +214,11 @@ class TitleBar(QWidget):
                 background-color: transparent; 
         """
         # resize frame top left
-        self.gripSize = 16
-        self.grip_topLeft = QSizeGrip(self)
+        self.gripSize = 16 
+        self.grip_topLeft = qtw.QSizeGrip(self)
         self.grip_topLeft.resize(self.gripSize, self.gripSize)
         self.grip_topLeft.setStyleSheet(css_invisible_gripSize)
-        self.grip_topRight = QSizeGrip(self)
+        self.grip_topRight = qtw.QSizeGrip(self)
         self.grip_topRight.resize(self.gripSize, self.gripSize)
         self.grip_topRight.setStyleSheet(css_invisible_gripSize)
 
@@ -365,7 +359,7 @@ class TitleBar(QWidget):
         pass
 
     def resizeEvent(self, event):
-        QMainWindow.resizeEvent(self, event)
+        qtw.QMainWindow.resizeEvent(self, event)
         rect = self.rect()
         # top right
         self.grips[1].move(rect.right() - self.gripSize)
@@ -387,27 +381,27 @@ class TitleBar(QWidget):
 
     def on_click_maximize(self):
         self.maximaze = not self.maximaze
-        if self.maximaze:    main.setWindowState(Qt.WindowNoState)
+        if self.maximaze:    main.setWindowState(qtc.Qt.WindowNoState)
         if not self.maximaze:
-            main.setWindowState(Qt.WindowMaximized)
+            main.setWindowState(qtc.Qt.WindowMaximized)
     
-    def eventFilter(self, obj, event):
+    def eventFilter(self, obj, event): 
         print(obj.objectName())
         # print(dir(event))
         # print(event.type())
-        if event.type() == QEvent.ToolTip:
+        if event.type() == qtc.QEvent.ToolTip:
             print(event.type())
             return True
             # self.status_info.setText(self.btn.toolTip())
-        if event.type() == QEvent.Leave:
+        if event.type() == qtc.QEvent.Leave:
             print(event.type())
             #self.status_info.setText(" ")
             self.status_info.setText(self.default)
 
-        if event.type() == QEvent.Enter:
+        if event.type() == qtc.QEvent.Enter:
             print(event.type()) 
             self.status_info.setText(self.btn.toolTip()) 
-        if event.type() == QEvent.HoverEnter:
+        if event.type() == qtc.QEvent.HoverEnter:
             print(event.type())    
         
         # if obj == self.btn and event.type() == QEvent.HoverEnter:
@@ -616,24 +610,24 @@ class MainWindow(qtw.QMainWindow):
         # magnify_toolbar.addAction(self.zoom_default_action)
 
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    app.setStyle(QStyleFactory.create("Fusion")) # Oxygen, Windows, Fusion etc.
+if __name__ == "__main__":  
+    app = qtw.QApplication(sys.argv)
+    app.setStyle(qtw.QStyleFactory.create("Fusion")) # Oxygen, Windows, Fusion etc.
     # Now use a palette to switch to dark colors:
-    palette = QPalette()
-    palette.setColor(QPalette.Window, QColor("#161a21"))
-    palette.setColor(QPalette.WindowText, QColor("#BFBDB6"))
-    palette.setColor(QPalette.AlternateBase, QColor("#161a21"))
-    palette.setColor(QPalette.ToolTipBase, Qt.black)
-    palette.setColor(QPalette.ToolTipText, QColor("#BFBDB6"))
-    palette.setColor(QPalette.Text, QColor("#BFBDB6"))
-    palette.setColor(QPalette.Button, QColor("#161a21")) # button color
-    palette.setColor(QPalette.Base, QColor("#161a21")) # textedit
-    palette.setColor(QPalette.ButtonText, QColor("#BFBDB6"))
-    palette.setColor(QPalette.BrightText, Qt.white)
-    palette.setColor(QPalette.Link, QColor("#0086b6"))
-    palette.setColor(QPalette.Highlight, QColor("#0086b6"))
-    palette.setColor(QPalette.HighlightedText, Qt.white)
+    palette = qtg.QPalette()
+    palette.setColor(qtg.QPalette.Window, qtg.QColor("#161a21"))
+    palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#BFBDB6"))
+    palette.setColor(qtg.QPalette.AlternateBase, qtg.QColor("#161a21"))
+    palette.setColor(qtg.QPalette.ToolTipBase, qtc.Qt.black)
+    palette.setColor(qtg.QPalette.ToolTipText, qtg.QColor("#BFBDB6"))
+    palette.setColor(qtg.QPalette.Text, qtg.QColor("#BFBDB6"))
+    palette.setColor(qtg.QPalette.Button, qtg.QColor("#161a21")) # button color
+    palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # textedit
+    palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
+    palette.setColor(qtg.QPalette.BrightText, qtc.Qt.white)
+    palette.setColor(qtg.QPalette.Link, qtg.QColor("#0086b6"))
+    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#0086b6"))
+    palette.setColor(qtg.QPalette.HighlightedText, qtc.Qt.white)
     app.setPalette(palette)
     main = MainWindow()
     main.show()
