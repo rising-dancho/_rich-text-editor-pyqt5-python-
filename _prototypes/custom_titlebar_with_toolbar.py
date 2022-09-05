@@ -5,6 +5,26 @@ from PyQt5.QtWidgets import (QMainWindow, QApplication, QToolButton, QHBoxLayout
                              QLabel, QSizeGrip, QMenuBar, QStyleFactory, qApp, QSizePolicy)
 from PyQt5.QtGui import QIcon, QPalette, QColor, QCursor
 
+# TITLEBAR + MENU:                  https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
+# CUSTOM TITLEBAR1:                 https://stackoverflow.com/questions/44241612/custom-titlebar-with-frame-in-pyqt5
+# CUSTOM TITLEBAR2:                 https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application
+# CUSTOM TITLEBAR3:                 https://stackoverflow.com/questions/63232599/pyqt5-custom-title-bar-doesnt-show
+# SET ACCESSIBLE NAME TO BUTTONS:   https://stackoverflow.com/questions/4925184/qt-stylesheet-syntax-targeting-a-specific-button-not-all-buttons
+# STYLING SPECIFIC BUTTONS:         https://stackoverflow.com/questions/67585501/pyqt-how-to-use-hover-in-button-stylesheet
+# IMAGE BUTTON SIMPLE:              https://www.codegrepper.com/code-examples/csharp/pyqt+button+image
+# IMAGE BUTTON COMPLEX:             https://stackoverflow.com/questions/2711033/how-code-a-image-button-in-pyqt
+# RESIZING FRAMELESS WINDOW:        https://stackoverflow.com/questions/7128238/implement-resize-option-to-qt-frameless-widget
+# PYQT CUSTOM WINDOWS:              https://www.youtube.com/watch?v=CA6bOJLf7Pw
+# OOP TUTORIAL:                     https://www.youtube.com/watch?v=e4fwY9ZsxPw&list=PLhQjrBD2T3817j24-GogXmWqO5Q5vYy0V&index=10
+# CORNER DRAG RESIZE (musicamante): https://stackoverflow.com/questions/62807295/how-to-resize-a-window-from-the-edges-after-adding-the-property-qtcore-qt-framel
+# CORNER DRAG RESIZE PROTOTYPE:     https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/blob/main/_prototype/musicamante_resize_window_with_corners_simple.py
+# EDGE DRAG RESIZE (yjg30737):      https://github.com/yjg30737/pyqt-frameless-window/blob/main/pyqt_frameless_window/framelessWindow.py
+# EDGE DRAG RESIZE PROTOTYPE:       https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/blob/main/_prototype/yjg30737_resize_window_with_edges.py
+# ABOUT "->":                       https://stackoverflow.com/questions/14379753/what-does-mean-in-python-function-definitions
+# ADD TOOLBAR FOR A QWIDGET:        https://forum.qt.io/topic/52022/solved-how-can-i-add-a-toolbar-for-a-qwidget-not-qmainwindow
+# DISPLAY MESSAGE ON MOUSE HOVER:   https://stackoverflow.com/questions/52291734/pyqt5-mouse-hover-functions
+# EVENT FILTER FOR MOUSE EVENT:     https://www.youtube.com/watch?v=imqz8JuFxyo
+# MAKE ICONS USING FIGMA:           https://www.youtube.com/watch?v=10fSci2vXtE
 
 # QTOOLBAR ON QWIDGET: https://stackoverflow.com/questions/51767548/put-a-qtoolbar-in-a-qwidget-instead-of-qmainwindow
 # ADD LAYOUT TO QMAINWINDOW: https://stackoverflow.com/questions/37304684/qwidgetsetlayout-attempting-to-set-qlayout-on-mainwindow-which-already
