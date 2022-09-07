@@ -169,6 +169,9 @@ class TitleBar(qtw.QWidget):
         self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
 
+    def close(self):
+        qtw.QApplication.quit()
+
     def new_tab(self, checked = False, title = "Untitled.txt"):
         w = qtw.QMainWindow()
         self.tabs.addTab(w, title)
