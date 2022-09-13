@@ -5,6 +5,7 @@
 #   
 #   GETTING STARTED:                        https://www.youtube.com/watch?v=a7iFHz70J1I&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=7
 #   GETTING STARTED CODING:                 https://doc.qt.io/qtforpython/gettingstarted.html
+#   FINISH THIS:                            https://www.youtube.com/watch?v=e4fwY9ZsxPw&t=3599s
 #   FINDING CODE EXAMPLES:                  https://www.programcreek.com/python/
 #
 #   MINDSET WHEN READING DOCUMENTATION  1:  https://www.freecodecamp.org/news/how-to-read-your-way-to-becoming-a-better-developer-b6432fa5bc0c/ 
@@ -87,7 +88,8 @@ class MainWindow(qtw.QMainWindow):
         # self.setContentsMargins(qtc.QMargins())
 
         self.statusbar = self.statusBar()
-        self.statusbar.showMessage("Ready")    
+        self.statusbar.showMessage("Ready") 
+
         self.tabs = qtw.QTabWidget(self)
         self.tabs.setTabsClosable(True)
         # self.tabs.setDocumentMode(True) # let's you double click tab bar to create new tabs
@@ -133,10 +135,10 @@ class MainWindow(qtw.QMainWindow):
     #         self.new_tab()
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
-        self.current_editor = self.create_editor()
-        self.text_editors.append(self.current_editor)
+        self.current_editor = self.create_editor() # create a QTextEdit
+        self.text_editors.append(self.current_editor) # add current editor id to the array list 
         self.tabs.addTab(self.current_editor, title)
-        self.tabs.setCurrentWidget(self.current_editor)
+        self.tabs.setCurrentWidget(self.current_editor) # set the currently tab selected as current widget
 
     def open_document(self):
         options = qtw.QFileDialog.Options()
@@ -709,12 +711,6 @@ class MainWindow(qtw.QMainWindow):
         fmt.setFontStrikeOut(self.strike_out_text_action.isChecked())
         # And set the next char format
         self.mergeFormatOnWordOrSelection(fmt)
-
-    def new_tab(self, checked = False, title = "Untitled.txt"):
-        self.current_editor = self.create_editor()
-        self.text_editors.append(self.current_editor)
-        self.tabs.addTab(self.current_editor, title)
-        self.tabs.setCurrentWidget(self.current_editor)
 
     def superScript(self):
 
