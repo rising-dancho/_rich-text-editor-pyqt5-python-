@@ -1,6 +1,9 @@
 # FUNDAMENTALS OF OBJECT ORIENTED PROGRAMMING: 
 # https://www.youtube.com/watch?v=e4fwY9ZsxPw&t=3599s
 
+
+
+
 class Student: # soul
     def __init__(self, name, house): # this allows to pass in parameters into the declaration object
         self.name = name # see method "get_student"
