@@ -1,3 +1,6 @@
+# FUNDAMENTALS OF OBJECT ORIENTED PROGRAMMING: 
+# https://www.youtube.com/watch?v=e4fwY9ZsxPw&t=3599s
+
 class Student:
     def __init__(self, name, house):
         self.name = name
