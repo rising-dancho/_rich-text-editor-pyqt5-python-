@@ -5,16 +5,16 @@
 
 
 # this Student "class" is kinda like the "soul" of the Student object
-class Student: # you can make parameters opational by attaching "None" as in house=None
+class Student: # you can make parameters opational by attaching "None" to a parameter, as in house=None
     def __init__(self, name, spell, house=None, ): # this allows to pass in parameters into the "declaration object"
         # Exception Handling codes below
         if name == "":
            raise ValueError("Missing Name")
         
-        if house not in ["gryff","slyth", "huff","raven"]: # not in allows for an array of values
+        if house not in ["gryff","slyth", "huff","raven"]: # "not in" allows for an array of values
            raise ValueError("Invalid House")
         
-        # notice that it doesn't have to be in order. the setters does not have to follow the order in which the parameters are declared
+        # notice that the declarations doesn't have to be in order. the setters does not have to follow the order in which the parameters are declared
         # also, positional arguments (self, name, spell) should be declared AFTER the default arguments
         self.name = name # see methodtae "get_student"
         self.house = house # we passed "name" and "house" parameters to the Student class
