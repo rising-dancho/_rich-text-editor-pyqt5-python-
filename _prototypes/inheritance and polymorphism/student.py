@@ -11,7 +11,7 @@ class Student: # you can make parameters opational by attaching "None" to a para
         if name == "":
            raise ValueError("Missing Name")
         
-        if house not in ["gryff","slyth", "huff","raven"]: # "not in" allows for an array of values
+        if house not in ["Gryff","Slyth", "Huff","Raven"]: # "not in" allows for an array of values
            raise ValueError("Invalid House")
         
         # REMEMBER: parameters in the __init__ MUST be IN ORDER! or else it would get jumbled when you use it!!
@@ -23,7 +23,7 @@ class Student: # you can make parameters opational by attaching "None" to a para
 
     # special python method in printing objects on the console
     def __str__(self): # this prevents this error: object at 0x000002CD04FEBEE0
-        return f"Behold! {self.name} from {self.house} and has the patronus {self.patronus}! Let it be known!!"
+        return f"Behold! {self.name} from {self.house} has the patronus {self.patronus}! Let it be known!!"
 
     def charm(self): # "self" is a positional argument (creaed by python creators) for allowing access to a method.
         # below is the syntax of python for a "switch statement" (if you do java)    
