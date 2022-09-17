@@ -6,7 +6,7 @@
 
 # this Student "class" is kinda like the "soul" of the Student object
 class Student: # you can make parameters opational by attaching "None" to a parameter, as in house=None
-    def __init__(self, name, spell, house=None, ): # this allows to pass in parameters into the "declaration object"
+    def __init__(self, name, house=None, spell=None): # this allows to pass in parameters into the "declaration object"
         # Exception Handling codes below
         if name == "":
            raise ValueError("Missing Name")
@@ -14,15 +14,16 @@ class Student: # you can make parameters opational by attaching "None" to a para
         if house not in ["gryff","slyth", "huff","raven"]: # "not in" allows for an array of values
            raise ValueError("Invalid House")
         
-        # notice that the declarations doesn't have to be in order. the setters does not have to follow the order in which the parameters are declared
-        # also, positional arguments (self, name, spell) should be declared AFTER the default arguments
+        # REMEMBER: parameters in the __init__ MUST be IN ORDER! or else it would get jumbled when you use it!!
+        # the setters does not have to follow the order in which the parameters are declared
+        # also, positional arguments (self, name) should be declared AFTER the default arguments (house, and spell)
         self.name = name # see methodtae "get_student"
         self.house = house # we passed "name" and "house" parameters to the Student class
-        self.patronus = spell # just added aa 4rth parameter. nothing special
+        self.spell = spell # just added aa 4rth parameter. nothing special
 
     # special python method in printing objects on the console
     def __str__(self): # this prevents this error: object at 0x000002CD04FEBEE0
-        return f"{self.name} from {self.house} and can use the spell {self.patronus}"
+        return f"Behold! {self.name} from {self.house} can use the spell {self.spell}! Let it be known!!"
 
 def get_student():
     name = input("Name: ") # passing this inputs from the user as an arguments
