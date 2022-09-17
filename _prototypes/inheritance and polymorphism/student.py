@@ -1,12 +1,12 @@
 # FUNDAMENTALS OF OBJECT ORIENTED PROGRAMMING: 
 # https://www.youtube.com/watch?v=e4fwY9ZsxPw&t=3599s
 
-# ABOUT DEFUALT ARGUMENTS: https://bobbyhadz.com/blog/python-syntaxerror-non-default-argument-follows-default-argument#:~:text=The%20Python%20%22SyntaxError%3A%20non%2D,positional%20parameters%20of%20the%20function.
-
+# ABOUT PYTHON DEFAULT PARAMETERS: https://www.pythontutorial.net/python-basics/python-default-parameters/
+# ABOUT DEFUALT ARGUMENTS ERROR: https://bobbyhadz.com/blog/python-syntaxerror-non-default-argument-follows-default-argument#:~:text=The%20Python%20%22SyntaxError%3A%20non%2D,positional%20parameters%20of%20the%20function.
 
 # this Student "class" is kinda like the "soul" of the Student object
 class Student: # you can make parameters opational by attaching "None" to a parameter, as in house=None
-    def __init__(self, name, house=None, patronus=None): # this allows to pass in parameters into the "declaration object"
+    def __init__(self, name, house=None, patronus='Unknown'): # this allows to pass in parameters into the "declaration object"
         # Exception Handling codes below
         if name == "":
            raise ValueError("Missing Name")
@@ -34,8 +34,12 @@ class Student: # you can make parameters opational by attaching "None" to a para
                 return "🦦"
             case "Jack Russel Terrier":
                 return "🐕"
-            case "_":
+            case _: # this is returned if the user did not input anything for the "Patronus:"
                 return "💫"
+
+def greet(name, message='Hi'):
+    return f"{message}, {name}!"
+
 
 def get_student():
     name = input("\n\nName: ") # passing this inputs from the user as an arguments
@@ -50,8 +54,16 @@ def main():
     student = get_student() # this object declaration takes the return statement from the "get_student" method
 
     print("\n\nExpecto Patronum!", student.charm()) # calling the charm method of the "Student" class
-    print(student,"\n\n") # print will trigger the __str__ method located inside the Student class, because the "print" method is looking for a "string" input
+    print(student,"\n") # print will trigger the __str__ method located inside the Student class, because the "print" method is looking for a "string" input
     # notice that inside the "get_student" method the Student class is referenced and given variables (name, house, patronus) and then returned student
+
+    greeting = greet(student.name)
+    print(greeting, "\n")
+
+
+
+
 
 if __name__ == "__main__":
     main()
+    
