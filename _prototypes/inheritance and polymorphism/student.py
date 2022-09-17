@@ -1,7 +1,7 @@
 # FUNDAMENTALS OF OBJECT ORIENTED PROGRAMMING: 
 # https://www.youtube.com/watch?v=e4fwY9ZsxPw&t=3599s
 
-# ABOUT PYTHON DEFAULT PARAMETERS: https://www.pythontutorial.net/python-basics/python-default-parameters/
+# LEARNING PYTHON DEFAULT PARAMETERS: https://www.pythontutorial.net/python-basics/python-default-parameters/
 # ABOUT DEFUALT ARGUMENTS ERROR: https://bobbyhadz.com/blog/python-syntaxerror-non-default-argument-follows-default-argument#:~:text=The%20Python%20%22SyntaxError%3A%20non%2D,positional%20parameters%20of%20the%20function.
 
 # this Student "class" is kinda like the "soul" of the Student object
@@ -25,7 +25,8 @@ class Student: # you can make parameters opational by attaching "None" to a para
     def __str__(self): # this prevents this error: object at 0x000002CD04FEBEE0
         return f"Behold! {self.name} from {self.house} has the patronus {self.patronus}! Let it be known!!"
 
-    def charm(self): # "self" is a positional argument (creaed by python creators) for allowing access to a method.
+    def charm(self): # "self" is a positional argument that is required for methods that are declared INSIDE a class
+        # this "self" argument is allowing access to a method owned by the Student class if in case you are trying to call this function OUTSIDE of the Student class
         # below is the syntax of python for a "switch statement" (if you do java)    
         match self.patronus: 
             case "Stag":
@@ -37,7 +38,7 @@ class Student: # you can make parameters opational by attaching "None" to a para
             case _: # this is returned if the user did not input anything for the "Patronus:"
                 return "💫"
 
-def greet(name, message='Hi'):
+def greet(name, message='Hi'): # we can call this method just by declaring it in our main method and providing the parameters that it is asking for
     return f"{message}, {name}!"
 
 
@@ -58,10 +59,7 @@ def main():
     # notice that inside the "get_student" method the Student class is referenced and given variables (name, house, patronus) and then returned student
 
     greeting = greet(student.name)
-    print(greeting, "\n")
-
-
-
+    print(greeting, "<3 \n")
 
 
 if __name__ == "__main__":
