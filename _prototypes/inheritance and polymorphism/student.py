@@ -6,7 +6,7 @@
 
 # this Student "class" is kinda like the "soul" of the Student object
 class Student: # you can make parameters opational by attaching "None" to a parameter, as in house=None
-    def __init__(self, name, house=None, spell=None): # this allows to pass in parameters into the "declaration object"
+    def __init__(self, name, house=None, patronus=None): # this allows to pass in parameters into the "declaration object"
         # Exception Handling codes below
         if name == "":
            raise ValueError("Missing Name")
@@ -19,26 +19,39 @@ class Student: # you can make parameters opational by attaching "None" to a para
         # also, positional arguments (self, name) should be declared AFTER the default arguments (house, and spell)
         self.name = name # see methodtae "get_student"
         self.house = house # we passed "name" and "house" parameters to the Student class
-        self.spell = spell # just added aa 4rth parameter. nothing special
+        self.patronus = patronus # just added aa 4rth parameter. nothing special
 
     # special python method in printing objects on the console
     def __str__(self): # this prevents this error: object at 0x000002CD04FEBEE0
-        return f"Behold! {self.name} from {self.house} can use the spell {self.spell}! Let it be known!!"
+        return f"Behold! {self.name} from {self.house} and has the patronus {self.patronus}! Let it be known!!"
+
+    def charm(self): # "self" is a positional argument (creaed by python creators) for allowing access to a method.
+        # below is the syntax of python for a "switch statement" (if you do java)    
+        match self.patronus: 
+            case "Stag":
+                return "🦌"
+            case "Otter":
+                return "🦦"
+            case "Jack Russel Terrier":
+                return "🐕"
+            case "_":
+                return "💫"
 
 def get_student():
-    name = input("Name: ") # passing this inputs from the user as an arguments
+    name = input("\n\nName: ") # passing this inputs from the user as an arguments
+    
     house = input("House: ")
-    spell = input("Spell: ")
-    student = Student(name, house, spell) # declaration of the object. or the "body" for my "soul".
+    patronus = input("Patronus: ")
+    student = Student(name, house, patronus) # declaration of the object. or the "body" for my "soul".
     
     return student # see main method where the "get_student" object is declared
 
 def main():
     student = get_student() # this object declaration takes the return statement from the "get_student" method
-    # print(f"{student.name} from {student.house}")
-    
-    print(student) # print triggers the __str__ method, because it's looking for a string
 
+    print("\n\nExpecto Patronum!", student.charm()) # calling the charm method of the "Student" class
+    print(student,"\n\n") # print will trigger the __str__ method located inside the Student class, because the "print" method is looking for a "string" input
+    # notice that inside the "get_student" method the Student class is referenced and given variables (name, house, patronus) and then returned student
 
 if __name__ == "__main__":
     main()
