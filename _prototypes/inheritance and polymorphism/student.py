@@ -3,17 +3,12 @@
 
 # LEARNING PYTHON DEFAULT PARAMETERS: https://www.pythontutorial.net/python-basics/python-default-parameters/
 # ABOUT DEFUALT ARGUMENTS ERROR: https://bobbyhadz.com/blog/python-syntaxerror-non-default-argument-follows-default-argument#:~:text=The%20Python%20%22SyntaxError%3A%20non%2D,positional%20parameters%20of%20the%20function.
+# ABOUT CLASS METHODS: https://www.programiz.com/python-programming/methods/built-in/classmethod
+# MULTIPLE INHERITANCE: https://www.youtube.com/watch?v=uYu4hCjYDhY
 
 # this Student "class" is kinda like the "soul" of the Student object
 class Student: # you can make parameters opational by attaching "None" to a parameter, as in house=None
-    def __init__(self, name, house=None): # this allows to pass in parameters into the "declaration object"
-        # Exception Handling codes below
-        if name == "":
-           raise ValueError("Missing Name")
-        
-        if house not in ["Gryff","Slyth", "Huff","Raven"]: # "not in" allows for an array of values
-           raise ValueError("Invalid House")
-        
+    def __init__(self, name, house): # this allows to pass in parameters into the "declaration object"
         # REMEMBER: parameters in the __init__ MUST be IN ORDER! or else it would get jumbled when you use it!!
         # the setters does not have to follow the order in which the parameters are declared
         # also, positional arguments (self, name) should be declared AFTER the default arguments (house, and spell)
@@ -39,11 +34,10 @@ def get_student():
 
 def main():
     student = get_student() # this object declaration takes the return statement from the "get_student" method
-
+    student.house = "Payatas, Smokey Mountain"
     print(student) # calling the charm method of the "Student" class
     # print will trigger the __str__ method located inside the Student class, because the "print" method is looking for a "string" input
     # notice that inside the "get_student" method the Student class is referenced and given variables (name, house, patronus) and then returned student
-
 
     greeting = greet(student.name)
     print(greeting, "<3 \n")
