@@ -13,24 +13,16 @@ class Employee:
     def fullname(self):
         print ("%s %s"%(self.first_name,self.last_name))
 
-    def print1(self):
-        print (self.email)
-        print ("Total no of Employee are :%d" %(Employee.emp_count))
-
-
 class Developer(Employee):
     raise_amount = 1.10
     def __init__(self,first,last,amount,programming):
         super().__init__(first,last,amount)
         self.programming= programming
 
-
-
 dev1=Developer("subhendu","panda",500000,"Python")
 dev2=Developer('Aditya','bishoyi',5688989,'java')
 dev2.fullname()
 dev1.fullname()
-
 
 emp1=Employee("tonu","trip",30000)
 emp1.fullname()
