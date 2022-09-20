@@ -5,6 +5,8 @@
 # ABOUT DEFUALT ARGUMENTS ERROR: https://bobbyhadz.com/blog/python-syntaxerror-non-default-argument-follows-default-argument#:~:text=The%20Python%20%22SyntaxError%3A%20non%2D,positional%20parameters%20of%20the%20function.
 # ABOUT CLASS METHODS: https://www.programiz.com/python-programming/methods/built-in/classmethod
 # MULTIPLE INHERITANCE: https://www.youtube.com/watch?v=uYu4hCjYDhY
+# CLASSES POLYMORPHISM: https://www.programiz.com/python-programming/polymorphism
+# PYTHON INHERITANCE: https://www.programiz.com/python-programming/inheritance
 
 # this Student "class" is kinda like the "soul" of the Student object
 class Student: # you can make parameters opational by attaching "None" to a parameter, as in house=None
@@ -12,7 +14,7 @@ class Student: # you can make parameters opational by attaching "None" to a para
         # REMEMBER: parameters in the __init__ MUST be IN ORDER! or else it would get jumbled when you use it!!
         # the setters does not have to follow the order in which the parameters are declared
         # also, positional arguments (self, name) should be declared AFTER the default arguments (house, and spell)
-        self.name = name # see methodtae "get_student"
+        self.name = name # see method "get_student"
         self.house = house # we passed "name" and "house" parameters to the Student class
     
 
