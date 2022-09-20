@@ -1,5 +1,11 @@
 # CLASSES POLYMORPHISM: https://www.programiz.com/python-programming/polymorphism
 
+# What is Polymorphism?
+# -- The literal meaning of polymorphism is the condition of occurrence in different forms.
+# -- Polymorphism is a very important concept in programming. 
+# -- It refers to the use of a single type entity (method, operator or object) to represent 
+# -- different types in different scenarios.
+
 class Cat:
     def __init__(self, name, age):
         self.name = name
