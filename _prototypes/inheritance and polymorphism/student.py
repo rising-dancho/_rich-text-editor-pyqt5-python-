@@ -4,7 +4,6 @@
 # LEARNING PYTHON DEFAULT PARAMETERS: https://www.pythontutorial.net/python-basics/python-default-parameters/
 # ABOUT DEFUALT ARGUMENTS ERROR: https://bobbyhadz.com/blog/python-syntaxerror-non-default-argument-follows-default-argument#:~:text=The%20Python%20%22SyntaxError%3A%20non%2D,positional%20parameters%20of%20the%20function.
 # ABOUT CLASS METHODS: https://www.programiz.com/python-programming/methods/built-in/classmethod
-# MULTIPLE INHERITANCE: https://www.youtube.com/watch?v=uYu4hCjYDhY
 # CLASSES POLYMORPHISM: https://www.programiz.com/python-programming/polymorphism
 # PYTHON INHERITANCE: https://www.programiz.com/python-programming/inheritance
 
