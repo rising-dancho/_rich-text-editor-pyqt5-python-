@@ -23,7 +23,6 @@ class TitleBar(qtw.QWidget):
         self.l.setContentsMargins(0,0,10,0)
         self.menubar = qtw.QMenuBar()
   
-        
         file_menu = self.menubar.addMenu('File')
         file_menu.addAction(self.new_action)
         file_menu.addAction(self.open_action)
@@ -31,7 +30,6 @@ class TitleBar(qtw.QWidget):
         file_menu.addSeparator()
         file_menu.addAction(self.exit_action)
 
-        
         self.l.addWidget(self.menubar) 
 
         self.window_title = qtw.QLabel("") # Notes
@@ -71,7 +69,6 @@ class TitleBar(qtw.QWidget):
         self.hideButton = qtw.QToolButton()
         self.hideButton.setAccessibleName("btn_min")  
         self.hideButton.clicked.connect(self.on_click_hide)
-
 
         self.l.addWidget(self.hideButton)
         self.l.addWidget(self.maxButton)
@@ -187,32 +184,50 @@ class TitleBar(qtw.QWidget):
                     
                 self.changesSaved = True
     
+    #####################################################
+    ## TITLE BAR MINIMIZE, MAXIMIZE, CLOSE METHODS
+    #####################################################
+
     def showMaxRestore(self):
         if(self.maxNormal):
             main.showNormal()
             self.maxNormal= False
             print('nomalscreen: maximize icon showing')
-            self.maxButton.setStyleSheet(self.css_maximize)
+            self.maxButton.setStyleSheet(
+            """
+                QToolButton[accessibleName="btn_max"] {
+                    image: url(./icons/nav_maximize.png);
+                    background: #161a21;
+                    border: nobutton_stylene;
+                    padding-right: 3px; 
+                }
+                QToolButton[accessibleName="btn_max"]:hover {
+                    image: url(./icons/colored_maximize.png);
+                    background: #161a21;
+                    border: none;
+                }
+            """
+            )
             
         else:
             main.showMaximized()
             self.maxNormal=  True
             print('fullscreen: collapse icon showing')
             self.maxButton.setStyleSheet(
-                """
-                    QToolButton[accessibleName="btn_max"]{
-                        image: url(./icons/nav_normal.png);
-                        background: #161a21;
-                        border: none;
-                        
-                    }
-                    QToolButton[accessibleName="btn_max"]:hover{
-                        image: url(./icons/colored_normal.png);
-                        background: #161a21;
-                        border: none;
-                        
-                    }
-                """
+            """
+                QToolButton[accessibleName="btn_max"]{
+                    image: url(./icons/nav_normal.png);
+                    background: #161a21;
+                    border: none;
+                    
+                }
+                QToolButton[accessibleName="btn_max"]:hover{
+                    image: url(./icons/colored_normal.png);
+                    background: #161a21;
+                    border: none;
+                    
+                }
+            """
             )
 
     def on_click_maximize(self):
@@ -273,7 +288,9 @@ class TitleBar(qtw.QWidget):
         if event.type() == event.WindowStateChange:
             self.titleBar.windowStateChanged(self.windowState())
 
-
+    #####################################################
+    ##                      END
+    #####################################################
 
 class MainWindow(qtw.QMainWindow):
     def __init__(self, parent=None):
