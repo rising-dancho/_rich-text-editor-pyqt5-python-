@@ -293,8 +293,8 @@ class TitleBar(qtw.QWidget):
     #####################################################
 
 class MainWindow(qtw.QMainWindow):
-    def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
+    def __init__(self):
+        super(MainWindow, self).__init__()
         self.statusbar = self.statusBar()
         self.statusbar.showMessage("Ready")
 
@@ -518,7 +518,6 @@ if __name__ == "__main__":
             }
             
         """
-
     )
     main.show()
     sys.exit(app.exec_())
