@@ -5,7 +5,6 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 
-
 class TitleBar(qtw.QWidget):
     height = 35
     def __init__(self, parent):
@@ -232,7 +231,6 @@ class MainWindow(qtw.QMainWindow):
         self._createActions()
         self._connectActions()
 
-
     def create_editor(self):
         current_editor = qtw.QTextEdit()
         # Set the tab stop width to around 33 pixels which is
@@ -252,12 +250,33 @@ class MainWindow(qtw.QMainWindow):
         if index < len(self.text_editors):
             del self.text_editors[index]
 
-    def close(self):
+    def close(self): # close entire program
         qtw.QApplication.quit()
 
-    def closeTab(self):
+    def closeTab(self): 
         close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
         close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
+
+    def new_tab(self, checked = False, title = "Untitled.txt"):
+        self.widget = qtw.QMainWindow()
+        self.tabs.addTab(self.widget, title)
+        self.tabs.setCurrentWidget(self.current_editor) # set the current tab selected as current widget
+        
+        self._createToolBars()
+        
+        self.current_editor = self.create_editor() # create a QTextEdit
+        self.text_editors.append(self.current_editor) # add current editor to the array list 
+       
+        self.widget.setCentralWidget(self.current_editor)
+
+    def _createToolBars(self):
+        # create toolbars
+        file_toolbar = self.widget.addToolBar("File")
+        file_toolbar.setIconSize(qtc.QSize(22,22))
+        # file_toolbar.setMovable(False)
+        file_toolbar.addAction(self.new_action)
+        file_toolbar.addAction(self.open_action)
+        file_toolbar.addAction(self.save_action)
 
     def _createActions(self):
         # FILE MENU
@@ -276,21 +295,6 @@ class MainWindow(qtw.QMainWindow):
         self.save_action.setToolTip("Save a file")
         self.exit_action.setToolTip("Exit Program")
 
-    def _createMenuBar(self):
-        self.menubar = self.menuBar()
-        file_menu = self.menubar .addMenu("File")
-        file_menu.addAction(self.new_action)
-        file_menu.addAction(self.open_action)
-        file_menu.addAction(self.save_action)
-        file_menu.addSeparator()
-        file_menu.addAction(self.export_as_odt_action)
-        file_menu.addAction(self.export_as_pdf_action)
-        file_menu.addSeparator()
-        file_menu.addAction(self.print_action)
-        file_menu.addAction(self.preview_action)
-        file_menu.addSeparator()
-        file_menu.addAction(self.exit_action)
-
     def _connectActions(self):
         # Connect File actions
         self.new_action.triggered.connect(self.new_tab)
@@ -298,23 +302,7 @@ class MainWindow(qtw.QMainWindow):
         self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
 
-    def new_tab(self, checked = False, title = "Untitled.txt"):
-        w = qtw.QMainWindow()
-        self.tabs.addTab(w, title)
-        self.tabs.setCurrentWidget(self.current_editor) # set the current tab selected as current widget
-        
-        # create toolbars
-        file_toolbar = w.addToolBar("File")
-        file_toolbar.setIconSize(qtc.QSize(22,22))
-        # file_toolbar.setMovable(False)
-        file_toolbar.addAction(self.new_action)
-        file_toolbar.addAction(self.open_action)
-        file_toolbar.addAction(self.save_action)
-        
-        self.current_editor = self.create_editor() # create a QTextEdit
-        self.text_editors.append(self.current_editor) # add current editor to the array list 
-       
-        w.setCentralWidget(self.current_editor)
+    
 
 
     def open_document(self):
