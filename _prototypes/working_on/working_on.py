@@ -1,3 +1,5 @@
+# parent=None MEANS OPTIONAL: https://www.reddit.com/r/learnpython/comments/qwmd5h/pyside6pyqt_why_is_parent_none_in_class/
+
 import sys
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
@@ -79,7 +81,6 @@ class TitleBar(qtw.QWidget):
         self.pressing = False
         self.maxNormal=False
 
- 
     
     #####################################################
     ## TITLE BAR MINIMIZE, MAXIMIZE, CLOSE METHODS
@@ -212,9 +213,10 @@ class MainWindow(qtw.QMainWindow):
         self.tabs = qtw.QTabWidget()
         self.tabs.setTabsClosable(True)
         self.tabs.tabBar().setMovable(True)
+        self.tabs.tabCloseRequested.connect(self.remove_editor)
+        self.tabs.currentChanged.connect(self.change_text_editor)
+        self.tabs.tabBar().setMovable(True)
         
-        self._createActions()
-
         # Cannot set QxxLayout directly on the QMainWindow
         # Need to create a QWidget and set it as the central widget
         widget = qtw.QWidget()
@@ -226,8 +228,36 @@ class MainWindow(qtw.QMainWindow):
         widget.setLayout(l)
         self.setCentralWidget(widget)
         self.new_tab()
+        self.closeTab()
         self._createActions()
         self._connectActions()
+
+
+    def create_editor(self):
+        current_editor = qtw.QTextEdit()
+        # Set the tab stop width to around 33 pixels which is
+        # about 8 spaces
+        current_editor.setTabStopWidth(33)
+        return current_editor
+
+    def change_text_editor(self, index):
+        if index < len(self.text_editors):
+            self.current_editor = self.text_editors[index]
+
+    def remove_editor(self, index):
+        if self.tabs.count() < 2:
+            return
+  
+        self.tabs.removeTab(index)
+        if index < len(self.text_editors):
+            del self.text_editors[index]
+
+    def close(self):
+        qtw.QApplication.quit()
+
+    def closeTab(self):
+        close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
+        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
 
     def _createActions(self):
         # FILE MENU
@@ -267,29 +297,6 @@ class MainWindow(qtw.QMainWindow):
         self.open_action.triggered.connect(self.open_document)
         self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
-    
-
-    def create_editor(self):
-        current_editor = qtw.QTextEdit()
-        # Set the tab stop width to around 33 pixels which is
-        # about 8 spaces
-        current_editor.setTabStopWidth(33)
-        return current_editor
-
-    def change_text_editor(self, index):
-        if index < len(self.text_editors):
-            self.current_editor = self.text_editors[index]
-
-    def remove_editor(self, index):
-        if self.tabs.count() < 2:
-            return
-  
-        self.tabs.removeTab(index)
-        if index < len(self.text_editors):
-            del self.text_editors[index]
-
-    def close(self):
-        qtw.QApplication.quit()
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
         w = qtw.QMainWindow()
