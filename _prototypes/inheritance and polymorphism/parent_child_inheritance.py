@@ -16,7 +16,6 @@ class MainWindow(qtw.QMainWindow):
         self.show()
 
     def do_something(self):
-
         print('doing something!')
 
 
