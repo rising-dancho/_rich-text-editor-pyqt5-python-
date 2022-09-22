@@ -6,7 +6,7 @@ from PyQt5 import QtGui as qtg
 
 class TitleBar(qtw.QWidget):
     height = 35
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         super(TitleBar, self).__init__(parent)
 
         self.current_editor = self.parent().create_editor()
