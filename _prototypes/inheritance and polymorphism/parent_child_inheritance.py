@@ -10,7 +10,7 @@ class MainWindow(qtw.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.do_something() #sanity check
+        # self.do_something() #sanity check
         self.cw = ChildWidget(self)
         self.setCentralWidget(self.cw)
         self.show()
@@ -23,7 +23,7 @@ class MainWindow(qtw.QMainWindow):
 class ChildWidget(qtw.QWidget):
 
     def __init__(self, parent=None):
-        super(ChildWidget, self).__init__(parent=parent)
+        super(ChildWidget, self).__init__(parent)
 
         self.button1 = qtw.QPushButton("do something")
         self.button1.clicked.connect(self.parent().do_something)
