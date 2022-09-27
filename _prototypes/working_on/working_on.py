@@ -1,27 +1,34 @@
-# parent=None MEANS OPTIONAL: https://www.reddit.com/r/learnpython/comments/qwmd5h/pyside6pyqt_why_is_parent_none_in_class/
+# "parent=None" MEANS OPTIONAL: httptitleBars://www.reddit.com/r/learnpython/comments/qwmd5h/pyside6pyqt_why_is_parent_none_in_class/
+# BINPRESS notepad: https://www.binpress.com/building-text-editor-pyqt-1/
+import MadQt
+print("MadQt version:", MadQt.__version__)
 
 import sys
+import webbrowser
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
+
 
 class TitleBar(qtw.QWidget):
     height = 35
     def __init__(self, parent):
         super(TitleBar, self).__init__(parent)
-
+        
         self.current_editor = self.parent().create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
         self.tabs = qtw.QTabWidget()
-        self.tabs.setTabsClosable(True)
+        self.tabs.setTabsClosable(True) 
         self.tabs.tabBar().setMovable(True)
 
         self.parent()._createActions()
         self.parent()._connectActions()
         
-        self.l = qtw.QHBoxLayout()
-        self.l.setContentsMargins(0,0,10,0)
+        self.layout = qtw.QHBoxLayout()
+        self.layout.setObjectName(u"header")
+        self.layout.setContentsMargins(0,0,10,0)
+
         self.menubar = qtw.QMenuBar()
   
         file_menu = self.menubar.addMenu('File')
@@ -31,13 +38,13 @@ class TitleBar(qtw.QWidget):
         file_menu.addSeparator()
         file_menu.addAction(self.parent().exit_action)
 
-        self.l.addWidget(self.menubar) 
+        self.layout.addWidget(self.menubar) 
 
         self.window_title = qtw.QLabel("") # Notes
         self.window_title.setAlignment(qtc.Qt.AlignCenter)
         self.window_title.setAccessibleName("lbl_title") 
         self.window_title.setFixedHeight(self.height)
-        self.l.addWidget(self.window_title)
+        self.layout.addWidget(self.window_title)
 
         self.setSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Fixed)
         self.maxNormal=False
@@ -71,10 +78,10 @@ class TitleBar(qtw.QWidget):
         self.hideButton.setAccessibleName("btn_min")  
         self.hideButton.clicked.connect(self.on_click_hide)
 
-        self.l.addWidget(self.hideButton)
-        self.l.addWidget(self.maxButton)
-        self.l.addWidget(self.closeButton)
-        self.setLayout(self.l)
+        self.layout.addWidget(self.hideButton)
+        self.layout.addWidget(self.maxButton)
+        self.layout.addWidget(self.closeButton)
+        self.setLayout(self.layout)
 
         self.start = qtc.QPoint(0, 0)
         self.pressing = False
@@ -126,36 +133,7 @@ class TitleBar(qtw.QWidget):
                 }
             """
             )
-
-    def on_click_maximize(self):
-        self.maximaze = not self.maximaze
-        if self.maximaze:    main.setWindowState(qtc.Qt.WindowNoState)
-        if not self.maximaze:
-            main.setWindowState(qtc.Qt.WindowMaximized)
     
-    def eventFilter(self, obj, event):
-        print(obj.objectName())
-        # print(dir(event))
-        # print(event.type())
-        if event.type() == qtc.QEvent.ToolTip:
-            print(event.type())
-            return True
-            # self.status_info.setText(self.btn.toolTip())
-        if event.type() == qtc.QEvent.Leave:
-            print(event.type())
-            #self.status_info.setText(" ")
-            self.status_info.setText(self.default)
-
-        if event.type() == qtc.QEvent.Enter:
-            print(event.type()) 
-            self.status_info.setText(self.btn.toolTip()) 
-        if event.type() == qtc.QEvent.HoverEnter:
-            print(event.type())    
-        
-        # if obj == self.btn and event.type() == QEvent.HoverEnter:
-        #     self.onHovered()
-        # return super(MainWindow, self).eventFilter(obj, event)
-
     def on_click_close(self):
         main.close()
             
@@ -163,27 +141,86 @@ class TitleBar(qtw.QWidget):
         main.showMinimized()
 
     # EVENT FUNCTIONS
-    def mousePressEvent(self, event):
-        self.start = self.mapToGlobal(event.pos())
-        self.pressing = True
+    # def mousePressEvent(self, event):
+    #     self.start = self.mapToGlobal(event.pos())
+    #     self.pressing = True
 
-    def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
-        if self.pressing:
-            self.end = self.mapToGlobal(event.pos())
-            self.movement = self.end-self.start
-            main.move(self.mapToGlobal(self.movement))
-            self.start = self.end
-
-    def mouseReleaseEvent(self, QMouseEvent):
-        self.pressing = False
-
-    def resizeEvent(self, event): # this is responsible for adjusting the titlebar to the correct size
-        super(TitleBar, self).resizeEvent(event)
-        self.window_title.setFixedWidth(main.width())
+    # def resizeEvent(self, event): # this is responsible for adjusting the titlebar to the correct size
+    #     super(TitleBar, self).resizeEvent(event)
+    #     self.window_title.setFixedWidth(main.width())
     
-    def changeEvent(self, event): # this is related with setting the window back to it's normal size
-        if event.type() == event.WindowStateChange:
-            self.titleBar.windowStateChanged(self.windowState())
+    # def changeEvent(self, event): # this is related with setting the window back to it's normal size
+    #     if event.type() == event.WindowStateChange:
+    #         self.titleBar.windowStateChanged(self.windowState())
+
+    # def on_click_maximize(self):
+    #     self.maximaze = not self.maximaze
+    #     if self.maximaze:    
+    #         main.setWindowState(qtc.Qt.WindowNoState)
+    #     if not self.maximaze:
+    #         main.setWindowState(qtc.Qt.WindowMaximized)
+
+    # def mouseButtonDblClick(self, event):
+    #     if event.type() == qtc.QEvent.MouseButtonDblClick:
+    #         self.titleBar.setWindowState(qtc.Qt.WindowFullScreen)
+
+    # ######## [ SAME ] #######
+
+    # def mouseReleaseEvent(self, event):
+    #     self.pressing = False
+
+    # def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
+    #     if self.pressing:
+    #         self.end = self.mapToGlobal(event.pos())
+    #         self.movement = self.end-self.start
+    #         main.move(self.mapToGlobal(self.movement))
+    #         self.start = self.end
+
+     ######## [ END ] #######
+
+    def eventFilter(self, obj, event):
+        # print(event.type())
+        if obj.objectName() == 'header':
+            if self.ui.logo.underMouse():
+                if event.type() == qtc.QEvent.MouseButtonRelease:
+                    webbrowser.open('https://madponyinteractive.github.io/MadQt/')
+                    return True
+            else:
+                if event.type() == qtc.QEvent.MouseButtonDblClick:
+                    self.setWindowState(self.windowState() ^ qtc.Qt.WindowFullScreen)
+                    return True
+
+                if event.type() == qtc.QEvent.MouseButtonRelease:
+                    if event.globalPosition().y() < 10 and self.moved:
+                        self.prevGeo = self.geometry()
+                        self.showMaximized()
+                        return True
+
+                if event.type() == qtc.QEvent.MouseButtonPress:
+                    self.prevMousePos = event.scenePosition()
+                    self.moved = False
+
+                if event.type() == qtc.QEvent.MouseMove:
+                    if self.windowState() == qtc.Qt.WindowFullScreen\
+                    or self.windowState() == qtc.Qt.WindowMaximized:
+                        self.showNormal()
+                        self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
+
+                    gr=self.geometry()
+                    screenPos = event.globalPosition()
+                    pos = screenPos-self.prevMousePos 
+                    x = max(pos.x(),0)
+                    y = max(pos.y(),0)
+                    screen = qtg.QGuiApplication.screenAt(qtc.QPoint(x,y)).size()
+                    x = min(x,screen.width()-gr.width())
+                    y = min(y,screen.height()-gr.height())
+
+                    self.move(x,y)
+                    self.moved = True
+
+                    # print(QGuiApplication.screens())
+        return super(TitleBar, self).eventFilter(self, obj, event)
+
 
     #####################################################
     ##                      END
@@ -208,7 +245,7 @@ class MainWindow(qtw.QMainWindow):
                             | qtc.Qt.WindowMaximizeButtonHint
                             | qtc.Qt.WindowCloseButtonHint)
 
-        self.title_bar  = TitleBar(self) 
+        self.title_bar  = TitleBar(self)
         self.tabs = qtw.QTabWidget()
         self.tabs.setTabsClosable(True)
         self.tabs.tabBar().setMovable(True)
@@ -219,15 +256,14 @@ class MainWindow(qtw.QMainWindow):
         # Cannot set QxxLayout directly on the QMainWindow
         # Need to create a QWidget and set it as the central widget
         widget = qtw.QWidget()
-        l = qtw.QVBoxLayout()
-        l.setContentsMargins(0,0,0,0)
-        l.addWidget(self.title_bar,1)
-        l.addWidget(self.tabs,2)
-        l.setSpacing(0) 
-        widget.setLayout(l)
+        layout = qtw.QVBoxLayout()
+        layout.setContentsMargins(0,0,0,0)
+        layout.addWidget(self.title_bar,1)
+        layout.addWidget(self.tabs,2)
+        layout.setSpacing(0) 
+        widget.setLayout(layout)
         self.setCentralWidget(widget)
         self.new_tab()
-        self.closeTab()
         self._createActions()
         self._connectActions()
 
@@ -253,9 +289,9 @@ class MainWindow(qtw.QMainWindow):
     def close(self): # close entire program
         qtw.QApplication.quit()
 
-    def closeTab(self): 
-        close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
-        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
+    # def closeTab(self): 
+    #     close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
+    #     close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
         self.widget = qtw.QMainWindow()
@@ -266,8 +302,24 @@ class MainWindow(qtw.QMainWindow):
         
         self.current_editor = self.create_editor() # create a QTextEdit
         self.text_editors.append(self.current_editor) # add current editor to the array list 
-       
         self.widget.setCentralWidget(self.current_editor)
+    
+    def open_document(self):
+        options = qtw.QFileDialog.Options()
+        # Get filename and show only .notes files
+        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
+        self.filename, _ = qtw.QFileDialog.getOpenFileName(
+            self, 'Open File',".",
+            "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
+            options=options
+        )
+        if self.filename:
+            with open(self.filename,"rt") as file:
+                content = file.read()
+                self.current_editor = self.create_editor() 
+                currentIndex = self.tabs.addTab(self.current_editor, str(self.filename))   # use that widget as the new tab
+                self.current_editor.setText(content) # set the contents of the file as the text
+                self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
 
     def _createToolBars(self):
         # create toolbars
@@ -302,26 +354,6 @@ class MainWindow(qtw.QMainWindow):
         self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
 
-    
-
-
-    def open_document(self):
-        options = qtw.QFileDialog.Options()
-        # Get filename and show only .notes files
-        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
-        self.filename, _ = qtw.QFileDialog.getOpenFileName(
-            self, 'Open File',".",
-            "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
-            options=options
-        )
-        if self.filename:
-            with open(self.filename,"rt") as file:
-                content = file.read()
-                self.current_editor = self.create_editor() 
-                currentIndex = self.tabs.addTab(self.current_editor, str(self.filename))   # use that widget as the new tab
-                self.current_editor.setText(content) # set the contents of the file as the text
-                self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
-
     def save_document (self):
         if not self.current_editor.document().isModified():
             self.statusBar().showMessage("There are no texts to be saved!")
@@ -345,10 +377,6 @@ class MainWindow(qtw.QMainWindow):
                     self.statusBar().showMessage(f"Saved to {self.filename}")
                     
                 self.changesSaved = True
-
-    
-
-
 
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
