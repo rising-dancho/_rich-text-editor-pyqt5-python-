@@ -1,5 +1,8 @@
 # "parent=None" MEANS OPTIONAL: httptitleBars://www.reddit.com/r/learnpython/comments/qwmd5h/pyside6pyqt_why_is_parent_none_in_class/
 # BINPRESS notepad: https://www.binpress.com/building-text-editor-pyqt-1/
+# https://stackoverflow.com/questions/67496362/qmouseevent-object-has-no-attribute-pos
+# https://stackoverflow.com/questions/2276810/pyqt-typeerror
+# https://doc-snapshots.qt.io/qt6-dev/qeventpoint.html#scenePosition-prop
 
 import sys
 import webbrowser
