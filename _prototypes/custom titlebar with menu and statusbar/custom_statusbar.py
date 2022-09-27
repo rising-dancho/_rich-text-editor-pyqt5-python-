@@ -1,9 +1,9 @@
 import sys
-from PySide6.QtCore import QPoint, Qt, QRect, QSize, QEvent
+from PySide6.QtCore import QPoint, Qt, QRect, QSize, QEvent, Qt, QPointF, QPoint
 from PySide6.QtWidgets import (QMainWindow, QApplication, QToolButton, QHBoxLayout,
                              QVBoxLayout, QTabWidget, QWidget,QPushButton, QLineEdit,
                              QLabel, QSizeGrip, QMenuBar, QStyleFactory, QSizePolicy)
-# from PyQt5.QtGui import QIcon, QPalette, QColor, QCursor
+from PyQt5.QtGui import QGuiApplication
 
 # how to install PySide6? just open you command prompt and type the ff: (you should have python installed of course)
 # pip install PySide6
@@ -22,12 +22,13 @@ class MainWindow(QWidget):
         # hlay.addStretch(1)
 
         vlay =QVBoxLayout(self)
+        self.installEventFilter(self)
         # vlay.addStretch(1)
 
         self.btn = QPushButton("Press me", objectName="BlueButton")
         self.btn.setToolTip("Toggle whether the font weight is bold or not")
         self.btn.clicked.connect(self.btn_onClick)
-        self.btn.installEventFilter(self)
+        # self.btn.installEventFilter(self)
         hlay.addWidget(self.btn)
         hlay.addStretch(1)
 
@@ -37,6 +38,8 @@ class MainWindow(QWidget):
         vlay.addWidget(self.status_info)
         vlay.addStretch(1)
         self.setLayout(vlay)
+
+        self.prevGeo = self.geometry()
     
     def btn_onClick(self):
         pass
@@ -59,15 +62,50 @@ class MainWindow(QWidget):
         if event.type() == QEvent.HoverEnter:
             print(event.type())    
         
+        if event.type() == QEvent.MouseButtonDblClick:
+                    self.setWindowState(self.windowState() ^ Qt.WindowFullScreen)
+                    return True
+
+        if event.type() == QEvent.MouseButtonRelease:
+                    if event.globalPosition().y() < 10 and self.moved:
+                        self.prevGeo = self.geometry()
+                        self.showMaximized()
+                        return True
+
+        if event.type() == QEvent.MouseButtonPress:
+            self.prevMousePos = event.scenePosition()
+            self.moved = False
+
+        if event.type() == QEvent.MouseMove:
+            if self.windowState() == Qt.WindowFullScreen\
+            or self.windowState() == Qt.WindowMaximized:
+                self.showNormal()
+                self.prevMousePos = QPointF(self.prevGeo.width()*.5,50)
+
+            gr=self.geometry()
+            screenPos = event.globalPosition()
+            pos = screenPos-self.prevMousePos 
+            x = max(pos.x(),0)
+            y = max(pos.y(),0)
+            screen = QGuiApplication.screenAt(QPoint(x,y)).size()
+            x = min(x,screen.width()-gr.width())
+            y = min(y,screen.height()-gr.height())
+
+            self.move(x,y)
+            self.moved = True
+
         # if obj == self.btn and event.type() == QEvent.HoverEnter:
         #     self.onHovered()
-        # return super(MainWindow, self).eventFilter(obj, event)
+
+        return super(MainWindow, self).eventFilter(obj, event)
+
+      
     
-    def onHovered(self):
-        print("hovered")
+    # def onHovered(self):
+    #     print("hovered")
     
-    def leaveEvent(self, e):
-        self.btn.setText("Press me")  
+    # def leaveEvent(self, e):
+    #     self.btn.setText("Press me")  
 
 
 if __name__ == '__main__':
