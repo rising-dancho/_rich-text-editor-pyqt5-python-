@@ -1,9 +1,7 @@
 import sys
-from PySide6.QtCore import QPoint, Qt, QRect, QSize, QEvent, Qt, QPointF, QPoint
-from PySide6.QtWidgets import (QMainWindow, QApplication, QToolButton, QHBoxLayout,
-                             QVBoxLayout, QTabWidget, QWidget,QPushButton, QLineEdit,
-                             QLabel, QSizeGrip, QMenuBar, QStyleFactory, QSizePolicy)
-from PyQt5.QtGui import QGuiApplication
+from PySide6.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
 
 # how to install PySide6? just open you command prompt and type the ff: (you should have python installed of course)
 # pip install PySide6
@@ -17,6 +15,8 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(400, 100, 300, 50)
+        self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowMaximizeButtonHint|Qt.WindowMinimizeButtonHint)
+     
 
         hlay = QHBoxLayout()
         # hlay.addStretch(1)
@@ -39,6 +39,7 @@ class MainWindow(QWidget):
         vlay.addStretch(1)
         self.setLayout(vlay)
 
+        self.properties = []
         self.prevGeo = self.geometry()
     
     def btn_onClick(self):
