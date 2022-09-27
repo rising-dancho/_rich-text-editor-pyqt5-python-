@@ -1,7 +1,5 @@
 # "parent=None" MEANS OPTIONAL: httptitleBars://www.reddit.com/r/learnpython/comments/qwmd5h/pyside6pyqt_why_is_parent_none_in_class/
 # BINPRESS notepad: https://www.binpress.com/building-text-editor-pyqt-1/
-import MadQt
-print("MadQt version:", MadQt.__version__)
 
 import sys
 import webbrowser
@@ -14,7 +12,10 @@ class TitleBar(qtw.QWidget):
     height = 35
     def __init__(self, parent):
         super(TitleBar, self).__init__(parent)
-        
+
+        self.installEventFilter(self)
+        self.prevGeo = self.geometry()
+
         self.current_editor = self.parent().create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
@@ -30,7 +31,7 @@ class TitleBar(qtw.QWidget):
         self.layout.setContentsMargins(0,0,10,0)
 
         self.menubar = qtw.QMenuBar()
-  
+
         file_menu = self.menubar.addMenu('File')
         file_menu.addAction(self.parent().new_action)
         file_menu.addAction(self.parent().open_action)
@@ -129,7 +130,6 @@ class TitleBar(qtw.QWidget):
                     image: url(./icons/colored_normal.png);
                     background: #161a21;
                     border: none;
-                    
                 }
             """
             )
@@ -176,50 +176,47 @@ class TitleBar(qtw.QWidget):
     #         main.move(self.mapToGlobal(self.movement))
     #         self.start = self.end
 
-     ######## [ END ] #######
+    ######### [ END ] ########
 
-    def eventFilter(self, obj, event):
+    def eventFilter(self, obj, event): 
+        # print(dir(event))
         # print(event.type())
-        if obj.objectName() == 'header':
-            if self.ui.logo.underMouse():
-                if event.type() == qtc.QEvent.MouseButtonRelease:
-                    webbrowser.open('https://madponyinteractive.github.io/MadQt/')
-                    return True
-            else:
-                if event.type() == qtc.QEvent.MouseButtonDblClick:
+        if event.type() == qtc.QEvent.MouseButtonDblClick:
                     self.setWindowState(self.windowState() ^ qtc.Qt.WindowFullScreen)
                     return True
 
-                if event.type() == qtc.QEvent.MouseButtonRelease:
+        if event.type() == qtc.QEvent.MouseButtonRelease:
                     if event.globalPosition().y() < 10 and self.moved:
                         self.prevGeo = self.geometry()
                         self.showMaximized()
                         return True
 
-                if event.type() == qtc.QEvent.MouseButtonPress:
-                    self.prevMousePos = event.scenePosition()
-                    self.moved = False
+        if event.type() == qtc.QEvent.MouseButtonPress:
+            self.prevMousePos = event.scenePosition()
+            self.moved = False
 
-                if event.type() == qtc.QEvent.MouseMove:
-                    if self.windowState() == qtc.Qt.WindowFullScreen\
-                    or self.windowState() == qtc.Qt.WindowMaximized:
-                        self.showNormal()
-                        self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
+        if event.type() == qtc.QEvent.MouseMove: 
+            if self.windowState() == qtc.Qt.WindowFullScreen\
+            or self.windowState() == qtc.Qt.WindowMaximized:
+                self.showNormal()
+                self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
 
-                    gr=self.geometry()
-                    screenPos = event.globalPosition()
-                    pos = screenPos-self.prevMousePos 
-                    x = max(pos.x(),0)
-                    y = max(pos.y(),0)
-                    screen = qtg.QGuiApplication.screenAt(qtc.QPoint(x,y)).size()
-                    x = min(x,screen.width()-gr.width())
-                    y = min(y,screen.height()-gr.height())
+            gr=self.geometry()
+            screenPos = event.globalPosition()
+            pos = screenPos-self.prevMousePos 
+            x = max(pos.x(),0)
+            y = max(pos.y(),0)
+            screen = qtg.QGuiApplication.screenAt(qtc.QPoint(x,y)).size()
+            x = min(x,screen.width()-gr.width())
+            y = min(y,screen.height()-gr.height())
 
-                    self.move(x,y)
-                    self.moved = True
+            self.move(x,y)
+            self.moved = True
 
-                    # print(QGuiApplication.screens())
-        return super(TitleBar, self).eventFilter(self, obj, event)
+        # if obj == self.btn and event.type() == QEvent.HoverEnter:
+        #     self.onHovered()
+
+        return super(TitleBar, self).eventFilter(obj, event)
 
 
     #####################################################
@@ -246,6 +243,7 @@ class MainWindow(qtw.QMainWindow):
                             | qtc.Qt.WindowCloseButtonHint)
 
         self.title_bar  = TitleBar(self)
+ 
         self.tabs = qtw.QTabWidget()
         self.tabs.setTabsClosable(True)
         self.tabs.tabBar().setMovable(True)
@@ -266,6 +264,7 @@ class MainWindow(qtw.QMainWindow):
         self.new_tab()
         self._createActions()
         self._connectActions()
+
 
     def create_editor(self):
         current_editor = qtw.QTextEdit()
