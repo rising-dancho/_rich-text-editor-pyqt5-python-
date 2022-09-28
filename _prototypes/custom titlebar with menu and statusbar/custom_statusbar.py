@@ -17,7 +17,6 @@ class MainWindow(QWidget):
         self.setGeometry(400, 100, 300, 50)
         self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowMaximizeButtonHint|Qt.WindowMinimizeButtonHint)
      
-
         hlay = QHBoxLayout()
         # hlay.addStretch(1)
 

@@ -1,19 +1,36 @@
 # "parent=None" MEANS OPTIONAL: httptitleBars://www.reddit.com/r/learnpython/comments/qwmd5h/pyside6pyqt_why_is_parent_none_in_class/
 # BINPRESS notepad: https://www.binpress.com/building-text-editor-pyqt-1/
-import MadQt
-print("MadQt version:", MadQt.__version__)
+# LINKS:
+# https://stackoverflow.com/questions/67496362/qmouseevent-object-has-no-attribute-pos
+# https://stackoverflow.com/questions/2276810/pyqt-typeerror
+# https://doc-snapshots.qt.io/qt6-dev/qeventpoint.html#scenePosition-prop
+# https://www.youtube.com/watch?v=CA6bOJLf7Pw&t=477s
+
+# import sys
+# import webbrowser
+# from PyQt5 import QtWidgets as qtw
+# from PyQt5 import QtCore as qtc
+# from PyQt5 import QtGui as qtg
 
 import sys
-import webbrowser
-from PyQt5 import QtWidgets as qtw
-from PyQt5 import QtCore as qtc
-from PyQt5 import QtGui as qtg
+from PySide6 import QtWidgets as qtw
+from PySide6 import QtCore as qtc
+from PySide6 import QtGui as qtg
 
 
 class TitleBar(qtw.QWidget):
     height = 35
     def __init__(self, parent):
         super(TitleBar, self).__init__(parent)
+
+        ### screen movement ###
+        self.installEventFilter(self)
+        self.prevGeo = self.geometry()
+
+        self.start = qtc.QPoint(0, 0)
+        self.pressing = False
+        self.maxNormal=False
+        ### [ end ] ###
         
         self.current_editor = self.parent().create_editor()
         self.current_editor.setFocus()
@@ -83,11 +100,6 @@ class TitleBar(qtw.QWidget):
         self.layout.addWidget(self.closeButton)
         self.setLayout(self.layout)
 
-        self.start = qtc.QPoint(0, 0)
-        self.pressing = False
-        self.maxNormal=False
-
-    
     #####################################################
     ## TITLE BAR MINIMIZE, MAXIMIZE, CLOSE METHODS
     #####################################################
@@ -175,52 +187,45 @@ class TitleBar(qtw.QWidget):
     #         self.movement = self.end-self.start
     #         main.move(self.mapToGlobal(self.movement))
     #         self.start = self.end
-
      ######## [ END ] #######
 
-    def eventFilter(self, obj, event):
+    def eventFilter(self, obj, event): 
+        # print(dir(event))
         # print(event.type())
-        if obj.objectName() == 'header':
-            if self.ui.logo.underMouse():
-                if event.type() == qtc.QEvent.MouseButtonRelease:
-                    webbrowser.open('https://madponyinteractive.github.io/MadQt/')
-                    return True
-            else:
-                if event.type() == qtc.QEvent.MouseButtonDblClick:
+
+        if event.type() == qtc.QEvent.MouseButtonPress:
+            self.prevMousePos = event.scenePosition()
+            self.moved = False
+
+        if event.type() == qtc.QEvent.MouseButtonDblClick:
                     self.setWindowState(self.windowState() ^ qtc.Qt.WindowFullScreen)
                     return True
 
-                if event.type() == qtc.QEvent.MouseButtonRelease:
+        if event.type() == qtc.QEvent.MouseButtonRelease:
                     if event.globalPosition().y() < 10 and self.moved:
                         self.prevGeo = self.geometry()
                         self.showMaximized()
                         return True
 
-                if event.type() == qtc.QEvent.MouseButtonPress:
-                    self.prevMousePos = event.scenePosition()
-                    self.moved = False
+        if event.type() == qtc.QEvent.MouseMove:
+            if self.windowState() == qtc.Qt.WindowFullScreen\
+            or self.windowState() == qtc.Qt.WindowMaximized:
+                self.showNormal()
+                self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
 
-                if event.type() == qtc.QEvent.MouseMove:
-                    if self.windowState() == qtc.Qt.WindowFullScreen\
-                    or self.windowState() == qtc.Qt.WindowMaximized:
-                        self.showNormal()
-                        self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
+            gr=self.geometry() 
+            screenPos = event.globalPosition() 
+            pos = screenPos-self.prevMousePos 
+            x = max(pos.x(),0)
+            y = max(pos.y(),0)
+            screen = qtg.QGuiApplication.screenAt(qtc.QPoint(x,y)).size()
+            x = min(x,screen.width()-gr.width())
+            y = min(y,screen.height()-gr.height())
 
-                    gr=self.geometry()
-                    screenPos = event.globalPosition()
-                    pos = screenPos-self.prevMousePos 
-                    x = max(pos.x(),0)
-                    y = max(pos.y(),0)
-                    screen = qtg.QGuiApplication.screenAt(qtc.QPoint(x,y)).size()
-                    x = min(x,screen.width()-gr.width())
-                    y = min(y,screen.height()-gr.height())
+            self.move(x,y)
+            self.moved = True
 
-                    self.move(x,y)
-                    self.moved = True
-
-                    # print(QGuiApplication.screens())
-        return super(TitleBar, self).eventFilter(self, obj, event)
-
+        return super(TitleBar, self).eventFilter(obj, event)
 
     #####################################################
     ##                      END
@@ -271,7 +276,7 @@ class MainWindow(qtw.QMainWindow):
         current_editor = qtw.QTextEdit()
         # Set the tab stop width to around 33 pixels which is
         # about 8 spaces
-        current_editor.setTabStopWidth(33)
+        current_editor.setTabStopDistance(33)
         return current_editor
 
     def change_text_editor(self, index):
@@ -279,7 +284,7 @@ class MainWindow(qtw.QMainWindow):
             self.current_editor = self.text_editors[index]
 
     def remove_editor(self, index):
-        if self.tabs.count() < 2:
+        if self.tabs.count() < 2: 
             return
   
         self.tabs.removeTab(index)
@@ -332,10 +337,10 @@ class MainWindow(qtw.QMainWindow):
 
     def _createActions(self):
         # FILE MENU
-        self.new_action = qtw.QAction(qtg.QIcon("./icons/new_file.png"),"New", self)
-        self.open_action = qtw.QAction(qtg.QIcon("./icons/folder.png"),"Open", self)
-        self.save_action = qtw.QAction(qtg.QIcon("./icons/save.png"),"Save", self)
-        self.exit_action = qtw.QAction(qtg.QIcon("./icons/close.png"), "Exit", self)
+        self.new_action = qtg.QAction(qtg.QIcon("./icons/new_file.png"),"New", self)
+        self.open_action = qtg.QAction(qtg.QIcon("./icons/folder.png"),"Open", self)
+        self.save_action = qtg.QAction(qtg.QIcon("./icons/save.png"),"Save", self)
+        self.exit_action = qtg.QAction(qtg.QIcon("./icons/close.png"), "Exit", self)
    
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
@@ -519,4 +524,4 @@ if __name__ == "__main__":
         """
     )
     main.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
