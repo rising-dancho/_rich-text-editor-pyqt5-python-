@@ -1,3 +1,6 @@
+# SOURCE: https://stackoverflow.com/questions/8814452/pyqt-how-to-add-separate-ui-widget-to-qmainwindow
+# RELATED: https://stackoverflow.com/questions/66643206/adding-qwidget-in-qmainwindow-which-already-has-a-central-widget-in-pyqt
+
 from PyQt5.QtCore import *
 from PyQt5.QtGui  import *
 from PyQt5.QtWidgets  import *
