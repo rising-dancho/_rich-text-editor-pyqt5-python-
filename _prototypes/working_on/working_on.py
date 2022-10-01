@@ -6,6 +6,8 @@
 # https://doc-snapshots.qt.io/qt6-dev/qeventpoint.html#scenePosition-prop
 # https://www.youtube.com/watch?v=CA6bOJLf7Pw&t=477s
 # https://doc.qt.io/qtforpython/PySide6/QtGui/QEventPoint.html
+# SOURCE: https://stackoverflow.com/questions/57569044/pyqt-how-to-create-custom-combined-titlebar-and-menubar
+
 
 # import sys
 # import webbrowser
@@ -27,6 +29,8 @@ class TitleBar(qtw.QWidget):
         ### screen movement ###
         self.installEventFilter(self)
         self.prevGeo = self.geometry()
+
+        
 
         self.start = qtc.QPoint(0, 0)
         self.pressing = False
@@ -153,80 +157,67 @@ class TitleBar(qtw.QWidget):
     def on_click_hide(self):
         main.showMinimized()
 
-    # EVENT FUNCTIONS
-    # def mousePressEvent(self, event):
-    #     self.start = self.mapToGlobal(event.pos())
-    #     self.pressing = True
+    """ 
+        self.installEventFilter(self)
+        self.prevGeo = self.geometry()
 
-    # def resizeEvent(self, event): # this is responsible for adjusting the titlebar to the correct size
-    #     super(TitleBar, self).resizeEvent(event)
-    #     self.window_title.setFixedWidth(main.width())
+        self.start = qtc.QPoint(0, 0)
+        self.pressing = False
+        self.maxNormal=False
+    """
     
-    # def changeEvent(self, event): # this is related with setting the window back to it's normal size
-    #     if event.type() == event.WindowStateChange:
-    #         self.titleBar.windowStateChanged(self.windowState())
+    # EVENT FUNCTIONS
+    def mousePressEvent(self, event):
+        # print(self.mapToGlobal(event.pos()))
+        self.start = self.mapToGlobal(event.pos())
+        self.pressing = True
 
-    # def on_click_maximize(self):
-    #     self.maximaze = not self.maximaze
-    #     if self.maximaze:    
-    #         main.setWindowState(qtc.Qt.WindowNoState)
-    #     if not self.maximaze:
-    #         main.setWindowState(qtc.Qt.WindowMaximized)
+    def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
+        if self.pressing:
+            self.end = self.mapToGlobal(event.pos())
+            self.movement = self.end-self.start
+            main.move(self.mapToGlobal(self.movement))
+            self.start = self.end
+            
+     ####### [ END ] #######
 
-    # def mouseButtonDblClick(self, event):
+    # def eventFilter(self, obj, event): 
+    #     # print(dir(event))
+    #     # print(event.type())
+
+    #     if event.type() == qtc.QEvent.MouseButtonPress:
+    #         self.prevMousePos = event.scenePosition()
+    #         self.moved = False
+
     #     if event.type() == qtc.QEvent.MouseButtonDblClick:
-    #         self.titleBar.setWindowState(qtc.Qt.WindowFullScreen)
+    #                 self.setWindowState(self.windowState() ^ qtc.Qt.WindowFullScreen)
+    #                 return True
 
-    # ######## [ SAME ] #######
+    #     if event.type() == qtc.QEvent.MouseButtonRelease:
+    #                 if event.globalPosition().y() < 10 and self.moved:
+    #                     self.prevGeo = self.geometry()
+    #                     self.showMaximized()
+    #                     return True
 
-    # def mouseReleaseEvent(self, event):
-    #     self.pressing = False
+    #     if event.type() == qtc.QEvent.MouseMove:
+    #         if self.windowState() == qtc.Qt.WindowFullScreen\
+    #         or self.windowState() == qtc.Qt.WindowMaximized:
+    #             self.showNormal()
+    #             self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
 
-    # def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
-    #     if self.pressing:
-    #         self.end = self.mapToGlobal(event.pos())
-    #         self.movement = self.end-self.start
-    #         main.move(self.mapToGlobal(self.movement))
-    #         self.start = self.end
-     ######## [ END ] #######
+    #         gr=self.geometry() 
+    #         screenPos = event.globalPosition() 
+    #         pos = screenPos-self.prevMousePos 
+    #         x = max(pos.x(),0)
+    #         y = max(pos.y(),0)
+    #         screen = qtg.QGuiApplication.screenAt(qtc.QPoint(x,y)).size()
+    #         x = min(x,screen.width()-gr.width())
+    #         y = min(y,screen.height()-gr.height())
 
-    def eventFilter(self, obj, event): 
-        # print(dir(event))
-        # print(event.type())
+    #         self.move(x,y)
+    #         self.moved = True
 
-        if event.type() == qtc.QEvent.MouseButtonPress:
-            self.prevMousePos = event.scenePosition()
-            self.moved = False
-
-        if event.type() == qtc.QEvent.MouseButtonDblClick:
-                    self.setWindowState(self.windowState() ^ qtc.Qt.WindowFullScreen)
-                    return True
-
-        if event.type() == qtc.QEvent.MouseButtonRelease:
-                    if event.globalPosition().y() < 10 and self.moved:
-                        self.prevGeo = self.geometry()
-                        self.showMaximized()
-                        return True
-
-        if event.type() == qtc.QEvent.MouseMove:
-            if self.windowState() == qtc.Qt.WindowFullScreen\
-            or self.windowState() == qtc.Qt.WindowMaximized:
-                self.showNormal()
-                self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
-
-            gr=self.geometry() 
-            screenPos = event.globalPosition() 
-            pos = screenPos-self.prevMousePos 
-            x = max(pos.x(),0)
-            y = max(pos.y(),0)
-            screen = qtg.QGuiApplication.screenAt(qtc.QPoint(x,y)).size()
-            x = min(x,screen.width()-gr.width())
-            y = min(y,screen.height()-gr.height())
-
-            self.move(x,y)
-            self.moved = True
-
-        return super(TitleBar, self).eventFilter(obj, event)
+    #     return super(TitleBar, self).eventFilter(obj, event)
 
     #####################################################
     ##                      END
