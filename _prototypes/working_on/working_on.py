@@ -60,7 +60,7 @@ class TitleBar(qtw.QWidget):
         self.start = qtc.QPoint(0, 0)
         self.pressing = False
         self.maximizedWindow=False
-        
+
         ### [ end ] ###
         
         self.current_editor = self.parent().create_editor()
@@ -118,7 +118,7 @@ class TitleBar(qtw.QWidget):
     #####################################################
     ## TITLE BAR MINIMIZE, MAXIMIZE, CLOSE METHODS
     #####################################################
-
+    
     def showMaxRestore(self):
         if(self.maximizedWindow):
             main.showNormal()
@@ -151,15 +151,8 @@ class TitleBar(qtw.QWidget):
         if event.type() == qtc.QEvent.MouseButtonDblClick:
             # PySide6.QtGui.QWindow.showNormal() # https://doc.qt.io/qtforpython/PySide6/QtGui/QWindow.html?highlight=shownormal#PySide6.QtGui.PySide6.QtGui.QWindow.showNormal
             #-- Shows the window as normal, i.e. neither maximized, minimized, nor fullscreen.
-            
-            if(self.maximizedWindow):
-                main.showNormal()
-                self.maximizedWindow= False
-                self.maxButton.setStyleSheet(self.nav_maximize)
-            else:
-                main.showMaximized()
-                self.maximizedWindow=  True
-                self.maxButton.setStyleSheet(self.nav_normal)
+            self.showMaxRestore()
+        
         return True
 
 
