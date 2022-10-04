@@ -23,8 +23,40 @@ from PySide6 import QtGui as qtg
 
 class TitleBar(qtw.QWidget):
     height = 35
+    
+
+
     def __init__(self, parent):
         super(TitleBar, self).__init__(parent)
+
+        self.nav_maximize = """
+            QToolButton[accessibleName="btn_max"] {
+                image: url(./icons/nav_maximize.png);
+                background: #161a21;
+                border: nobutton_stylene;
+                padding-right: 3px; 
+            }
+            QToolButton[accessibleName="btn_max"]:hover {
+                image: url(./icons/colored_maximize.png);
+                background: #161a21;
+                border: none;
+            }
+        """
+
+        self.nav_normal =  """
+                QToolButton[accessibleName="btn_max"]{
+                    image: url(./icons/nav_normal.png);
+                    background: #161a21;
+                    border: none;
+                    
+                }
+                QToolButton[accessibleName="btn_max"]:hover{
+                    image: url(./icons/colored_normal.png);
+                    background: #161a21;
+                    border: none;
+                    
+                }
+            """
 
         ### screen movement ###
         self.installEventFilter(self)
@@ -34,7 +66,7 @@ class TitleBar(qtw.QWidget):
 
         self.start = qtc.QPoint(0, 0)
         self.pressing = False
-        self.maxNormal=False
+        self.maximizedWindow=False
         ### [ end ] ###
         
         self.current_editor = self.parent().create_editor()
@@ -69,7 +101,7 @@ class TitleBar(qtw.QWidget):
         self.layout.addWidget(self.window_title)
 
         self.setSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Fixed)
-        self.maxNormal=False
+        self.maximizedWindow=False
        
         self.closeButton = qtw.QToolButton() 
         self.closeButton.setAccessibleName("btn_close")                           
@@ -78,22 +110,7 @@ class TitleBar(qtw.QWidget):
 
         self.maxButton = qtw.QToolButton()
         self.maxButton.setAccessibleName("btn_max")  
-        self.maxButton.setStyleSheet(
-            """
-            QToolButton[accessibleName="btn_max"] {
-                image: url(./icons/nav_maximize.png);
-                background: #161a21;
-                border: nobutton_stylene;
-                padding-right: 3px; 
-            }
-            QToolButton[accessibleName="btn_max"]:hover {
-                image: url(./icons/colored_maximize.png);
-                background: #161a21;
-                border: none;
-            }
-        
-        """
-        )
+        self.maxButton.setStyleSheet(self.nav_maximize)
         self.maxButton.clicked.connect(self.showMaxRestore)
 
         self.hideButton = qtw.QToolButton()
@@ -110,46 +127,17 @@ class TitleBar(qtw.QWidget):
     #####################################################
 
     def showMaxRestore(self):
-        if(self.maxNormal):
+        if(self.maximizedWindow):
             main.showNormal()
-            self.maxNormal= False
+            self.maximizedWindow= False
             print('nomalscreen: maximize icon showing')
-            self.maxButton.setStyleSheet(
-            """
-                QToolButton[accessibleName="btn_max"] {
-                    image: url(./icons/nav_maximize.png);
-                    background: #161a21;
-                    border: nobutton_stylene;
-                    padding-right: 3px; 
-                }
-                QToolButton[accessibleName="btn_max"]:hover {
-                    image: url(./icons/colored_maximize.png);
-                    background: #161a21;
-                    border: none;
-                }
-            """
-            )
+            self.maxButton.setStyleSheet(self.nav_maximize)
             
         else:
             main.showMaximized()
-            self.maxNormal=  True
+            self.maximizedWindow=  True
             print('fullscreen: collapse icon showing')
-            self.maxButton.setStyleSheet(
-            """
-                QToolButton[accessibleName="btn_max"]{
-                    image: url(./icons/nav_normal.png);
-                    background: #161a21;
-                    border: none;
-                    
-                }
-                QToolButton[accessibleName="btn_max"]:hover{
-                    image: url(./icons/colored_normal.png);
-                    background: #161a21;
-                    border: none;
-                    
-                }
-            """
-            )
+            self.maxButton.setStyleSheet(self.nav_normal)
     
     def on_click_close(self):
         main.close()
@@ -157,68 +145,52 @@ class TitleBar(qtw.QWidget):
     def on_click_hide(self):
         main.showMinimized()
 
-    """ 
-        self.installEventFilter(self)
-        self.prevGeo = self.geometry()
 
-        self.start = qtc.QPoint(0, 0)
-        self.pressing = False
-        self.maxNormal=False
-    """
-    
     # EVENT FUNCTIONS
     def mousePressEvent(self, event):
-        # print(self.mapToGlobal(event.pos()))
-        self.start = self.mapToGlobal(event.pos())
+        # PySide6.QtGui.QCursor.pos()
+        # RETURN TYPE: PySide6.QtCore.QPoint
+        #-- Returns the position of the cursor (hot spot) 
+        # of the primary screen in global screen coordinates.
+        
+        self.start = event.globalPosition().toPoint()
+        # print(self.start)
         self.pressing = True
 
+        if event.type() == qtc.QEvent.MouseButtonDblClick:
+            # PySide6.QtGui.QWindow.showNormal() # https://doc.qt.io/qtforpython/PySide6/QtGui/QWindow.html?highlight=shownormal#PySide6.QtGui.PySide6.QtGui.QWindow.showNormal
+            #-- Shows the window as normal, i.e. neither maximized, minimized, nor fullscreen.
+            
+            if(self.maximizedWindow):
+                main.showNormal()
+                self.maximizedWindow= False
+                print('nomalscreen: maximize icon showing')
+                self.maxButton.setStyleSheet(self.nav_maximize)
+            else:
+                main.showMaximized()
+                self.maximizedWindow=  True
+                print('fullscreen: collapse icon showing')
+                self.maxButton.setStyleSheet(self.nav_normal)
+
+        return True
+
+
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
+    
+        if(self.maximizedWindow):
+                main.showNormal()
+                self.maximizedWindow= False
+                print('nomalscreen: maximize icon showing')
+                self.maxButton.setStyleSheet(self.nav_maximize)
+
         if self.pressing:
-            self.end = self.mapToGlobal(event.pos())
+            # GLOBAL POSITION: https://stackoverflow.com/questions/67723421/deprecationwarning-function-when-moving-app-removed-titlebar-pyside6
+            self.end = event.globalPosition().toPoint()
             self.movement = self.end-self.start
             main.move(self.mapToGlobal(self.movement))
             self.start = self.end
+
             
-     ####### [ END ] #######
-
-    # def eventFilter(self, obj, event): 
-    #     # print(dir(event))
-    #     # print(event.type())
-
-    #     if event.type() == qtc.QEvent.MouseButtonPress:
-    #         self.prevMousePos = event.scenePosition()
-    #         self.moved = False
-
-    #     if event.type() == qtc.QEvent.MouseButtonDblClick:
-    #                 self.setWindowState(self.windowState() ^ qtc.Qt.WindowFullScreen)
-    #                 return True
-
-    #     if event.type() == qtc.QEvent.MouseButtonRelease:
-    #                 if event.globalPosition().y() < 10 and self.moved:
-    #                     self.prevGeo = self.geometry()
-    #                     self.showMaximized()
-    #                     return True
-
-    #     if event.type() == qtc.QEvent.MouseMove:
-    #         if self.windowState() == qtc.Qt.WindowFullScreen\
-    #         or self.windowState() == qtc.Qt.WindowMaximized:
-    #             self.showNormal()
-    #             self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
-
-    #         gr=self.geometry() 
-    #         screenPos = event.globalPosition() 
-    #         pos = screenPos-self.prevMousePos 
-    #         x = max(pos.x(),0)
-    #         y = max(pos.y(),0)
-    #         screen = qtg.QGuiApplication.screenAt(qtc.QPoint(x,y)).size()
-    #         x = min(x,screen.width()-gr.width())
-    #         y = min(y,screen.height()-gr.height())
-
-    #         self.move(x,y)
-    #         self.moved = True
-
-    #     return super(TitleBar, self).eventFilter(obj, event)
-
     #####################################################
     ##                      END
     #####################################################

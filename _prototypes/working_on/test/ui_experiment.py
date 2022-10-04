@@ -1,53 +1,36 @@
 # SOURCE: https://stackoverflow.com/questions/8814452/pyqt-how-to-add-separate-ui-widget-to-qmainwindow
 
 import sys
-from PyQt5 import QtWidgets as qtw
-from PyQt5 import QtCore as qtc
-from PyQt5 import QtGui as qtg
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+
+import sys
+
+class MyMainWindow(QMainWindow):
+
+    def __init__(self, parent=None):
+
+        super(MyMainWindow, self).__init__(parent)
+        self.form_widget = FormWidget(self) 
+        self.setCentralWidget(self.form_widget) 
 
 
-class MainWindow(qtw.QMainWindow):
-    def __init__(self):
-        super(MainWindow, self).__init__()
-        self.form_widget = FormWidget(self)
-        _widget = qtw.QWidget()
-        _layout = qtw.QVBoxLayout(_widget)
-        _layout.addWidget(self.form_widget)
-        self.setCentralWidget(_widget)
+class FormWidget(QWidget):
 
-class FormWidget(qtw.QWidget):
-
-    def __init__(self, parent):
+    def __init__(self, parent):        
         super(FormWidget, self).__init__(parent)
-        self.__controls()
-        self.__layout()
+        self.layout = QVBoxLayout(self)
 
-    def __controls(self):
-        self.label = qtw.QLabel("Name for backdrop")
-        self.txted = qtw.QLineEdit()
-        self.lbled = qtw.QLabel("Select a readNode")
-        self.cmbox = qtw.QComboBox()
+        self.button1 = QPushButton("Button 1")
+        self.layout.addWidget(self.button1)
 
-    def __layout(self):
-        self.vbox = qtw.QVBoxLayout()
-        self.hbox = qtw.QHBoxLayout()
-        self.h2Box = qtw.QHBoxLayout()
+        self.button2 = QPushButton("Button 2")
+        self.layout.addWidget(self.button2)
 
-        self.hbox.addWidget(self.label)
-        self.hbox.addWidget(self.txted)
+        self.setLayout(self.layout)
 
-        self.h2Box.addWidget(self.lbled)
-        self.h2Box.addWidget(self.cmbox)
-
-        self.vbox.addLayout(self.hbox)
-        self.vbox.addLayout(self.h2Box)
-        self.setLayout(self.vbox)
-
-
-    
-
-if __name__ == '__main__':
-    app = qtw.QApplication(sys.argv)
-    win = MainWindow()
-    win.show()
-    sys.exit(app.exec_()) 
+app = QApplication([])
+foo = MyMainWindow()
+foo.show()
+sys.exit(app.exec_())
