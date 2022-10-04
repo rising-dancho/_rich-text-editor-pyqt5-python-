@@ -89,7 +89,7 @@ class TitleBar(qtw.QWidget):
         self.window_title = qtw.QLabel("Visual Studio Code") # Notes
         self.window_title.setAccessibleName("lbl_title") 
         self.window_title.setFixedHeight(self.height)
-        self.layout.addStretch(1) # this stretch the self.window_title to take all the remaining space
+        self.layout.addStretch(1) # this stretches the self.window_title qlabel to take-up all the remaining space
         self.layout.addWidget(self.window_title)
 
         self.setSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Fixed)
@@ -97,7 +97,6 @@ class TitleBar(qtw.QWidget):
        
         self.closeButton = qtw.QToolButton() 
         self.closeButton.setAccessibleName("btn_close")                           
- 
         self.closeButton.clicked.connect(self.on_click_close)
 
         self.maxButton = qtw.QToolButton()
@@ -146,11 +145,17 @@ class TitleBar(qtw.QWidget):
         self.start = event.globalPosition().toPoint()
         # print(self.start)
         self.pressing = True
-
+        
         if event.type() == qtc.QEvent.MouseButtonDblClick:
             self.showMaxRestore()
-        return True
-
+            return True
+    
+    # window will maximize if mouse cursor is positioned at less then 10 pixels in y-coordinate
+    def mouseReleaseEvent(self, event):
+        if event.globalPosition().y() < 10:
+            self.showMaxRestore()
+        
+            
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
 
         if(self.maximizedWindow): 
@@ -159,6 +164,7 @@ class TitleBar(qtw.QWidget):
                 main.showNormal()
                 self.maximizedWindow= False
                 self.maxButton.setStyleSheet(self.nav_maximize)
+     
 
         if self.pressing: # this is for moving the window
             # GLOBAL POSITION: https://stackoverflow.com/questions/67723421/deprecationwarning-function-when-moving-app-removed-titlebar-pyside6
@@ -166,6 +172,7 @@ class TitleBar(qtw.QWidget):
             self.movement = self.end-self.start
             main.move(self.mapToGlobal(self.movement))
             self.start = self.end
+
 
     #####################################################
     ##                      END
@@ -184,11 +191,7 @@ class MainWindow(qtw.QMainWindow):
         # WINDOW FLAGS: https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-windowflags-example.html?highlight=windowminimizebuttonhint
         self.setMinimumSize(400,250)
         self.resize(700,500)
-        self.setWindowFlags(self.windowFlags() 
-                            | qtc.Qt.FramelessWindowHint 
-                            | qtc.Qt.WindowMinimizeButtonHint
-                            | qtc.Qt.WindowMaximizeButtonHint
-                            | qtc.Qt.WindowCloseButtonHint)
+        self.setWindowFlags(self.windowFlags() | qtc.Qt.FramelessWindowHint)
 
         self.title_bar  = TitleBar(self)
         self.tabs = qtw.QTabWidget()
