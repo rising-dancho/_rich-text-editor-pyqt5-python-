@@ -8,7 +8,6 @@
 # https://doc.qt.io/qtforpython/PySide6/QtGui/QEventPoint.html
 # SOURCE: https://stackoverflow.com/questions/57569044/pyqt-how-to-create-custom-combined-titlebar-and-menubar
 
-
 # import sys
 # import webbrowser
 # from PyQt5 import QtWidgets as qtw
@@ -327,7 +326,8 @@ class MainWindow(qtw.QMainWindow):
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     app.setStyle(qtw.QStyleFactory.create("Fusion")) # Oxygen, Windows, Fusion etc.
-    # Now use a palette to switch to dark colors:
+    # DARKER COLOR OR LIGHTER: https://pinetools.com/darken-color
+    # COLOR READABILITY CHECKER: https://coolors.co/contrast-checker/dfdcd1-161a21
     palette = qtg.QPalette()
     palette.setColor(qtg.QPalette.Window, qtg.QColor("#161a21"))
     palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#BFBDB6"))
@@ -347,17 +347,16 @@ if __name__ == "__main__":
     main.setStyleSheet(
          """
             QMainWindow{ background: #161a21; border-style: none;}
-            QStatusBar { color: #BFBDB6; background: #1c2028; }
+            QStatusBar { color: #BFBDB6; background: #161a21; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
             QMenuBar::item { color: #BFBDB6; background: #161a21; }
             
-         
             QTextEdit
             {
                 border: none;
                 font: "Consolas";
                 color: #BFBDB6;
-                background: #161a21;
+                background: #12151b;
                 selection-background-color: #ffb454;
                 selection-color: #000000;
             }
@@ -375,7 +374,7 @@ if __name__ == "__main__":
             } 
             QToolBar
             {
-                background: #1c2028;
+                background: #161a21;
                 border: none;
                 border-style: none;
             }
