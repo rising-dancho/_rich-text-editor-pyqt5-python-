@@ -357,7 +357,7 @@ if __name__ == "__main__":
                 font: "Consolas";
                 color: #BFBDB6;
                 background: #13161d;
-                selection-background-color: #ff9d21;
+                selection-background-color: #ffb454;
                 selection-color: #000000;
             }
             QMenuBar
