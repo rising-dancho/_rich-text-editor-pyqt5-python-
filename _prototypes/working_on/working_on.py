@@ -339,8 +339,8 @@ if __name__ == "__main__":
     palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # textedit
     palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
     palette.setColor(qtg.QPalette.BrightText, qtc.Qt.white)
-    palette.setColor(qtg.QPalette.Link, qtg.QColor("#ffb454"))
-    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#ffb454"))
+    palette.setColor(qtg.QPalette.Link, qtg.QColor("#ff9d21"))
+    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#ff9d21"))
     palette.setColor(qtg.QPalette.HighlightedText, qtg.QColor("#000"))
     app.setPalette(palette)
     main = MainWindow()
@@ -357,7 +357,7 @@ if __name__ == "__main__":
                 font: "Consolas";
                 color: #BFBDB6;
                 background: #13161d;
-                selection-background-color: #ffb454;
+                selection-background-color: #ff9d21;
                 selection-color: #000000;
             }
             QMenuBar
