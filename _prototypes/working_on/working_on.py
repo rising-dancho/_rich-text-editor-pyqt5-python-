@@ -120,14 +120,15 @@ class TitleBar(qtw.QWidget):
     #####################################################
     
     def showMaxRestore(self):
+        # PySide6.QtGui.QWindow.showNormal() # https://doc.qt.io/qtforpython/PySide6/QtGui/QWindow.html?highlight=shownormal#PySide6.QtGui.PySide6.QtGui.QWindow.showNormal
+        #-- Shows the window as normal, i.e. neither maximized, minimized, nor fullscreen.
         if(self.maximizedWindow):
             main.showNormal()
-            self.maximizedWindow= False
+            self.maximizedWindow = False
             self.maxButton.setStyleSheet(self.nav_maximize)
-            
         else:
             main.showMaximized()
-            self.maximizedWindow=  True
+            self.maximizedWindow = True
             self.maxButton.setStyleSheet(self.nav_normal)
     
     def on_click_close(self):
@@ -135,7 +136,6 @@ class TitleBar(qtw.QWidget):
             
     def on_click_hide(self):
         main.showMinimized()
-
 
     # EVENT FUNCTIONS
     def mousePressEvent(self, event):
@@ -149,12 +149,8 @@ class TitleBar(qtw.QWidget):
         self.pressing = True
 
         if event.type() == qtc.QEvent.MouseButtonDblClick:
-            # PySide6.QtGui.QWindow.showNormal() # https://doc.qt.io/qtforpython/PySide6/QtGui/QWindow.html?highlight=shownormal#PySide6.QtGui.PySide6.QtGui.QWindow.showNormal
-            #-- Shows the window as normal, i.e. neither maximized, minimized, nor fullscreen.
             self.showMaxRestore()
-        
         return True
-
 
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
 
