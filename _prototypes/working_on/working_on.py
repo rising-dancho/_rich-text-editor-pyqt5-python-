@@ -23,9 +23,6 @@ from PySide6 import QtGui as qtg
 
 class TitleBar(qtw.QWidget):
     height = 35
-    
-
-
     def __init__(self, parent):
         super(TitleBar, self).__init__(parent)
 
@@ -171,26 +168,26 @@ class TitleBar(qtw.QWidget):
                 self.maximizedWindow=  True
                 print('fullscreen: collapse icon showing')
                 self.maxButton.setStyleSheet(self.nav_normal)
-
         return True
 
 
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
-    
-        if(self.maximizedWindow):
+
+        if(self.maximizedWindow): 
+        # if the window is moved while maximized, 
+        # it is automatically returned to its normal state upon mouse drag
                 main.showNormal()
                 self.maximizedWindow= False
                 print('nomalscreen: maximize icon showing')
                 self.maxButton.setStyleSheet(self.nav_maximize)
 
-        if self.pressing:
+        if self.pressing: # this is for moving the window
             # GLOBAL POSITION: https://stackoverflow.com/questions/67723421/deprecationwarning-function-when-moving-app-removed-titlebar-pyside6
             self.end = event.globalPosition().toPoint()
             self.movement = self.end-self.start
             main.move(self.mapToGlobal(self.movement))
             self.start = self.end
 
-            
     #####################################################
     ##                      END
     #####################################################
