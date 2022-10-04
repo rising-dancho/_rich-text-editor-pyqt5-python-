@@ -339,9 +339,9 @@ if __name__ == "__main__":
     palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # textedit
     palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
     palette.setColor(qtg.QPalette.BrightText, qtc.Qt.white)
-    palette.setColor(qtg.QPalette.Link, qtg.QColor("#0086b6"))
-    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#0086b6"))
-    palette.setColor(qtg.QPalette.HighlightedText, qtc.Qt.white)
+    palette.setColor(qtg.QPalette.Link, qtg.QColor("#ff9916"))
+    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#ff9916"))
+    palette.setColor(qtg.QPalette.HighlightedText, qtg.QColor("#000"))
     app.setPalette(palette)
     main = MainWindow()
     main.setStyleSheet(
