@@ -55,15 +55,12 @@ class TitleBar(qtw.QWidget):
                 }
             """
 
-        ### screen movement ###
-        self.installEventFilter(self)
-        self.prevGeo = self.geometry()
-
-        
+        ### for screen movement ###
 
         self.start = qtc.QPoint(0, 0)
         self.pressing = False
         self.maximizedWindow=False
+        
         ### [ end ] ###
         
         self.current_editor = self.parent().create_editor()
