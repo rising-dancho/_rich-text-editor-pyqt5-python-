@@ -356,7 +356,7 @@ if __name__ == "__main__":
                 border: none;
                 font: "Consolas";
                 color: #BFBDB6;
-                background: #11141a;
+                background: #13161d;
                 selection-background-color: #ffb454;
                 selection-color: #000000;
             }
