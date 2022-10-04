@@ -73,7 +73,6 @@ class TitleBar(qtw.QWidget):
         self.parent()._connectActions()
         
         self.layout = qtw.QHBoxLayout()
-        self.layout.setObjectName(u"header")
         self.layout.setContentsMargins(0,0,10,0)
 
         self.menubar = qtw.QMenuBar()
@@ -90,6 +89,7 @@ class TitleBar(qtw.QWidget):
         self.window_title = qtw.QLabel("Visual Studio Code") # Notes
         self.window_title.setAccessibleName("lbl_title") 
         self.window_title.setFixedHeight(self.height)
+        self.layout.addStretch(1) # this stretch the self.window_title to take all the remaining space
         self.layout.addWidget(self.window_title)
 
         self.setSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Fixed)
@@ -335,13 +335,13 @@ if __name__ == "__main__":
     palette.setColor(qtg.QPalette.ToolTipBase, qtc.Qt.black)
     palette.setColor(qtg.QPalette.ToolTipText, qtg.QColor("#BFBDB6"))
     palette.setColor(qtg.QPalette.Text, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.Button, qtg.QColor("#161a21")) # button color
+    palette.setColor(qtg.QPalette.Button, qtg.QColor("#161a21")) # toolbar button hover color
     palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # textedit
     palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
     palette.setColor(qtg.QPalette.BrightText, qtc.Qt.white)
-    palette.setColor(qtg.QPalette.Link, qtg.QColor("#ff9d21"))
-    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#ff9d21"))
-    palette.setColor(qtg.QPalette.HighlightedText, qtg.QColor("#000"))
+    palette.setColor(qtg.QPalette.Link, qtg.QColor("#0086b6"))
+    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#0086b6"))
+    palette.setColor(qtg.QPalette.HighlightedText, qtg.QColor("#000000"))
     app.setPalette(palette)
     main = MainWindow()
     main.setStyleSheet(
