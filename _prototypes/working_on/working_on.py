@@ -91,8 +91,7 @@ class TitleBar(qtw.QWidget):
 
         self.layout.addWidget(self.menubar) 
 
-        self.window_title = qtw.QLabel("") # Notes
-        self.window_title.setAlignment(qtc.Qt.AlignCenter)
+        self.window_title = qtw.QLabel("Visual Studio Code") # Notes
         self.window_title.setAccessibleName("lbl_title") 
         self.window_title.setFixedHeight(self.height)
         self.layout.addWidget(self.window_title)
@@ -127,13 +126,11 @@ class TitleBar(qtw.QWidget):
         if(self.maximizedWindow):
             main.showNormal()
             self.maximizedWindow= False
-            print('nomalscreen: maximize icon showing')
             self.maxButton.setStyleSheet(self.nav_maximize)
             
         else:
             main.showMaximized()
             self.maximizedWindow=  True
-            print('fullscreen: collapse icon showing')
             self.maxButton.setStyleSheet(self.nav_normal)
     
     def on_click_close(self):
@@ -161,12 +158,10 @@ class TitleBar(qtw.QWidget):
             if(self.maximizedWindow):
                 main.showNormal()
                 self.maximizedWindow= False
-                print('nomalscreen: maximize icon showing')
                 self.maxButton.setStyleSheet(self.nav_maximize)
             else:
                 main.showMaximized()
                 self.maximizedWindow=  True
-                print('fullscreen: collapse icon showing')
                 self.maxButton.setStyleSheet(self.nav_normal)
         return True
 
@@ -178,7 +173,6 @@ class TitleBar(qtw.QWidget):
         # it is automatically returned to its normal state upon mouse drag
                 main.showNormal()
                 self.maximizedWindow= False
-                print('nomalscreen: maximize icon showing')
                 self.maxButton.setStyleSheet(self.nav_maximize)
 
         if self.pressing: # this is for moving the window
