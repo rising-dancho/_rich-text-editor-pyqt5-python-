@@ -16,7 +16,9 @@ class MainWindow(QWidget):
         super().__init__()
         self.setGeometry(400, 100, 300, 50)
         self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowMaximizeButtonHint|Qt.WindowMinimizeButtonHint)
-     
+
+        self.prevGeo = self.geometry()
+        
         hlay = QHBoxLayout()
         # hlay.addStretch(1)
 
@@ -38,8 +40,7 @@ class MainWindow(QWidget):
         vlay.addStretch(1)
         self.setLayout(vlay)
 
-        self.properties = []
-        self.prevGeo = self.geometry()
+        
     
     def btn_onClick(self):
         pass
