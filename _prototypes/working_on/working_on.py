@@ -54,12 +54,10 @@ class TitleBar(qtw.QWidget):
                 }
             """
 
-        ### for screen movement ###
-
-        self.start = qtc.QPoint(0, 0)
+        ### for window movement ###
+        self.prevGeo = self.geometry()
         self.pressing = False
         self.maximizedWindow=False
-
         ### [ end ] ###
         
         self.current_editor = self.parent().create_editor()
@@ -97,7 +95,7 @@ class TitleBar(qtw.QWidget):
        
         self.closeButton = qtw.QToolButton() 
         self.closeButton.setAccessibleName("btn_close")                           
-        self.closeButton.clicked.connect(self.on_click_close)
+        self.closeButton.clicked.connect(self.onClickClose)
 
         self.maxButton = qtw.QToolButton()
         self.maxButton.setAccessibleName("btn_max")  
@@ -106,7 +104,7 @@ class TitleBar(qtw.QWidget):
 
         self.hideButton = qtw.QToolButton()
         self.hideButton.setAccessibleName("btn_min")  
-        self.hideButton.clicked.connect(self.on_click_hide)
+        self.hideButton.clicked.connect(self.onClickHide)
 
         self.layout.addWidget(self.hideButton)
         self.layout.addWidget(self.maxButton)
@@ -116,7 +114,12 @@ class TitleBar(qtw.QWidget):
     #####################################################
     ## TITLE BAR MINIMIZE, MAXIMIZE, CLOSE METHODS
     #####################################################
-    
+    def onClickClose(self):
+        main.close()
+            
+    def onClickHide(self):
+        main.showMinimized()
+
     def showMaxRestore(self):
         # PySide6.QtGui.QWindow.showNormal() # https://doc.qt.io/qtforpython/PySide6/QtGui/QWindow.html?highlight=shownormal#PySide6.QtGui.PySide6.QtGui.QWindow.showNormal
         #-- Shows the window as normal, i.e. neither maximized, minimized, nor fullscreen.
@@ -129,33 +132,23 @@ class TitleBar(qtw.QWidget):
             self.maximizedWindow = True
             self.maxButton.setStyleSheet(self.nav_normal)
     
-    def on_click_close(self):
-        main.close()
-            
-    def on_click_hide(self):
-        main.showMinimized()
-
     # EVENT FUNCTIONS
+    # window will maximize if mouse cursor is positioned at less then 10 pixels in y-coordinate
+    def mouseReleaseEvent(self, event):
+        if event.globalPosition().y() < 10:
+            self.prevGeo = self.geometry() # save window geometry
+            self.showMaxRestore() # maximize window
+            return True
+
     def mousePressEvent(self, event):
-        # PySide6.QtGui.QCursor.pos()
-        # RETURN TYPE: PySide6.QtCore.QPoint
-        #-- Returns the position of the cursor (hot spot) 
-        # of the primary screen in global screen coordinates.
-        
-        self.start = event.globalPosition().toPoint()
-        # print(self.start)
+        # getting previous mouse x and y coordinates
+        self.prevMousePos = event.scenePosition()
         self.pressing = True
         
         if event.type() == qtc.QEvent.MouseButtonDblClick:
             self.showMaxRestore()
             return True
-    
-    # window will maximize if mouse cursor is positioned at less then 10 pixels in y-coordinate
-    def mouseReleaseEvent(self, event):
-        if event.globalPosition().y() < 10:
-            self.showMaxRestore()
-        
-            
+
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
 
         if(self.maximizedWindow): 
@@ -164,15 +157,19 @@ class TitleBar(qtw.QWidget):
                 main.showNormal()
                 self.maximizedWindow= False
                 self.maxButton.setStyleSheet(self.nav_maximize)
-     
+                # mouse cursor re-positioning on the window
+                self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
 
         if self.pressing: # this is for moving the window
             # GLOBAL POSITION: https://stackoverflow.com/questions/67723421/deprecationwarning-function-when-moving-app-removed-titlebar-pyside6
-            self.end = event.globalPosition().toPoint()
-            self.movement = self.end-self.start
-            main.move(self.mapToGlobal(self.movement))
-            self.start = self.end
-
+            gr=self.geometry()
+            mousePosition = event.globalPosition()
+            pos = mousePosition-self.prevMousePos
+            x = pos.x() 
+            y = pos.y() 
+            main.move(x,y)
+      
+            
 
     #####################################################
     ##                      END
@@ -191,7 +188,10 @@ class MainWindow(qtw.QMainWindow):
         # WINDOW FLAGS: https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-windowflags-example.html?highlight=windowminimizebuttonhint
         self.setMinimumSize(400,250)
         self.resize(700,500)
-        self.setWindowFlags(self.windowFlags() | qtc.Qt.FramelessWindowHint)
+        self.setWindowFlags(qtc.Qt.FramelessWindowHint|
+                            qtc.Qt.WindowMaximizeButtonHint|
+                            qtc.Qt.WindowMinimizeButtonHint
+                            )
 
         self.title_bar  = TitleBar(self)
         self.tabs = qtw.QTabWidget()
