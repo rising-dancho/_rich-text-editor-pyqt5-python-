@@ -162,7 +162,6 @@ class TitleBar(qtw.QWidget):
 
         if self.pressing: # this is for moving the window
             # GLOBAL POSITION: https://stackoverflow.com/questions/67723421/deprecationwarning-function-when-moving-app-removed-titlebar-pyside6
-            gr=self.geometry()
             mousePosition = event.globalPosition()
             pos = mousePosition-self.prevMousePos
             x = pos.x() 
