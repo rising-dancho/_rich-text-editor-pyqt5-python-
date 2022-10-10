@@ -71,8 +71,8 @@ class TitleBar(qtw.QWidget):
         self.parent()._connectActions()
         
         self.layout = qtw.QHBoxLayout()
-        self.layout.setContentsMargins(0,0,10,0)
-
+        self.layout.setContentsMargins(0,0,10,0) 
+        
         self.menubar = qtw.QMenuBar()
   
         file_menu = self.menubar.addMenu('File')
@@ -85,6 +85,7 @@ class TitleBar(qtw.QWidget):
         self.layout.addWidget(self.menubar) 
 
         self.window_title = qtw.QLabel("Visual Studio Code") # Notes
+        self.window_title.setAlignment(qtc.Qt.AlignCenter)
         self.window_title.setAccessibleName("lbl_title") 
         self.window_title.setFixedHeight(self.height)
         self.layout.addStretch(1) # this stretches the self.window_title qlabel to take-up all the remaining space
@@ -168,11 +169,10 @@ class TitleBar(qtw.QWidget):
             y = pos.y() 
             main.move(x,y)
       
-            
-
     #####################################################
     ##                      END
     #####################################################
+
 
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
@@ -209,6 +209,7 @@ class MainWindow(qtw.QMainWindow):
         layout.addWidget(self.tabs,2)
         layout.setSpacing(0) 
         widget.setLayout(layout)
+     
         self.setCentralWidget(widget)
         self.new_tab()
         self._createActions()
@@ -267,6 +268,7 @@ class MainWindow(qtw.QMainWindow):
                 currentIndex = self.tabs.addTab(self.current_editor, str(self.filename))   # use that widget as the new tab
                 self.current_editor.setText(content) # set the contents of the file as the text
                 self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
+                
 
     def _createToolBars(self):
         # create toolbars
