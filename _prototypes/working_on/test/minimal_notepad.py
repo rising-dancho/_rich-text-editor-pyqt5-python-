@@ -1,3 +1,4 @@
+# SOMEONE HELPED ME WITH THE TOOLBAR FIXED: https://stackoverflow.com/questions/38322349/pyqt-having-a-status-bar-menu-bar-qwidget
 
 import sys
 from PySide6 import QtWidgets as qtw
