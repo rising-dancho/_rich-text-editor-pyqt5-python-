@@ -193,6 +193,7 @@ class MainWindow(qtw.QMainWindow):
      
         self.setCentralWidget(widget)
         self.new_tab()
+        self.closeTab()
         self._createActions()
         self._connectActions()
 
@@ -209,11 +210,15 @@ class MainWindow(qtw.QMainWindow):
 
     def remove_editor(self, index):
         if self.tabs.count() < 2: 
-            return
+            return True
   
         self.tabs.removeTab(index)
         if index < len(self.text_editors):
             del self.text_editors[index]
+        
+    def closeTab(self): 
+        close_tab = qtg.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
+        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
 
     def close(self): # close entire program
         qtw.QApplication.quit()
@@ -231,8 +236,6 @@ class MainWindow(qtw.QMainWindow):
     
     def open_document(self):
         options = qtw.QFileDialog.Options()
-        # Get filename and show only .notes files
-        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
         self.filename, _ = qtw.QFileDialog.getOpenFileName(
             self, 'Open File',".",
             "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
