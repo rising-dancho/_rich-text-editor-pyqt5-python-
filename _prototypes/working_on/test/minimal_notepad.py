@@ -65,7 +65,7 @@ class TitleBar(qtw.QWidget):
 
         self.layout.addWidget(self.menubar) 
 
-        self.window_title = qtw.QLabel("Visual Studio Code") # Notes
+        self.window_title = qtw.QLabel("Visual Studio Code") # Window title
         self.window_title.setAlignment(qtc.Qt.AlignCenter)
         self.window_title.setAccessibleName("lbl_title") 
         self.window_title.setFixedHeight(self.height)
@@ -104,7 +104,7 @@ class TitleBar(qtw.QWidget):
 
     def showMaxRestore(self):
         # PySide6.QtGui.QWindow.showNormal() # https://doc.qt.io/qtforpython/PySide6/QtGui/QWindow.html?highlight=shownormal#PySide6.QtGui.PySide6.QtGui.QWindow.showNormal
-        #-- Shows the window as normal, i.e. neither maximized, minimized, nor fullscreen.
+        #-- Shows the window as normal
         if(self.maximizedWindow):
             main.showNormal()
             self.maximizedWindow = False
@@ -181,13 +181,19 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.currentChanged.connect(self.change_text_editor)
         self.tabs.tabBar().setMovable(True)
         
+        file_toolbar = self.addToolBar("File")
+        file_toolbar.setIconSize(qtc.QSize(22,22))
+        file_toolbar.addAction(self.new_action)
+        file_toolbar.addAction(self.open_action)
+
         # Cannot set QxxLayout directly on the QMainWindow
         # Need to create a QWidget and set it as the central widget
         widget = qtw.QWidget()
         layout = qtw.QVBoxLayout()
         layout.setContentsMargins(0,0,0,0)
         layout.addWidget(self.title_bar,1)
-        layout.addWidget(self.tabs,2)
+        layout.addWidget(file_toolbar,2)
+        layout.addWidget(self.tabs,3)
         layout.setSpacing(0) 
         widget.setLayout(layout)
      
@@ -227,8 +233,6 @@ class MainWindow(qtw.QMainWindow):
         self.widget = qtw.QMainWindow()
         self.tabs.addTab(self.widget, title)
         self.tabs.setCurrentWidget(self.current_editor) # set the current tab selected as current widget
-        
-        self._createToolBars()
         
         self.current_editor = self.create_editor() # create a QTextEdit
         self.text_editors.append(self.current_editor) # add current editor to the array list 
