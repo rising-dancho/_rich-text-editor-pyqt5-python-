@@ -200,18 +200,22 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.currentChanged.connect(self.change_text_editor)
         self.tabs.tabBar().setMovable(True)
         
+        self._createToolBars()
+        
         # Cannot set QxxLayout directly on the QMainWindow
         # Need to create a QWidget and set it as the central widget
         widget = qtw.QWidget()
         layout = qtw.QVBoxLayout()
         layout.setContentsMargins(0,0,0,0)
         layout.addWidget(self.title_bar,1)
-        layout.addWidget(self.tabs,2)
+        layout.addWidget(self.file_toolbar,2)
+        layout.addWidget(self.tabs,3)
         layout.setSpacing(0) 
         widget.setLayout(layout)
      
         self.setCentralWidget(widget)
         self.new_tab()
+        self.closeTab()
         self._createActions()
         self._connectActions()
 
@@ -228,25 +232,23 @@ class MainWindow(qtw.QMainWindow):
 
     def remove_editor(self, index):
         if self.tabs.count() < 2: 
-            return
+            return True
   
         self.tabs.removeTab(index)
         if index < len(self.text_editors):
             del self.text_editors[index]
+        
+    def closeTab(self): 
+        close_tab = qtg.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
+        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
 
     def close(self): # close entire program
         qtw.QApplication.quit()
-
-    # def closeTab(self): 
-    #     close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
-    #     close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
         self.widget = qtw.QMainWindow()
         self.tabs.addTab(self.widget, title)
         self.tabs.setCurrentWidget(self.current_editor) # set the current tab selected as current widget
-        
-        self._createToolBars()
         
         self.current_editor = self.create_editor() # create a QTextEdit
         self.text_editors.append(self.current_editor) # add current editor to the array list 
@@ -254,8 +256,6 @@ class MainWindow(qtw.QMainWindow):
     
     def open_document(self):
         options = qtw.QFileDialog.Options()
-        # Get filename and show only .notes files
-        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
         self.filename, _ = qtw.QFileDialog.getOpenFileName(
             self, 'Open File',".",
             "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
@@ -272,13 +272,12 @@ class MainWindow(qtw.QMainWindow):
 
     def _createToolBars(self):
         # create toolbars
-        file_toolbar = self.widget.addToolBar("File")
-        file_toolbar.setIconSize(qtc.QSize(22,22))
-        # file_toolbar.setMovable(False)
-        file_toolbar.addAction(self.new_action)
-        file_toolbar.addAction(self.open_action)
-        file_toolbar.addAction(self.save_action)
-
+        self.file_toolbar = self.addToolBar("File")
+        self.file_toolbar.setIconSize(qtc.QSize(22,22))
+        self.file_toolbar.addAction(self.new_action)
+        self.file_toolbar.addAction(self.open_action)
+        self.file_toolbar.addAction(self.save_action)
+        
     def _createActions(self):
         # FILE MENU
         self.new_action = qtg.QAction(qtg.QIcon("./icons/new_file.png"),"New", self)

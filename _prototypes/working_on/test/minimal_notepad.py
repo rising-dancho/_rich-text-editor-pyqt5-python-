@@ -62,6 +62,10 @@ class TitleBar(qtw.QWidget):
         self.menubar = qtw.QMenuBar()
   
         file_menu = self.menubar.addMenu('File')
+        file_menu.addAction(self.parent().new_action)
+        file_menu.addAction(self.parent().open_action)
+        file_menu.addAction(self.parent().save_action)
+        file_menu.addSeparator()
         file_menu.addAction(self.parent().exit_action)
 
         self.layout.addWidget(self.menubar) 
@@ -182,10 +186,7 @@ class MainWindow(qtw.QMainWindow):
         self.tabs.currentChanged.connect(self.change_text_editor)
         self.tabs.tabBar().setMovable(True)
         
-        file_toolbar = self.addToolBar("File")
-        file_toolbar.setIconSize(qtc.QSize(22,22))
-        file_toolbar.addAction(self.new_action)
-        file_toolbar.addAction(self.open_action)
+        self._createToolBars()
 
         # Cannot set QxxLayout directly on the QMainWindow
         # Need to create a QWidget and set it as the central widget
@@ -193,7 +194,7 @@ class MainWindow(qtw.QMainWindow):
         layout = qtw.QVBoxLayout()
         layout.setContentsMargins(0,0,0,0)
         layout.addWidget(self.title_bar,1)
-        layout.addWidget(file_toolbar,2)
+        layout.addWidget(self.file_toolbar,2)
         layout.addWidget(self.tabs,3)
         layout.setSpacing(0) 
         widget.setLayout(layout)
@@ -254,36 +255,61 @@ class MainWindow(qtw.QMainWindow):
                 self.current_editor.setText(content) # set the contents of the file as the text
                 self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
                 
-
     def _createToolBars(self):
         # create toolbars
-        file_toolbar = self.widget.addToolBar("File")
-        file_toolbar.setIconSize(qtc.QSize(22,22))
-        # file_toolbar.setMovable(False)
-        file_toolbar.addAction(self.new_action)
-        file_toolbar.addAction(self.open_action)
+        self.file_toolbar = self.addToolBar("File")
+        self.file_toolbar.setIconSize(qtc.QSize(22,22))
+        self.file_toolbar.addAction(self.new_action)
+        self.file_toolbar.addAction(self.open_action)
+        self.file_toolbar.addAction(self.save_action)
 
     def _createActions(self):
         # FILE MENU
         self.new_action = qtg.QAction(qtg.QIcon("./icons/new_file.png"),"New", self)
         self.open_action = qtg.QAction(qtg.QIcon("./icons/folder.png"),"Open", self)
+        self.save_action = qtg.QAction(qtg.QIcon("./icons/save.png"),"Save", self)
         self.exit_action = qtg.QAction(qtg.QIcon("./icons/close.png"), "Exit", self)
    
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
+        self.save_action.setShortcut("Ctrl+S")
         self.exit_action.setShortcut("Ctrl+Shift+Q")
 
         self.new_action.setToolTip("New file")
         self.open_action.setToolTip("Open a file")
+        self.save_action.setToolTip("Save a file")
         self.exit_action.setToolTip("Exit Program")
 
     def _connectActions(self):
         # Connect File actions
         self.new_action.triggered.connect(self.new_tab)
         self.open_action.triggered.connect(self.open_document)
+        self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
 
+    def save_document (self):
+        if not self.current_editor.document().isModified():
+            self.statusBar().showMessage("There are no texts to be saved!")
+        else:
+            # Only open dialog if there is no filename yet
+            #PYQT5 Returns a tuple in PyQt5, we only need the filename
+            options = qtw.QFileDialog.Options()
+            file_filter = 'Notes_ file (*.notes);; Text file (*.txt);; Python file (*.py)'
+            if not self.filename:
+                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Notes Files (*.notes)')[0] # zero index is required, otherwise it would throw an error if no selection was made
+            
+            if self.filename:
 
+                # We just store the contents of the text file along with the
+                # format in html, which Qt does in a very nice way for us
+                with open(self.filename,"wt") as file:
+                    file.write(self.current_editor.toHtml())
+                    print(self.tabs.currentIndex())
+                    print(str(self.filename))
+                    self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
+                    self.statusBar().showMessage(f"Saved to {self.filename}")
+                    
+                self.changesSaved = True
 
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
