@@ -6,6 +6,7 @@
 # https://doc-snapshots.qt.io/qt6-dev/qeventpoint.html#scenePosition-prop
 # https://www.youtube.com/watch?v=CA6bOJLf7Pw&t=477s
 # https://doc.qt.io/qtforpython/PySide6/QtGui/QEventPoint.html
+# https://stackoverflow.com/questions/58109832/how-to-hide-the-windows-taskbar-behind-a-pyqt-window
 # SOURCE: https://stackoverflow.com/questions/57569044/pyqt-how-to-create-custom-combined-titlebar-and-menubar
 
 # import sys
@@ -123,7 +124,7 @@ class TitleBar(qtw.QWidget):
 
     def showMaxRestore(self):
         # PySide6.QtGui.QWindow.showNormal() # https://doc.qt.io/qtforpython/PySide6/QtGui/QWindow.html?highlight=shownormal#PySide6.QtGui.PySide6.QtGui.QWindow.showNormal
-        #-- Shows the window as normal, i.e. neither maximized, minimized, nor fullscreen.
+        #-- Shows the window as normal, meaning neither maximized, minimized, nor fullscreen.
         if(self.maximizedWindow):
             main.showNormal()
             self.maximizedWindow = False
@@ -189,7 +190,8 @@ class MainWindow(qtw.QMainWindow):
         self.resize(700,500)
         self.setWindowFlags(qtc.Qt.FramelessWindowHint|
                             qtc.Qt.WindowMaximizeButtonHint|
-                            qtc.Qt.WindowMinimizeButtonHint
+                            qtc.Qt.WindowMinimizeButtonHint |
+                            qtc.Qt.WindowStaysOnTopHint  # make window on top of taskbar
                             )
 
         self.title_bar  = TitleBar(self)
@@ -233,7 +235,7 @@ class MainWindow(qtw.QMainWindow):
     def remove_editor(self, index):
         if self.tabs.count() < 2: 
             return True
-  
+
         self.tabs.removeTab(index)
         if index < len(self.text_editors):
             del self.text_editors[index]

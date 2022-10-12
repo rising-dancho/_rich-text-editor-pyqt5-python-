@@ -170,12 +170,13 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.setFocus()
         self.text_editors = []
 
-        # WINDOW FLAGS: https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-windowflags-example.html?highlight=windowminimizebuttonhint
+          # WINDOW FLAGS: https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-windowflags-example.html?highlight=windowminimizebuttonhint
         self.setMinimumSize(400,250)
         self.resize(700,500)
         self.setWindowFlags(qtc.Qt.FramelessWindowHint|
                             qtc.Qt.WindowMaximizeButtonHint|
-                            qtc.Qt.WindowMinimizeButtonHint
+                            qtc.Qt.WindowMinimizeButtonHint |
+                            qtc.Qt.WindowStaysOnTopHint  # make window on top of taskbar
                             )
 
         self.title_bar  = TitleBar(self)
