@@ -46,7 +46,7 @@ class MainWindow(qtw.QMainWindow):
         
         new_file = file_menu.addAction("New")
         new_file.setShortcut("Ctrl+N")
-        # new_file.triggered.connect(self.new_file)
+        new_file.triggered.connect(self.new_file)
 
         open_file = file_menu.addAction("Open File")
         open_file.setShortcut("Ctrl+O")
@@ -131,27 +131,31 @@ class MainWindow(qtw.QMainWindow):
 
 
     def set_new_tab(self, path: Path, is_new_file=False):
+        editor = self.get_editor()
+        if is_new_file:
+            self.tab_view.addTab(editor, "untitled")
+            self.setWindowTitle("untitled")
+            self.statusBar().showMessage("Opened untitled")
+            self.tab_view.setCurrentIndex(self.tab_view.count()- 1)
+            self.current_file = None
+            return
+
         if not path.is_file():
             return
-        if not is_new_file and self.is_binary(path):
+        if self.is_binary(path):
             self.statusBar().showMessage("Cannot Open Binary File", 2000)
             return
         
         # check if file already open
-        if not is_new_file:
-            for i in range(self.tab_view.count()):
-                if self.tab_view.tabText(i) == path.name:
-                    self.tab_view.setCurrentIndex(i)
-                    self.current_file = path
-                    return
+        for i in range(self.tab_view.count()):
+            if self.tab_view.tabText(i) == path.name:
+                self.tab_view.setCurrentIndex(i)
+                self.current_file = path
+                return
 
-        # create new tab
-        editor = self.get_editor()
 
         self.tab_view.addTab(editor, path.name)
-
-        if not is_new_file:
-            editor.setText(path.read_text())
+        editor.setText(path.read_text())
         self.setWindowTitle(path.name)
         self.current_file = path
         self.tab_view.setCurrentIndex(self.tab_view.count() - 1)
