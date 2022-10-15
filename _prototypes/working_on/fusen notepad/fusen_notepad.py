@@ -8,6 +8,10 @@ from PyQt5.Qsci import *
 
 from pathlib import Path
 
+import keyword
+import pkgutil
+import importlib
+
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -50,21 +54,21 @@ class MainWindow(qtw.QMainWindow):
 
         open_file = file_menu.addAction("Open File")
         open_file.setShortcut("Ctrl+O")
-        # open_file.triggered.connect(self.open_file)
+        open_file.triggered.connect(self.open_file)
 
         open_folder = file_menu.addAction("Open Folder")
         open_folder.setShortcut("Ctrl+K")
-        # open_folder.triggered.connect(self.open_folder)
+        open_folder.triggered.connect(self.open_folder)
 
         file_menu.addSeparator()
         
         save_file = file_menu.addAction("Save")
         save_file.setShortcut("Ctrl+S")
-        # save_file.triggered.connect(self.save_file)
+        save_file.triggered.connect(self.save_file)
 
         save_as = file_menu.addAction("Save As")
         save_as.setShortcut("Ctrl+Shift+S")
-        # save_as.triggered.connect(self.save_as)
+        save_as.triggered.connect(self.save_as)
         
 
         # Edit menu
@@ -88,7 +92,7 @@ class MainWindow(qtw.QMainWindow):
         editor.setBraceMatching(QsciScintilla.SloppyBraceMatch)
 
         # indentation
-        editor.setIndentationGuides(True)
+        editor.setIndentationGuides(False)
         editor.setTabWidth(4)
         editor.setIndentationsUseTabs(False)
         editor.setAutoIndent(True)
@@ -100,17 +104,28 @@ class MainWindow(qtw.QMainWindow):
         editor.setAutoCompletionUseSingle(QsciScintilla.AcusNever)
 
         # caret
-        # editor.setCaretForegroundColor(QColor("#dedcdc"))
-        # editor.setCaretLineVisible(True)
-        # editor.setCaretWidth(2)
-        # editor.setCaretLineBackgroundColor(QColor("#2c313c"))
+        editor.setCaretForegroundColor(qtg.QColor("#ffb454")) # this is the color of the blinking cursor
+        editor.setCaretLineVisible(True)
+        editor.setCaretWidth(2)
+        editor.setCaretLineBackgroundColor(qtg.QColor("#dedcdc")) # this is the color of the text highlight
         
         # EOL
         editor.setEolMode(QsciScintilla.EolWindows)
         editor.setEolVisibility(False)
 
         # lexer
-        editor.setLexer(None)
+        self.pylexer = QsciLexerPython() # there is a default lexer for many language
+        self.pylexer.setDefaultFont(self.window_font)
+       
+
+        # Api (you can add autocompletion using this)
+        self.api = QsciAPIs(self.pylexer)
+        editor.setLexer(self.pylexer)
+        for key in keyword.kwlist + dir(__builtins__):
+            self.api.add(key)
+
+        for _, name, _ in pkgutil.iter_modules():
+            self.api.add(name)
 
         # line numbers
         editor.setMarginType(0, QsciScintilla.NumberMargin)
@@ -118,9 +133,17 @@ class MainWindow(qtw.QMainWindow):
         editor.setMarginsForegroundColor(qtg.QColor("#ff888888"))
         editor.setMarginsBackgroundColor(qtg.QColor("#282c34"))
         editor.setMarginsFont(self.window_font)
-        
-        return editor
 
+        # keypress ctrl + space to show the autocompletion
+        editor.keyPressEvent = self.handle_editor_press
+        return editor
+    
+    def handle_editor_press(self, e: qtg.QKeyEvent): # keypress ctrl + space to show the autocompletion
+        editor: QsciScintilla = self.tab_view.currentWidget()
+        if e.modifiers() == qtc.Qt.ControlModifier and e.key() == qtc.Qt.Key_Space:
+            editor.autoCompleteFromAll()
+        else:
+            QsciScintilla.keyPressEvent(editor, e)
 
     def is_binary(self, path):
         '''
