@@ -5,12 +5,13 @@ from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5.Qsci import * 
 # test
+# https://www.flaticon.com/packs/text-edition-22
 
 from pathlib import Path
+from editor import Editor
 
-import keyword
-import pkgutil
-import importlib
+
+# import importlib
 
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
@@ -25,7 +26,7 @@ class MainWindow(qtw.QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("PYQT EDITOR")
-        self.resize(1300, 900)
+        self.resize(800, 500)
 
         self.setStyleSheet(open("./css/style.qss", "r").read())
 
@@ -81,69 +82,8 @@ class MainWindow(qtw.QMainWindow):
 
 
     def get_editor(self, path: Path = None, is_python_file=True) -> QsciScintilla:
-        
-        #editor
-        editor = QsciScintilla()
-
-        # Font
-        editor.setFont(self.window_font)
-
-        # brace matching
-        editor.setBraceMatching(QsciScintilla.SloppyBraceMatch)
-
-        # indentation
-        editor.setIndentationGuides(False)
-        editor.setTabWidth(4)
-        editor.setIndentationsUseTabs(False)
-        editor.setAutoIndent(True)
-
-        # autocomplete
-        editor.setAutoCompletionSource(QsciScintilla.AcsAll)
-        editor.setAutoCompletionThreshold(1) 
-        editor.setAutoCompletionCaseSensitivity(False)
-        editor.setAutoCompletionUseSingle(QsciScintilla.AcusNever)
-
-        # caret
-        editor.setCaretForegroundColor(qtg.QColor("#ffb454")) # this is the color of the blinking cursor
-        editor.setCaretLineVisible(True)
-        editor.setCaretWidth(2)
-        editor.setCaretLineBackgroundColor(qtg.QColor("#dedcdc")) # this is the color of the text highlight
-        
-        # EOL
-        editor.setEolMode(QsciScintilla.EolWindows)
-        editor.setEolVisibility(False)
-
-        # lexer
-        self.pylexer = QsciLexerPython() # there is a default lexer for many language
-        self.pylexer.setDefaultFont(self.window_font)
-       
-
-        # Api (you can add autocompletion using this)
-        self.api = QsciAPIs(self.pylexer)
-        editor.setLexer(self.pylexer)
-        for key in keyword.kwlist + dir(__builtins__):
-            self.api.add(key)
-
-        for _, name, _ in pkgutil.iter_modules():
-            self.api.add(name)
-
-        # line numbers
-        editor.setMarginType(0, QsciScintilla.NumberMargin)
-        editor.setMarginWidth(0, "000")
-        editor.setMarginsForegroundColor(qtg.QColor("#ff888888"))
-        editor.setMarginsBackgroundColor(qtg.QColor("#282c34"))
-        editor.setMarginsFont(self.window_font)
-
-        # keypress ctrl + space to show the autocompletion
-        editor.keyPressEvent = self.handle_editor_press
+        editor = Editor() # instance of our own class
         return editor
-    
-    def handle_editor_press(self, e: qtg.QKeyEvent): # keypress ctrl + space to show the autocompletion
-        editor: QsciScintilla = self.tab_view.currentWidget()
-        if e.modifiers() == qtc.Qt.ControlModifier and e.key() == qtc.Qt.Key_Space:
-            editor.autoCompleteFromAll()
-        else:
-            QsciScintilla.keyPressEvent(editor, e)
 
     def is_binary(self, path):
         '''
@@ -204,6 +144,15 @@ class MainWindow(qtw.QMainWindow):
     #     ''')
     #     return frame
 
+    def get_side_bar_label(self, path, name):
+        label = qtw.QLabel()
+        label.setPixmap(qtg.QPixmap(path).scaled(qtc.QSize(30, 30)))
+        label.setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
+        label.setFont(self.window_font)
+        label.mousePressEvent = lambda e: self.show_hide_tab(e, name)
+        return label
+
+
     def set_up_body(self):
 
         # Body        
@@ -235,11 +184,7 @@ class MainWindow(qtw.QMainWindow):
         side_bar_layout.setAlignment(qtc.Qt.AlignTop | qtc.Qt.AlignCenter)
         
         # setup labels
-        folder_label = qtw.QLabel()
-        folder_label.setPixmap(qtg.QPixmap("./icons/folder.png").scaled(qtc.QSize(30, 30)))
-        folder_label.setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
-        folder_label.setFont(self.window_font)
-        folder_label.mousePressEvent = self.show_hide_tab()
+        folder_label = self.get_side_bar_label("./icons/folder.png","folder-icon")
         side_bar_layout.addWidget(folder_label)
         self.side_bar.setLayout(side_bar_layout)
 
@@ -358,7 +303,12 @@ class MainWindow(qtw.QMainWindow):
         #         frame.hide()
         
         # self.current_side_bar = type_
-        
+    
+    def show_hide_tab(self, e, type_):
+        if self.tree_view.isHidden():
+            self.tree_view.show()
+        else:
+            self.tree_view.hide()
    
     def new_file(self):
         self.set_new_tab(None, is_new_file=True)
@@ -426,3 +376,4 @@ if __name__ == '__main__':
     app = qtw.QApplication([])
     window = MainWindow()
     sys.exit(app.exec())
+
