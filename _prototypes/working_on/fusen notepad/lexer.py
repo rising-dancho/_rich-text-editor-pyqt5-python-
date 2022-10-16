@@ -1,3 +1,4 @@
+from lib2to3.pgen2.tokenize import generate_tokens
 import re
 import keyword
 import builtins
@@ -25,7 +26,7 @@ class PyCustomLexer(QsciLexerCustom):
         self.color_comments = "#777777"
         self.color_constants = "#d19a5e"
         self.color_functions = "#61afd1"
-        self.colorr_classes = "#c68f55"
+        self.color_classes = "#c68f55"
         self.colorr_function_def = "#61afd1"
   
 
@@ -98,6 +99,47 @@ class PyCustomLexer(QsciLexerCustom):
     def description(self, style: int) -> str:
         if style == self.DEFAULT:
             return "DEFAULT"
+        elif style == self.KEYWORD:
+            return "KEYWORD"
+        elif style == self.TYPES:
+            return "TYPES"
+        elif style == self.STRING:
+            return "STRING"
+        elif style == self.KEYARGS:
+            return "KEYARGS"
+        elif style == self.BRACKETS:
+            return "BRACKETS"
+        elif style == self.COMMENTS:
+            return "COMMENTS"
+        elif style == self.CONSTANTS:
+            return "CONSTANTS"
+        elif style == self.FUNCTIONS:
+            return "FUNCTIONS"
+        elif style == self.CLASSES:
+            return "CLASSES"
+        elif style == self.FUNCTION_DEF:
+            return "FUNCTION_DEF"
+        else:
+            return ""
+    
+    def get_tokens(self, text) -> list[str,int]:
+        # 3. Tokenize the text 
+        # ---------------------
+        p = re.compile(r"[*]\/|\/[*]|\s+|\w+|\W")
+
+        # 'token_list' is a list of tuples: (token_name, token_len), ex: '(class, 5)' 
+        return [ (token, len(bytearray(token, "utf-8"))) for token in p.findall(text)]
+
+    def styleText(self, start: int, end: int) -> None:
+        
+        self.startStyling(start)
+        editor: QsciScintilla = self.parent()
+
+        text = editor.text()[start:end]
+        tokens_list = self.get_tokens(text)
+        print(tokens_list)
+        
+        
         
 
 
