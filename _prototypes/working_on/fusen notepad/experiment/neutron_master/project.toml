@@ -1,0 +1,14 @@
+[project]
+name = "qcodedit"
+version = "0.1.0"
+description = "A Code Editor Created using PyQt5"
+main_script = "./src/main.py"
+
+[packages]
+jedi = "0.18.1"
+PyQt5 = "5.15.7"
+QScintilla = "2.13.3"
+
+[scripts]
+build-qrc = "pyrcc5 ./src/icons/resources.qrc -o ./src/resources.py"
+upgrade-pip = "python -m pip install --upgrade pip"
