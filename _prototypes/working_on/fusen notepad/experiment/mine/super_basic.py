@@ -1,19 +1,25 @@
-# "parent=None" MEANS OPTIONAL: httptitleBars://www.reddit.com/r/learnpython/comments/qwmd5h/pyside6pyqt_why_is_parent_none_in_class/
-# BINPRESS notepad: https://www.binpress.com/building-text-editor-pyqt-1/
-# LINKS:
-# https://stackoverflow.com/questions/67496362/qmouseevent-object-has-no-attribute-pos
-# https://stackoverflow.com/questions/2276810/pyqt-typeerror
-# https://doc-snapshots.qt.io/qt6-dev/qeventpoint.html#scenePosition-prop
-# https://www.youtube.com/watch?v=CA6bOJLf7Pw&t=477s
-# https://doc.qt.io/qtforpython/PySide6/QtGui/QEventPoint.html
-# https://stackoverflow.com/questions/58109832/how-to-hide-the-windows-taskbar-behind-a-pyqt-window
-# SOURCE: https://stackoverflow.com/questions/57569044/pyqt-how-to-create-custom-combined-titlebar-and-menubar
+# TODO: PySide6/PyQt5 to PyQt6 conversion
+# -> In order to call "Window" or "WindowText" in QPallete, you need to use the enum "ColorRole" 
+#   like this: (QtGui.QPalette.ColorRole.Window) = read here: https://doc.qt.io/qt-6/qpalette.html
+#
+# -> "qtc.Qt.white" does not work anymore in PyQt6, use the enum "GlobalColor"
+#   like this: (QtCore.Qt.GlobalColor.black) = read here: https://doc.qt.io/qt-6/qt.html
+#   
+# -> error: AttributeError: type object 'Qt' has no attribute 'FramelessWindowHint'. solution: use enum "WindowType"
+#   like this: (QtCore.Qt.WindowType.FramelessWindowHint) = read here: https://stackoverflow.com/questions/69747328/pyqt6-attributeerror-qt
+#
+# -> error: AttributeError: type object 'Qt' has no attribute 'AlignCenter'. solution: use enum "AlignmentFlag" 
+#   like this: (QtCore.Qt.AlignmentFlag.AlignCenter) = read here: https://doc.qt.io/qt-6/qt.html#AlignmentFlag-enum
+#
+# -> error: AttributeError: type object 'QSizePolicy' has no attribute 'Expanding'. solution: use enum "Policy"
+#   like this: (QtWidgets.QSizePolicy.Policy.Expanding) = read here: https://doc.qt.io/qt-6/qsizepolicy.html
 
 
 import sys
-from PySide6 import QtWidgets as qtw
-from PySide6 import QtCore as qtc
-from PySide6 import QtGui as qtg
+from PyQt6 import QtWidgets as qtw
+from PyQt6 import QtCore as qtc
+from PyQt6 import QtGui as qtg
+from pathlib import Path
 
 
 class TitleBar(qtw.QWidget):
@@ -51,7 +57,7 @@ class TitleBar(qtw.QWidget):
             """
 
         ### for window movement ###
-        self.prevGeo = self.geometry()
+        self.prevGeo = self.geometry() # save window geometry: QtCore.QRect(int x, int y, int width, int height)
         self.pressing = False
         self.maximizedWindow=False
         ### [ end ] ###
@@ -74,20 +80,19 @@ class TitleBar(qtw.QWidget):
         file_menu = self.menubar.addMenu('File')
         file_menu.addAction(self.parent().new_action)
         file_menu.addAction(self.parent().open_action)
-        file_menu.addAction(self.parent().save_action)
         file_menu.addSeparator()
         file_menu.addAction(self.parent().exit_action)
 
         self.layout.addWidget(self.menubar) 
 
         self.window_title = qtw.QLabel("Visual Studio Code") # Notes
-        self.window_title.setAlignment(qtc.Qt.AlignCenter)
+        self.window_title.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
         self.window_title.setAccessibleName("lbl_title") 
         self.window_title.setFixedHeight(self.height)
         self.layout.addStretch(1) # this stretches the self.window_title qlabel to take-up all the remaining space
         self.layout.addWidget(self.window_title)
 
-        self.setSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Fixed)
+        self.setSizePolicy(qtw.QSizePolicy.Policy.Expanding, qtw.QSizePolicy.Policy.Fixed)
         self.maximizedWindow=False
        
         self.closeButton = qtw.QToolButton() 
@@ -130,24 +135,24 @@ class TitleBar(qtw.QWidget):
             main.showMaximized()
             self.maximizedWindow = True
             self.maxButton.setStyleSheet(self.nav_normal)
-                
+    
     # EVENT FUNCTIONS
     # window will maximize if mouse cursor is positioned at less then 10 pixels in y-coordinate
     def mouseReleaseEvent(self, event):
-        if event.globalPosition().y() < 10:
-            self.prevGeo = self.geometry() # save window geometry
+        if event.globalPosition().toPoint().y() < 10:
+            self.prevGeo = self.geometry() # save current window geometry: returns-> QtCore.QRect(int x, int y, int width, int height)
             self.showMaxRestore() # maximize window
-            return True
+            return
 
     def mousePressEvent(self, event):
         # getting previous mouse x and y coordinates
-        self.prevMousePos = event.scenePosition()
-        print("previous mouse pos",self.prevMousePos)
+        self.prevMousePos = event.scenePosition() # coordinates of prev mouse position
+        # print("previous mouse pos",self.prevMousePos)
         self.pressing = True
         
-        if event.type() == qtc.QEvent.MouseButtonDblClick:
+        if event.type() == qtc.QEvent.Type.MouseButtonDblClick:
             self.showMaxRestore()
-            return True
+            return
 
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
 
@@ -158,16 +163,18 @@ class TitleBar(qtw.QWidget):
                 self.maximizedWindow= False
                 self.maxButton.setStyleSheet(self.nav_maximize)
                 # mouse cursor re-positioning on the window
-                self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5, self.prevGeo.height()*.5) # setting the mouse location to be exactly at the center of the titlebar
+                self.prevMousePos = qtc.QPointF((self.prevGeo.width()*.5), (self.prevGeo.height()*.5)) # setting the mouse position to be exactly at the center of the titlebar
 
         if self.pressing: # this is for moving the window
             # GLOBAL POSITION: https://stackoverflow.com/questions/67723421/deprecationwarning-function-when-moving-app-removed-titlebar-pyside6
             mousePosition = event.globalPosition()
-            print("mouse pos",mousePosition)
+            print("mousePosition",mousePosition)
             pos = mousePosition-self.prevMousePos
-            x = pos.x() 
-            y = pos.y() 
-            main.move(x,y)
+            # "toPoint()" rounds the the float value of QPointF to the nearest integer
+            x = pos.toPoint().x()
+            y = pos.toPoint().y() 
+            main.move(x,y) # .move() only accepts integer values that's why we use .toPoint()
+
       
     #####################################################
     ##                      END
@@ -187,10 +194,10 @@ class MainWindow(qtw.QMainWindow):
         # WINDOW FLAGS: https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-windowflags-example.html?highlight=windowminimizebuttonhint
         self.setMinimumSize(400,250)
         self.resize(700,500)
-        self.setWindowFlags(qtc.Qt.FramelessWindowHint|
-                            qtc.Qt.WindowMaximizeButtonHint|
-                            qtc.Qt.WindowMinimizeButtonHint |
-                            qtc.Qt.WindowStaysOnTopHint  # make window on top of taskbar
+        self.setWindowFlags(qtc.Qt.WindowType.FramelessWindowHint|
+                            qtc.Qt.WindowType.WindowMaximizeButtonHint|
+                            qtc.Qt.WindowType.WindowMinimizeButtonHint |
+                            qtc.Qt.WindowType.WindowStaysOnTopHint  # make window on top of taskbar
                             )
 
         self.title_bar  = TitleBar(self)
@@ -256,11 +263,12 @@ class MainWindow(qtw.QMainWindow):
         self.widget.setCentralWidget(self.current_editor)
     
     def open_document(self):
-        options = qtw.QFileDialog.Options()
+        # guide on pyqt6: QFileDialog = read here: https://zetcode.com/pyqt6/dialogs/
+        home_dir = str(Path.home())
         self.filename, _ = qtw.QFileDialog.getOpenFileName(
             self, 'Open File',".",
             "Text Files (*.txt);;Python Files (*.py)",
-            options=options
+            home_dir
         )
         if self.filename:
             with open(self.filename,"rt") as file:
@@ -276,55 +284,26 @@ class MainWindow(qtw.QMainWindow):
         self.file_toolbar.setIconSize(qtc.QSize(22,22))
         self.file_toolbar.addAction(self.new_action)
         self.file_toolbar.addAction(self.open_action)
-        self.file_toolbar.addAction(self.save_action)
         
-    def _createActions(self):
+    def _createActions(self): 
         # FILE MENU
         self.new_action = qtg.QAction(qtg.QIcon("./icons/new_file.png"),"New", self)
         self.open_action = qtg.QAction(qtg.QIcon("./icons/folder.png"),"Open", self)
-        self.save_action = qtg.QAction(qtg.QIcon("./icons/save.png"),"Save", self)
         self.exit_action = qtg.QAction(qtg.QIcon("./icons/close.png"), "Exit", self)
    
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
-        self.save_action.setShortcut("Ctrl+S")
         self.exit_action.setShortcut("Ctrl+Shift+Q")
 
         self.new_action.setToolTip("New file")
         self.open_action.setToolTip("Open a file")
-        self.save_action.setToolTip("Save a file")
         self.exit_action.setToolTip("Exit Program")
 
     def _connectActions(self):
         # Connect File actions
         self.new_action.triggered.connect(self.new_tab)
         self.open_action.triggered.connect(self.open_document)
-        self.save_action.triggered.connect(self.save_document)
         self.exit_action.triggered.connect(self.close)
-
-    def save_document (self):
-        if not self.current_editor.document().isModified():
-            self.statusBar().showMessage("There are no texts to be saved!")
-        else:
-            # Only open dialog if there is no filename yet
-            #PYQT5 Returns a tuple in PyQt5, we only need the filename
-            options = qtw.QFileDialog.Options()
-            file_filter = 'Text file (*.txt);; Python file (*.py)'
-            if not self.filename:
-                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Text Files (*.txt)')[0] # zero index is required, otherwise it would throw an error if no selection was made
-            
-            if self.filename:
-
-                # We just store the contents of the text file along with the
-                # format in html, which Qt does in a very nice way for us
-                with open(self.filename,"wt") as file:
-                    file.write(self.current_editor.toHtml())
-                    print(self.tabs.currentIndex())
-                    print(str(self.filename))
-                    self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
-                    self.statusBar().showMessage(f"Saved to {self.filename}")
-                    
-                self.changesSaved = True
 
 
 if __name__ == "__main__":
@@ -353,8 +332,8 @@ if __name__ == "__main__":
             QTabBar::tab { border: none; }
             QTabBar::tab:!selected:hover { background: #161a21; }
             QTabBar::tab:top:!selected { background: #161a21; }
-            QTabBar::close-button { image: url(./icons/close_default.png); }
-            QTabBar::close-button:hover { image: url(./icons/close_active.png); }
+            QTabBar::close-button { image: url(./icons/close_default.png); margin: 2px}
+            QTabBar::close-button:hover { image: url(./icons/close_active.png);  margin: 2px}
             QTabBar::tab:selected {
                 color: #e1af4b;
                 background: #161a21;
@@ -405,6 +384,8 @@ if __name__ == "__main__":
                 QToolButton::hover{
                 background-color: #161a21;
             }
+            /*  ---------- [end] ------------*/
+
                 QToolButton[accessibleName="btn_max"]{
                 image: url(./icons/nav_normal.png);
                 background: #161a21;
@@ -510,6 +491,7 @@ if __name__ == "__main__":
                 width:0px;
                 height:0px;
             }
+            /*  ---------- [end] ----------  */
         """
     )
     main.show()
