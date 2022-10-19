@@ -259,7 +259,7 @@ class MainWindow(qtw.QMainWindow):
         options = qtw.QFileDialog.Options()
         self.filename, _ = qtw.QFileDialog.getOpenFileName(
             self, 'Open File',".",
-            "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
+            "Text Files (*.txt);;Python Files (*.py)",
             options=options
         )
         if self.filename:
@@ -309,9 +309,9 @@ class MainWindow(qtw.QMainWindow):
             # Only open dialog if there is no filename yet
             #PYQT5 Returns a tuple in PyQt5, we only need the filename
             options = qtw.QFileDialog.Options()
-            file_filter = 'Notes_ file (*.notes);; Text file (*.txt);; Python file (*.py)'
+            file_filter = 'Text file (*.txt);; Python file (*.py)'
             if not self.filename:
-                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Notes Files (*.notes)')[0] # zero index is required, otherwise it would throw an error if no selection was made
+                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Text Files (*.txt)')[0] # zero index is required, otherwise it would throw an error if no selection was made
             
             if self.filename:
 
@@ -326,25 +326,21 @@ class MainWindow(qtw.QMainWindow):
                     
                 self.changesSaved = True
 
+
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
-    app.setStyle(qtw.QStyleFactory.create("Fusion")) # Oxygen, Windows, Fusion etc.
+    app.setStyle(qtw.QStyleFactory.create("Fusion")) # ['windowsvista', 'Windows', 'Fusion']
+    print(qtw.QStyleFactory.keys())
     # DARKER COLOR OR LIGHTER: https://pinetools.com/darken-color
     # COLOR READABILITY CHECKER: https://coolors.co/contrast-checker/dfdcd1-161a21
     palette = qtg.QPalette()
-    palette.setColor(qtg.QPalette.Window, qtg.QColor("#161a21"))
-    palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.AlternateBase, qtg.QColor("#161a21"))
-    palette.setColor(qtg.QPalette.ToolTipBase, qtc.Qt.black)
-    palette.setColor(qtg.QPalette.ToolTipText, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.Text, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.Button, qtg.QColor("#161a21")) # toolbar button hover color
-    palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # textedit
-    palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.BrightText, qtc.Qt.white)
-    palette.setColor(qtg.QPalette.Link, qtg.QColor("#0086b6"))
-    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#0086b6"))
-    palette.setColor(qtg.QPalette.HighlightedText, qtg.QColor("#000000"))
+    palette.setColor(qtg.QPalette.ColorRole.Button, qtg.QColor("#161a21")) # overflow buttons color for the qtabbar
+    palette.setColor(qtg.QPalette.ColorRole.Window, qtg.QColor("#161a21")) # menu border color
+    palette.setColor(qtg.QPalette.ColorRole.WindowText, qtg.QColor("#BFBDB6")) # for the window title
+    palette.setColor(qtg.QPalette.ColorRole.Text, qtg.QColor("#BFBDB6")) # menu unhighlited text color
+    palette.setColor(qtg.QPalette.ColorRole.Base, qtg.QColor("#161a21")) # menu unhighlited bg color
+    palette.setColor(qtg.QPalette.ColorRole.Highlight, qtg.QColor("#0086b6")) # menu mouse hover highlight color 
+    palette.setColor(qtg.QPalette.ColorRole.HighlightedText, qtg.QColor("#000000")) # menu highlighted text color 
     app.setPalette(palette)
     main = MainWindow()
     main.setStyleSheet(
@@ -353,7 +349,28 @@ if __name__ == "__main__":
             QStatusBar { color: #BFBDB6; background: #161a21; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
             QMenuBar::item { color: #BFBDB6; background: #161a21; }
-            
+            QTabWidget::pane { border: none; }
+            QTabBar::tab { border: none; }
+            QTabBar::tab:!selected:hover { background: #161a21; }
+            QTabBar::tab:top:!selected { background: #161a21; }
+            QTabBar::close-button { image: url(./icons/close_default.png); }
+            QTabBar::close-button:hover { image: url(./icons/close_active.png); }
+            QTabBar::tab:selected {
+                color: #e1af4b;
+                background: #161a21;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+            }
+            QTabBar::tab:!selected {
+                background: silver;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+            }
+            QTabBar::tab:top, QTabBar::tab:bottom {
+                min-width: 8ex;
+                margin-right: -1px;
+                padding: 5px 10px 5px 10px;
+            }
             QTextEdit
             {
                 border: none;
@@ -381,40 +398,22 @@ if __name__ == "__main__":
                 border: none;
                 border-style: none;
             }
-            
-            QTabWidget::pane { border: none; }
-            QTabBar::tab { border: none; }
-            QTabBar::tab:!selected:hover { background: #161a21; }
-            QTabBar::tab:top:!selected { background: #161a21; }
-            QTabBar::close-button { image: url(./icons/close_default.png); }
-            QTabBar::close-button:hover { image: url(./icons/close_active.png); }
-            QTabBar::tab:selected {
-                color: #e1af4b;
-                background: #161a21;
-                border-top-left-radius: 5px;
-                border-top-right-radius: 5px;
+            /*  -----------------------------//
+                -  The css below affects the QToolbar buttons (or any QToolButton)
+                -----------------------------//
+            */
+                QToolButton::hover{
+                background-color: #161a21;
             }
-            QTabBar::tab:!selected {
-                background: silver;
-                border-top-left-radius: 5px;
-                border-top-right-radius: 5px;
-            }
-            QTabBar::tab:top, QTabBar::tab:bottom {
-                min-width: 8ex;
-                margin-right: -1px;
-                padding: 5px 10px 5px 10px;
-            }
-                 QToolButton[accessibleName="btn_max"]{
+                QToolButton[accessibleName="btn_max"]{
                 image: url(./icons/nav_normal.png);
                 background: #161a21;
-                border: none;
-                
+                border: none;  
             }
             QToolButton[accessibleName="btn_max"]:hover{
                 image: url(./icons/colored_normal.png);
                 background: #161a21;
                 border: none;
-                
             }
             QToolButton[accessibleName="btn_max"] {
                 image: url(./icons/nav_maximize.png);
@@ -433,7 +432,6 @@ if __name__ == "__main__":
                 font-size: 14px;
                 padding: 3px; 
             }
-           
             QLabel[accessibleName="lbl_title"]{
                 background-color: #161a21; 
                 font-size: 13px;
@@ -444,7 +442,6 @@ if __name__ == "__main__":
                 image: url(./icons/nav_close.png);
                 background: #161a21;
                 border: none;
-               
             }
             QToolButton[accessibleName="btn_close"]:hover {
                 image: url(./icons/colored_close.png);
@@ -463,7 +460,56 @@ if __name__ == "__main__":
                 border: none;
                 padding-right: 3px;
             }
-            
+            QScrollBar:vertical {
+                border: none;
+                width: 14px;
+                margin: 0px 0 0px 0;
+                background-color: #161a21;
+                border-radius: 0px;
+            }
+            QScrollBar:handle:vertical {
+                background-color: #292c35;
+            }
+            QScrollBar:handle:vertical:hover {
+                background-color: #4c4a4a;
+            }
+            QScrollBar:handle:vertical:pressed {
+                background-color: #5c5b5b;
+            }
+            QScrollBar:horizontal {
+                border: none;
+                height: 14px;
+                margin: 0px 0 0 0;
+                background-color: #161a21;
+                border-radius: 0px;
+            }
+            QScrollBar:handle:horizontal {
+                background-color: #292c35;
+            }
+            QScrollBar:handle:horizontal:hover {
+                background-color: #4c4a4a;
+            }
+            QScrollBar:handle:horizontal:pressed {
+                background-color: #5c5b5b;
+            }
+            /*  -----------------------------//
+                -  The css below removes the QScrollBar's Arrow keys both aesthetically AND functionally
+                -----------------------------//
+            */
+            QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal,
+            QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal{
+                border: none;
+                background-color: none;
+                color: none;
+                width:0px;
+                height:0px;
+            }
+            QScrollBar::sub-line, QScrollBar::add-line{
+                border: none;
+                background-color: none;
+                width:0px;
+                height:0px;
+            }
         """
     )
     main.show()
