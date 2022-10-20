@@ -17,7 +17,7 @@ class MainWindow(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
         # add before init
-        self.app_name = "Visual Studio Code"
+        self.app_name = "Visu al Studio Code"
         self.side_bar_clr = "#282c34"
 
         self.current_file = None
@@ -35,7 +35,6 @@ class MainWindow(qtw.QMainWindow):
         self.window_font = qtg.QFont("Consolas") # font needs to be installed in your computer if its not use something else
         self.window_font.setPointSize(11)
         self.setFont(self.window_font) 
-
 
         self.set_up_menu()
         self.set_up_body()
@@ -72,7 +71,6 @@ class MainWindow(qtw.QMainWindow):
         save_as.setShortcut("Ctrl+Shift+S")
         save_as.triggered.connect(self.save_as)
         
-
         # Edit menu
         edit_menu = menu_bar.addMenu("Edit")
         
@@ -127,7 +125,6 @@ class MainWindow(qtw.QMainWindow):
         self.tab_view.setCurrentIndex(self.tab_view.count() - 1)
         self.statusBar().showMessage(f"Opened {path.name}", 2000)
             
-
     def get_side_bar_label(self, path, name):
         label = qtw.QLabel()
         label.setPixmap(qtg.QPixmap(path).scaled(qtc.QSize(30, 30)))
@@ -135,7 +132,6 @@ class MainWindow(qtw.QMainWindow):
         label.setFont(self.window_font)
         label.mousePressEvent = lambda e: self.show_hide_tab(e, name)
         return label
-
 
     def set_up_body(self):
 
@@ -250,17 +246,14 @@ class MainWindow(qtw.QMainWindow):
         self.tab_view.setDocumentMode(True)
         self.tab_view.tabCloseRequested.connect(self.close_tab)
 
-
         # # add tree view and tab view
         self.hsplit.addWidget(self.tree_frame)
         self.hsplit.addWidget(self.tab_view)
-
-               
+    
         body.addWidget(self.hsplit)
         body_frame.setLayout(body)
         self.setCentralWidget(body_frame)
-     
-        
+      
 
     def tree_view_context_menu(self, pos):
         ...
@@ -307,7 +300,6 @@ class MainWindow(qtw.QMainWindow):
         self.tab_view.setTabText(self.tab_view.currentIndex(), path.name)
         self.statusBar().showMessage(f"Saved {path.name}", 2000)
         self.current_file = path
-
 
     def open_file(self):
         # open file

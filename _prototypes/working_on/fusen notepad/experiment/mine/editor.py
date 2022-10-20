@@ -44,11 +44,14 @@ class Editor(QsciScintilla):
         self.setEolMode(QsciScintilla.EolWindows)
         self.setEolVisibility(False)
 
+        # bracket matching colors
+        self.setMatchedBraceBackgroundColor(qtg.QColor("#c678dd")) 
+        self.setMatchedBraceForegroundColor(qtg.QColor("#F2E3E3"))
+
         # lexer
         self.pylexer = PyCustomLexer(self) # there is a default lexer for many language
         self.pylexer.setDefaultFont(self.window_font)
        
-    
         # Api (you can add autocompletion using this)
         self.api = QsciAPIs(self.pylexer)
         self.setLexer(self.pylexer)
@@ -58,15 +61,39 @@ class Editor(QsciScintilla):
         for _, name, _ in pkgutil.iter_modules():
             self.api.add(name)
 
-        # line numbers
+        # style
+        self.setIndentationGuidesBackgroundColor(qtg.QColor("#dedcdc")) # indentation line guide color
+        self.setIndentationGuidesForegroundColor(qtg.QColor("#dedcdc")) # indentation line guide color
+        self.SendScintilla(self.SCI_STYLESETBACK, self.STYLE_DEFAULT, qtg.QColor("#282c34")) # background color of the editor "paper color"
+        self.setEdgeColor(qtg.QColor("#2c313c")) # border color of the number line
+        self.setEdgeMode(QsciScintilla.EdgeLine)
+        self.setWhitespaceBackgroundColor(qtg.QColor("#2c313c")) # highlight background
+        self.setWhitespaceForegroundColor(qtg.QColor("#ffffff")) # highligh text color
+        self.setContentsMargins(0, 0, 0, 0)
+        self.setSelectionBackgroundColor(qtg.QColor("#333a46")) 
+
+          # margin 0 = Line nr margin
         self.setMarginType(0, QsciScintilla.NumberMargin)
-        self.setMarginWidth(0, "000")
-        self.setMarginsForegroundColor(qtg.QColor("#ff888888"))
-        self.setMarginsBackgroundColor(qtg.QColor("#282c34"))
+        self.setMarginWidth(0, "0000")
+        self.setMarginsForegroundColor(qtg.QColor("#ff888888")) # number line color
+        self.setMarginsBackgroundColor(qtg.QColor("#282c34")) # background color number line
         self.setMarginsFont(self.window_font)
+
+        self.setFolding(QsciScintilla.BoxedFoldStyle, 1)
+        self.setFoldMarginColors(qtg.QColor("#2c313c"), qtg.QColor("#282c34")) # margin color between numberline and editor
+
+        self.indicatorDefine(QsciScintilla.SquigglePixmapIndicator, 0)
 
         # keypress ctrl + space to show the autocompletion
         # self.keyPressEvent = self.handle_editor_press
+
+    @property
+    def autocomplete(self): 
+        return self.complete_flag
+    
+    @autocomplete.setter
+    def set_autocomplete(self, value):
+        self.complete_flag = value
 
     def keyPressEvent(self, e: qtg.QKeyEvent) -> None: # keypress ctrl + space to show the autocompletion
         if e.modifiers() == qtc.Qt.ControlModifier and e.key() == qtc.Qt.Key_Space:
