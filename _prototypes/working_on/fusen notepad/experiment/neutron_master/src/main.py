@@ -1,16 +1,15 @@
 import sys
+import shutil
 import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.Qsci import *
-from file_manager import FileManager
-import resources
 
+import resources
 
 from pathlib import Path
 from editor import Editor
-
 
 
 class MainWindow(QMainWindow):
@@ -41,20 +40,17 @@ class MainWindow(QMainWindow):
         self.setFont(self.window_font)
 
         self.set_up_menu()
-
         self.setUpBody()
-
         self.set_up_status_bar()
-
         self.show()
 
-
-    def get_side_bar_label(self, img_path: str, widget) -> QLabel:
+    # for the sidebar
+    def get_side_bar_icon(self, img_path: str, widget) -> QLabel:
         label = QLabel()
         label.setPixmap(QPixmap(img_path).scaled(QSize(32, 32)))
         label.setAlignment(Qt.AlignmentFlag.AlignTop)
         label.setFont(self.window_font)
-        label.mousePressEvent = lambda e: self.show_hide_tab(e, widget)
+        label.mousePressEvent = lambda e: self.show_hide_panel(e, widget) # when pressed: open and closes side panel
         return label
 
     def get_frame(self) -> QFrame:
@@ -76,9 +72,6 @@ class MainWindow(QMainWindow):
                 color: white;
             }
         """
-
-		
-
 		)
 
         return frame
@@ -111,7 +104,21 @@ class MainWindow(QMainWindow):
         ################# HSPLIT ######################
         # horizontal split view
         self.hsplit = QSplitter(Qt.Horizontal)
-    
+        
+        ###############################################
+        ################# Model ######################
+        # Create file system model to show in tree view
+        
+        self.model = QFileSystemModel()
+        self.model.setRootPath(os.getcwd())
+        # File system filters
+        self.model.setFilter(QDir.NoDotAndDotDot | QDir.AllDirs | QDir.Files)
+        # Create file system model to show in tree view
+        self.model = QFileSystemModel()
+        self.model.setRootPath(os.getcwd())
+        # File system filters
+        self.model.setFilter(QDir.NoDotAndDotDot | QDir.AllDirs | QDir.Files)
+
         ###############################################
         ################ TAB VIEW ####################
         # Tab Widget to add editor to
@@ -122,8 +129,6 @@ class MainWindow(QMainWindow):
         self.tab_view.setDocumentMode(True)
         self.tab_view.tabCloseRequested.connect(self.close_tab)
   
-
-
         ###############################################
         ############## SideBar #######################
         self.side_bar = QFrame()
@@ -139,9 +144,34 @@ class MainWindow(QMainWindow):
         side_bar_layout.setContentsMargins(5, 10, 5, 0)
         side_bar_layout.setAlignment(Qt.AlignTop | Qt.AlignCenter)
 
-        
         ###############################################
         ############ File Manager ###############
+
+        self.tree_view = QTreeView()
+        self.tree_view.setFont(QFont("FiraCode", 13))
+        self.tree_view.setModel(self.model)
+        self.tree_view.setRootIndex(self.model.index(os.getcwd()))
+        self.tree_view.setSelectionMode(QTreeView.SingleSelection)
+        self.tree_view.setSelectionBehavior(QTreeView.SelectRows)
+        self.tree_view.setEditTriggers(QTreeView.NoEditTriggers)
+        # add custom context menu
+        # self.tree_view.setContextMenuPolicy(Qt.CustomContextMenu)
+        # self.tree_view.customContextMenuRequested.connect(self.tree_view_context_menu)
+        # handling click
+        self.tree_view.clicked.connect(self.tree_view_clicked)
+        self.tree_view.setIndentation(10)
+        self.tree_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # Hide header and hide other columns except for name
+        self.tree_view.setHeaderHidden(True) # hiding header
+        self.tree_view.setColumnHidden(1, True)
+        self.tree_view.setColumnHidden(2, True)
+        self.tree_view.setColumnHidden(3, True)
+
+        # enable drag and drop
+        self.tree_view.setDragEnabled(True)
+        self.tree_view.setAcceptDrops(True)
+        self.tree_view.setDropIndicatorShown(True)
+        self.tree_view.setDragDropMode(QAbstractItemView.DragDrop)
 
         # frame and layout to hold tree view
         self.file_manager_frame = self.get_frame()
@@ -153,21 +183,22 @@ class MainWindow(QMainWindow):
         self.file_manager_layout.setContentsMargins(0, 0, 0, 0)
         self.file_manager_layout.setSpacing(0)
 
-        self.file_manager = FileManager(tab_view=self.tab_view,set_new_tab=self.set_new_tab, main_window=self) # was tree_view
 
         # setup layout
-        self.file_manager_layout.addWidget(self.file_manager)
+        self.file_manager_layout.addWidget(self.tree_view)
         self.file_manager_frame.setLayout(self.file_manager_layout)
 
         ####################################################
         ############## SideBar Icons #######################
-        folder_label = self.get_side_bar_label(
+        folder_icon = self.get_side_bar_icon(
             ":/icons/folder-icon-blue.svg", self.file_manager_frame
         )
-        side_bar_layout.addWidget(folder_label)
+        side_bar_layout.addWidget(folder_icon)
         self.side_bar.setLayout(side_bar_layout)
         body.addWidget(self.side_bar)
 
+        ####################################################
+        ############## WELCOME MESSAGE #######################
 
         self.welcome_frame = self.get_frame()
         self.welcome_frame.setStyleSheet(
@@ -188,7 +219,6 @@ class MainWindow(QMainWindow):
         welcome_layout.setSpacing(20)
         welcome_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-
         wlcm_title = self.create_label(
             "Welcome to Neutron!\n\n",
             "color: #84878B;",
@@ -208,6 +238,10 @@ class MainWindow(QMainWindow):
         welcome_layout.addWidget(wlcm_msg)
         self.welcome_frame.setLayout(welcome_layout)
 
+
+        ##############################
+        ###### SETUP WIDGETS ##########
+
         # add file manager and tab view
         self.hsplit.addWidget(self.file_manager_frame)
         self.hsplit.addWidget(self.welcome_frame)
@@ -221,27 +255,41 @@ class MainWindow(QMainWindow):
         body_frame.setLayout(body)
 
         # set central widget
-
         self.setCentralWidget(body_frame)
 
-    def new_file_act(self):
-        """Create new file"""
-        ...
+     # item drop
+    def dropEvent(self, e: QDropEvent) -> None:
+        """Drop event for tree view"""
+        root_path = Path(self.model.rootPath())
+        if e.mimeData().hasUrls():
+            for url in e.mimeData().urls():
+                path = Path(url.toLocalFile())
+                if path.is_dir():
+                    shutil.copytree(path, root_path / path.name)
+                else:
+                    shutil.copy(path, root_path / path.name)
+        e.accept()
 
-    def show_hide_tab(self, e: QMouseEvent, widget: str):
+        return super().dropEvent(e)
+    
+    def dragEnterEvent(self, e: QDragEnterEvent) -> None:
+        """Drag enter event for tree view"""
+        if e.mimeData().hasUrls():
+            e.accept()
+        else:
+            e.ignore()
+
+    def show_hide_panel(self, e: QMouseEvent, widget: str):
         if self.current_side_bar == widget:
             if widget.isHidden():
                 widget.show()
             else:
                 widget.hide()
-
             return
-
        
         self.hsplit.replaceWidget(0, widget)
         self.current_side_bar = widget
         self.current_side_bar.show()
-
 
     def close_tab(self, index: int):
         self.tab_view.removeTab(index)
@@ -282,7 +330,6 @@ class MainWindow(QMainWindow):
         save_as.setShortcut("Ctrl+Shift+S")
         save_as.triggered.connect(self.save_as)
         
-
         # Edit menu
         edit_menu = menu_bar.addMenu("Edit")
         
@@ -349,8 +396,6 @@ class MainWindow(QMainWindow):
         self.tab_view.setCurrentIndex(self.tab_view.count() - 1)
         self.current_file = path
 
- 
-
     def save_file(self):
         # save file
         if self.current_file is None and self.tab_view.count() > 0:
@@ -384,21 +429,22 @@ class MainWindow(QMainWindow):
 
         f = Path(new_file)
         self.set_new_tab(f)
-
    
     def open_folder(self):
-        # open folder
+            # open folder
         ops = QFileDialog.Options() # this is optional
-        # ops |= qtw.QFileDialog.DontUseNativeDialog
-        self.model = self.file_manager.model
+        ops |= QFileDialog.DontUseNativeDialog
+
         new_folder = QFileDialog.getExistingDirectory(self, "Pick A Folder", "", options=ops)
-        if new_folder: 
+        if new_folder:
             self.model.setRootPath(new_folder)
             self.tree_view.setRootIndex(self.model.index(new_folder))
             self.statusBar().showMessage(f"Opened {new_folder}", 2000)
 
-    
-
+    def tree_view_clicked(self, index: QModelIndex):
+        path = self.model.filePath(index)
+        f = Path(path)
+        self.set_new_tab(f)
 
 if __name__ == "__main__":
     app = QApplication([])

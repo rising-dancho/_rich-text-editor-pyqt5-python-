@@ -42,14 +42,16 @@ class Editor(QsciScintilla):
         self.setCaretWidth(2)
         self.setCaretLineBackgroundColor(QColor("#2c313c"))
 
-        # bracket matching colors
-        self.setMatchedBraceBackgroundColor(QColor("#c678dd"))
-        self.setMatchedBraceForegroundColor(QColor("#F2E3E3"))
-
         # EOL
         self.setEolMode(QsciScintilla.EolWindows)
         self.setEolVisibility(False)
 
+
+        # bracket matching colors
+        self.setMatchedBraceBackgroundColor(QColor("#c678dd"))
+        self.setMatchedBraceForegroundColor(QColor("#F2E3E3"))
+
+       
         # lexer
         self.pylexer = PyCustomLexer(self) # there is a default lexer for many language
         self.pylexer.setDefaultFont(self.window_font)
@@ -75,10 +77,6 @@ class Editor(QsciScintilla):
         self.setContentsMargins(0, 0, 0, 0)
         self.setSelectionBackgroundColor(QColor("#333a46"))
 
-        # markers
-        # text_edit.markerDefine(QsciScintilla.Circle, 1)
-        # text_edit.setMarkerBackgroundColor(QColor("#FF0000"), 1)
-        # text_edit.setMarkerForegroundColor(QColor("#FFFFFF"), 1)
 
         # margin 0 = Line nr margin
         self.setMarginType(0, QsciScintilla.NumberMargin)
@@ -87,25 +85,8 @@ class Editor(QsciScintilla):
         self.setMarginsBackgroundColor(QColor("#282c34"))
         self.setMarginsFont(self.window_font)
 
-        # folding
-        # self.setMarginType(1, QsciScintilla)
-        # self.setMarginWidth(1, "000")
-        # self.setMarginMarkerMask(1, 0b1111)
-        # self.setMarginSensitivity(1, True)
         self.setFolding(QsciScintilla.BoxedFoldStyle, 1)
         self.setFoldMarginColors(QColor("#2c313c"), QColor("#2c313c"))
-
-        # margin 1 = Symbol margin
-        # editor.setMarginType(1, QsciScintilla.SymbolMargin)
-        # editor.setMarginWidth(1, "000")
-        # editor.setMarginMarkerMask(1, 0b1111)
-        # editor.setMarginSensitivity(1, True)
-
-        # debug_circle = QImage("./src/imgs/Basic_red_dot.png").scaled(QSize(13, 13))
-        # # smooth circle
-        # debug_circle.setDevicePixelRatio(self.devicePixelRatioF())
-        # editor.markerDefine(debug_circle, 1)
-        # editor.marginClicked.connect(self.handle_margin)
 
         self.indicatorDefine(QsciScintilla.SquigglePixmapIndicator, 0)
 
@@ -123,23 +104,4 @@ class Editor(QsciScintilla):
             self.autoCompleteFromAll()
         else:
             return super().keyPressEvent(e)
-
-
-
-
-
-    # def marginClicked(self, margin: int, line: int, state: typing.Union[Qt.KeyboardModifiers, Qt.KeyboardModifier]) -> None:
-    #     # check if marker is set
-    #     if self.markersAtLine(line) != 0:
-    #         self.markerDelete(line, 1)
-    #     else:
-    #         self.markerAdd(line, 1)
-    #         self.SendScintilla(QsciScintilla.SCI_SETINDICATORCURRENT, 0)
-    #         # Assign a value to the text
-    #         self.SendScintilla(QsciScintilla.SCI_SETINDICATORVALUE, 1)
-
-    #         start_pos = self.positionFromLineIndex(line, 0)
-    #         # Now apply the indicator-style on the chosen text
-    #         self.SendScintilla(QsciScintilla.SCI_INDICATORFILLRANGE, start_pos, len(self.text(line)))
-    #     # return super().marginClicked(margin, line, state)
 

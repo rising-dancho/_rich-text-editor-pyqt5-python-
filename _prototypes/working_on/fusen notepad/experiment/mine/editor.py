@@ -38,7 +38,7 @@ class Editor(QsciScintilla):
         self.setCaretForegroundColor(qtg.QColor("#24a3ff")) # this is the color of the blinking cursor
         self.setCaretLineVisible(True)
         self.setCaretWidth(2)
-        self.setCaretLineBackgroundColor(qtg.QColor("#003963")) # this is the color of the text highlight
+        self.setCaretLineBackgroundColor(qtg.QColor("#2c313c")) # this is the color of the text highlight
         
         # EOL
         self.setEolMode(QsciScintilla.EolWindows)

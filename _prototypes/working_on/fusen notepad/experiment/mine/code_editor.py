@@ -208,7 +208,6 @@ class MainWindow(qtw.QMainWindow):
         # File system filters
         self.model.setFilter(qtc.QDir.NoDotAndDotDot | qtc.QDir.AllDirs | qtc.QDir.Files)
 
-
         ##############################
         ###### FILE VIEWER ##########
         self.tree_view = qtw.QTreeView()
@@ -219,8 +218,8 @@ class MainWindow(qtw.QMainWindow):
         self.tree_view.setSelectionBehavior(qtw.QTreeView.SelectRows)
         self.tree_view.setEditTriggers(qtw.QTreeView.NoEditTriggers)
         # add custom context menu
-        self.tree_view.setContextMenuPolicy(qtc.Qt.CustomContextMenu)
-        self.tree_view.customContextMenuRequested.connect(self.tree_view_context_menu)
+        # self.tree_view.setContextMenuPolicy(qtc.Qt.CustomContextMenu)
+        # self.tree_view.customContextMenuRequested.connect(self.tree_view_context_menu)
         # handling click
         self.tree_view.clicked.connect(self.tree_view_clicked)
         self.tree_view.setIndentation(10) 
@@ -253,11 +252,7 @@ class MainWindow(qtw.QMainWindow):
         body.addWidget(self.hsplit)
         body_frame.setLayout(body)
         self.setCentralWidget(body_frame)
-      
-
-    def tree_view_context_menu(self, pos):
-        ...
-
+        
 
     def tree_view_clicked(self, index: qtc.QModelIndex):
         path = self.model.filePath(index)
@@ -315,6 +310,8 @@ class MainWindow(qtw.QMainWindow):
         f = Path(new_file)
         self.set_new_tab(f)
 
+    def tree_view_context_menu(self, pos):
+        ...
 
     def open_folder(self):
         # open folder

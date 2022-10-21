@@ -25,45 +25,42 @@ class FileManager(QTreeView):
         self.manager_font = QFont("Consolas", 11)
         
         
-         # Create file system model to show in tree view
-        self.model = QFileSystemModel()
-        self.model.setRootPath(os.getcwd())
-        # File system filters
-        self.model.setFilter(QDir.NoDotAndDotDot | QDir.AllDirs | QDir.Files)
-        self.model.setReadOnly(False)
+        #  # Create file system model to show in tree view
+        # self.model = QFileSystemModel()
+        # self.model.setRootPath(os.getcwd())
+        # # File system filters
+        # self.model.setFilter(QDir.NoDotAndDotDot | QDir.AllDirs | QDir.Files)
+        # self.model.setReadOnly(False)
 
         ### NEW
         self.setFocusPolicy(Qt.NoFocus)
         self.setFont(self.manager_font)
-        self.setModel(self.model)
-        self.setRootIndex(self.model.index(os.getcwd()))
-        self.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        self.setSelectionBehavior(QTreeView.SelectRows)
-        self.setEditTriggers(QTreeView.EditTrigger.NoEditTriggers)
-        # Add custom context menu
-        self.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.customContextMenuRequested.connect(self.show_context_menu)
-        # handling click
-        self.clicked.connect(self.tree_view_clicked)
-        self.setIndentation(10)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        # Hide header and hide other columns except for name
-        self.setHeaderHidden(True)
-        self.setColumnHidden(1, True)
-        self.setColumnHidden(2, True)
-        self.setColumnHidden(3, True)
+        # self.setModel(self.model)
+        # self.setRootIndex(self.model.index(os.getcwd()))
+        # self.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        # self.setSelectionBehavior(QTreeView.SelectRows)
+        # self.setEditTriggers(QTreeView.EditTrigger.NoEditTriggers)
+        # # Add custom context menu
+        # self.setContextMenuPolicy(Qt.CustomContextMenu)
+        # self.customContextMenuRequested.connect(self.show_context_menu)
+        # # handling click
+        # # self.clicked.connect(self.tree_view_clicked)
+        # self.setIndentation(10)
+        # self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # # Hide header and hide other columns except for name
+        # self.setHeaderHidden(True)
+        # self.setColumnHidden(1, True)
+        # self.setColumnHidden(2, True)
+        # self.setColumnHidden(3, True)
 
-        # enable drag and drop
-        self.setDragEnabled(True)
-        self.setAcceptDrops(True)
-        self.setDropIndicatorShown(True)
-        self.setDragDropMode(QAbstractItemView.DragDrop)
+        # # enable drag and drop
+        # self.setDragEnabled(True)
+        # self.setAcceptDrops(True)
+        # self.setDropIndicatorShown(True)
+        # self.setDragDropMode(QAbstractItemView.DragDrop)
         
 
-    def tree_view_clicked(self, index: QModelIndex):
-        path = self.model.filePath(index)
-        f = Path(path)
-        self.set_new_tab(f)
+
 
     def delete_path(self, path: Path):
         """delete file or folder with path"""
@@ -179,9 +176,9 @@ class FileManager(QTreeView):
 
         return super().dropEvent(e)
 
-    def dragEnterEvent(self, e: QDragEnterEvent) -> None:
-        """Drag enter event for tree view"""
-        if e.mimeData().hasUrls():
-            e.accept()
-        else:
-            e.ignore()
+    # def dragEnterEvent(self, e: QDragEnterEvent) -> None:
+    #     """Drag enter event for tree view"""
+    #     if e.mimeData().hasUrls():
+    #         e.accept()
+    #     else:
+    #         e.ignore()
