@@ -331,15 +331,15 @@ if __name__ == "__main__":
     app.setStyle(qtw.QStyleFactory.create("Fusion")) # ['windowsvista', 'Windows', 'Fusion']
     print(qtw.QStyleFactory.keys())
     # DARKER COLOR OR LIGHTER: https://pinetools.com/darken-color
-    # COLOR READABILITY CHECKER: https://coolors.co/contrast-checker/dfdcd1-161a21
+    # COLOR READABILITY CHECKER: https://coolors.co/contrast-checker/dfdcd1-1c2028
     # QPallete documentation: https://doc.qt.io/qt-6/qpalette.html
     palette = qtg.QPalette()
-    palette.setColor(qtg.QPalette.Window, qtg.QColor("#161a21")) # general background color
+    palette.setColor(qtg.QPalette.Window, qtg.QColor("#1c2028")) # general background color
     palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#BFBDB6")) # for the window title
-    palette.setColor(qtg.QPalette.Button, qtg.QColor("#161a21")) # overflow buttons color for the qtabbar
-    palette.setColor(qtg.QPalette.Window, qtg.QColor("#161a21")) # menu border color
+    palette.setColor(qtg.QPalette.Button, qtg.QColor("#1c2028")) # overflow buttons color for the qtabbar
+    palette.setColor(qtg.QPalette.Window, qtg.QColor("#1c2028")) # menu border color
     palette.setColor(qtg.QPalette.Text, qtg.QColor("#BFBDB6")) # menu unhighlited text color
-    palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # menu unhighlited bg color
+    palette.setColor(qtg.QPalette.Base, qtg.QColor("#1c2028")) # menu unhighlited bg color
     palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#0086b6")) # menu mouse hover highlight color 
     palette.setColor(qtg.QPalette.HighlightedText, qtg.QColor("#000000")) # menu highlighted text color 
     app.setPalette(palette)
@@ -349,9 +349,9 @@ if __name__ == "__main__":
             /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp */
             
             QMainWindow{ border-style: none;}
-            QStatusBar { color: #BFBDB6; background: #161a21; }
-            QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
-            QMenuBar::item { color: #BFBDB6; background: #161a21; }
+            QStatusBar { color: #BFBDB6; background: #1c2028; }
+            QMenuBar::item:pressed {  color: #BFBDB6; background: #1c2028; }
+            QMenuBar::item { color: #BFBDB6; background: #1c2028; }
             
             /* styling Qmenu: https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qmenu */
             
@@ -360,21 +360,23 @@ if __name__ == "__main__":
                 background-color: #0086b6;
                 color: #000;
             }
-
+            
             QTabWidget::pane { border: none; }
             QTabBar::tab { border: none; }
-            QTabBar::tab:!selected:hover { background: #161a21; }
-            QTabBar::tab:top:!selected { background: #161a21;}
+            QTabBar::tab:top:selected { background: #161a21;}
+            QTabBar::tab:top:!selected { background: #1c2028; }
             QTabBar::close-button { image: url(./icons/close_default.png); margin: 2px}
             QTabBar::close-button:hover { image: url(./icons/close_active.png);  margin: 2px}
             QTabBar::tab:selected {
-                color: #e1af4b;
-                background: #161a21;
+                color: #ffb454;
+                background: #1c2028;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
             }
+            
             QTabBar::tab:!selected {
-                background: silver;
+                color: #BFBDB6;
+                background: #1c2028;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
             }
@@ -388,25 +390,25 @@ if __name__ == "__main__":
                 border: none;
                 font: "Consolas";
                 color: #BFBDB6;
-                background: #13161d;
+                background: #161a21;
                 selection-background-color: #ffb454;
                 selection-color: #000000;
             }
             QMenuBar
             {
                 color: #BFBDB6;
-                background: #161a21;
+                background: #1c2028;
                 border: none;
                 border-style: none;
             }
             QMenuBar::item:selected 
             { 
                 color: #BFBDB6;
-                background: #161a21; 
+                background: #1c2028; 
             } 
             QToolBar
             {
-                background: #161a21;
+                background: #1c2028;
                 border: none;
                 border-style: none;
             }
@@ -415,29 +417,29 @@ if __name__ == "__main__":
                 -----------------------------//
             */
                 QToolButton::hover{
-                background-color: #161a21;
+                background-color: #1c2028;
             }
             /*  ---------- [end] ------------*/
 
                 QToolButton[accessibleName="btn_max"]{
                 image: url(./icons/nav_normal.png);
-                background: #161a21;
+                background: #1c2028;
                 border: none;  
             }
             QToolButton[accessibleName="btn_max"]:hover{
                 image: url(./icons/colored_normal.png);
-                background: #161a21;
+                background: #1c2028;
                 border: none;
             }
             QToolButton[accessibleName="btn_max"] {
                 image: url(./icons/nav_maximize.png);
-                background: #161a21;
+                background: #1c2028;
                 border: nobutton_stylene;
                 padding-right: 3px; 
             }
             QToolButton[accessibleName="btn_max"]:hover {
                 image: url(./icons/colored_maximize.png);
-                background: #161a21;
+                background: #1c2028;
                 border: none;
             }
             QMenuBar{
@@ -447,30 +449,30 @@ if __name__ == "__main__":
                 padding: 3px; 
             }
             QLabel[accessibleName="lbl_title"]{
-                background-color: #161a21; 
+                background-color: #1c2028; 
                 font-size: 13px;
                 font: "Consolas";
                 padding-right: 425px;
             }
             QToolButton[accessibleName="btn_close"] {
                 image: url(./icons/nav_close.png);
-                background: #161a21;
+                background: #1c2028;
                 border: none;
             }
             QToolButton[accessibleName="btn_close"]:hover {
                 image: url(./icons/colored_close.png);
-                background: #161a21;
+                background: #1c2028;
                 border: none;
             }    
             QToolButton[accessibleName="btn_min"] {
                 image: url(./icons/nav_minimize.png);
-                background: #161a21;
+                background: #1c2028;
                 border: none;
                 padding-right: 3px;
             }
             QToolButton[accessibleName="btn_min"]:hover {
                 image: url(./icons/colored_minimize.png);
-                background: #161a21;
+                background: #1c2028;
                 border: none;
                 padding-right: 3px;
             }
@@ -478,7 +480,7 @@ if __name__ == "__main__":
                 border: none;
                 width: 14px;
                 margin: 0px 0 0px 0;
-                background-color: #161a21;
+                background-color: #1c2028;
                 border-radius: 0px;
             }
             QScrollBar:handle:vertical {
@@ -494,7 +496,7 @@ if __name__ == "__main__":
                 border: none;
                 height: 14px;
                 margin: 0px 0 0 0;
-                background-color: #161a21;
+                background-color: #1c2028;
                 border-radius: 0px;
             }
             QScrollBar:handle:horizontal {
