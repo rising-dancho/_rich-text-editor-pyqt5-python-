@@ -348,6 +348,7 @@ if __name__ == "__main__":
             QStatusBar { color: #BFBDB6; background: #161a21; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
             QMenuBar::item { color: #BFBDB6; background: #161a21; }
+            QTextEdit QMenu::item {color: #ffb454; font-weight: normal} /* for context menu> right click -> textedit*/
             QTabWidget::pane { border: none; }
             QTabBar::tab { border: none; }
             QTabBar::tab:!selected:hover { background: #161a21; }
