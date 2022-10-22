@@ -908,7 +908,7 @@ class MainWindow(qtw.QMainWindow):
             
             /* styling Qmenu: https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qmenu */
             
-            QTextEdit QMenu::item {color: #BFBDB6; font-weight: normalt;} /* for context menu> right click -> textedit*/
+            QTextEdit QMenu::item {color: #BFBDB6; font-weight: normal;} /* for context menu> right click -> textedit*/
             QTextEdit QMenu::item:selected { /* when user selects item using mouse or keyboard */
                 background-color: #0086b6;
                 color: #000;
