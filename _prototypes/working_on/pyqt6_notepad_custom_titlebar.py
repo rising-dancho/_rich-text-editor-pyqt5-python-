@@ -325,7 +325,7 @@ if __name__ == "__main__":
     main = MainWindow()
     main.setStyleSheet(
          """
-            /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp*/
+            /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp */
             
             QMainWindow{ background: #161a21; border-style: none;}
             QStatusBar { color: #BFBDB6; background: #161a21; }w
