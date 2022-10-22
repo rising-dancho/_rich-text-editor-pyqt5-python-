@@ -332,10 +332,12 @@ if __name__ == "__main__":
     print(qtw.QStyleFactory.keys())
     # DARKER COLOR OR LIGHTER: https://pinetools.com/darken-color
     # COLOR READABILITY CHECKER: https://coolors.co/contrast-checker/dfdcd1-161a21
+    # QPallete documentation: https://doc.qt.io/qt-6/qpalette.html
     palette = qtg.QPalette()
+    palette.setColor(qtg.QPalette.Window, qtg.QColor("#161a21")) # general background color
+    palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#BFBDB6")) # for the window title
     palette.setColor(qtg.QPalette.Button, qtg.QColor("#161a21")) # overflow buttons color for the qtabbar
     palette.setColor(qtg.QPalette.Window, qtg.QColor("#161a21")) # menu border color
-    palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#BFBDB6")) # for the window title
     palette.setColor(qtg.QPalette.Text, qtg.QColor("#BFBDB6")) # menu unhighlited text color
     palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # menu unhighlited bg color
     palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#0086b6")) # menu mouse hover highlight color 
@@ -344,10 +346,10 @@ if __name__ == "__main__":
     main = MainWindow()
     main.setStyleSheet(
          """
-             /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp */
+            /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp */
             
-            QMainWindow{ background: #161a21; border-style: none;}
-            QStatusBar { color: #BFBDB6; background: #161a21; }w
+            QMainWindow{ border-style: none;}
+            QStatusBar { color: #BFBDB6; background: #161a21; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
             QMenuBar::item { color: #BFBDB6; background: #161a21; }
             
@@ -362,7 +364,7 @@ if __name__ == "__main__":
             QTabWidget::pane { border: none; }
             QTabBar::tab { border: none; }
             QTabBar::tab:!selected:hover { background: #161a21; }
-            QTabBar::tab:top:!selected { background: #161a21; }
+            QTabBar::tab:top:!selected { background: #161a21;}
             QTabBar::close-button { image: url(./icons/close_default.png); margin: 2px}
             QTabBar::close-button:hover { image: url(./icons/close_active.png);  margin: 2px}
             QTabBar::tab:selected {

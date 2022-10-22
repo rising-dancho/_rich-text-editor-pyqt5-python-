@@ -312,8 +312,9 @@ if __name__ == "__main__":
     print(qtw.QStyleFactory.keys())
     # DARKER COLOR OR LIGHTER: https://pinetools.com/darken-color
     # COLOR READABILITY CHECKER: https://coolors.co/contrast-checker/dfdcd1-161a21
+    # QPallete documentation: https://doc.qt.io/qt-6/qpalette.html
     palette = qtg.QPalette()
-    palette.setColor(qtg.QPalette.ColorRole.Window, qtg.QColor("#fff"))
+    palette.setColor(qtg.QPalette.ColorRole.Window, qtg.QColor("#161a21")) # general background color
     palette.setColor(qtg.QPalette.ColorRole.WindowText, qtg.QColor("#BFBDB6")) # for the window title
     palette.setColor(qtg.QPalette.ColorRole.Button, qtg.QColor("#161a21")) # overflow buttons color for the qtabbar
     palette.setColor(qtg.QPalette.ColorRole.Window, qtg.QColor("#161a21")) # menu border color
@@ -327,8 +328,8 @@ if __name__ == "__main__":
          """
             /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp */
             
-            QMainWindow{ background: #161a21; border-style: none;}
-            QStatusBar { color: #BFBDB6; background: #161a21; }w
+            QMainWindow{ border-style: none;}
+            QStatusBar { color: #BFBDB6; background: #161a21; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
             QMenuBar::item { color: #BFBDB6; background: #161a21; }
             
