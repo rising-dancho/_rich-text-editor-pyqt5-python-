@@ -903,6 +903,7 @@ class MainWindow(qtw.QMainWindow):
             QStatusBar { color: #BFBDB6; background: #1c2028; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #1c2028; }
             QMenuBar::item { color: #BFBDB6; background: #1c2028; }
+            QTextEdit QMenu::item {color: #ffb454; font-weight: normal} /* for context menu> right click -> textedit*/
          
        
             QTextEdit
