@@ -313,9 +313,10 @@ if __name__ == "__main__":
     # DARKER COLOR OR LIGHTER: https://pinetools.com/darken-color
     # COLOR READABILITY CHECKER: https://coolors.co/contrast-checker/dfdcd1-161a21
     palette = qtg.QPalette()
+    palette.setColor(qtg.QPalette.ColorRole.Window, qtg.QColor("#fff"))
+    palette.setColor(qtg.QPalette.ColorRole.WindowText, qtg.QColor("#BFBDB6")) # for the window title
     palette.setColor(qtg.QPalette.ColorRole.Button, qtg.QColor("#161a21")) # overflow buttons color for the qtabbar
     palette.setColor(qtg.QPalette.ColorRole.Window, qtg.QColor("#161a21")) # menu border color
-    palette.setColor(qtg.QPalette.ColorRole.WindowText, qtg.QColor("#BFBDB6")) # for the window title
     palette.setColor(qtg.QPalette.ColorRole.Text, qtg.QColor("#BFBDB6")) # menu unhighlited text color
     palette.setColor(qtg.QPalette.ColorRole.Base, qtg.QColor("#161a21")) # menu unhighlited bg color
     palette.setColor(qtg.QPalette.ColorRole.Highlight, qtg.QColor("#0086b6")) # menu mouse hover highlight color 
@@ -324,15 +325,25 @@ if __name__ == "__main__":
     main = MainWindow()
     main.setStyleSheet(
          """
+            /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp*/
+            
             QMainWindow{ background: #161a21; border-style: none;}
-            QStatusBar { color: #BFBDB6; background: #161a21; }
+            QStatusBar { color: #BFBDB6; background: #161a21; }w
             QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
             QMenuBar::item { color: #BFBDB6; background: #161a21; }
-            QTextEdit QMenu::item {color: #ffb454; font-weight: normal} /* for context menu> right click -> textedit*/
+            
+            /* styling Qmenu: https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qmenu */
+            
+            QTextEdit QMenu::item {color: #BFBDB6; font-weight: normalt;} /* for context menu> right click -> textedit*/
+            QTextEdit QMenu::item:selected { /* when user selects item using mouse or keyboard */
+                background-color: #0086b6;
+                color: #000;
+            }
+
             QTabWidget::pane { border: none; }
             QTabBar::tab { border: none; }
             QTabBar::tab:!selected:hover { background: #161a21; }
-            QTabBar::tab:top:!selected { background: #161a21; }
+            QTabBar::tab:top:!selected { background: #161a21;}
             QTabBar::close-button { image: url(./icons/close_default.png); margin: 2px}
             QTabBar::close-button:hover { image: url(./icons/close_active.png);  margin: 2px}
             QTabBar::tab:selected {

@@ -899,12 +899,20 @@ class MainWindow(qtw.QMainWindow):
     
     def myStyleSheet(self):
         return """
+            /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp */
+            
             QMainWindow{ background: #1c2028; border-style: none;}
             QStatusBar { color: #BFBDB6; background: #1c2028; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #1c2028; }
             QMenuBar::item { color: #BFBDB6; background: #1c2028; }
-            QTextEdit QMenu::item {color: #ffb454; font-weight: normal} /* for context menu> right click -> textedit*/
-         
+            
+            /* styling Qmenu: https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qmenu */
+            
+            QTextEdit QMenu::item {color: #BFBDB6; font-weight: normalt;} /* for context menu> right click -> textedit*/
+            QTextEdit QMenu::item:selected { /* when user selects item using mouse or keyboard */
+                background-color: #0086b6;
+                color: #000;
+            }
        
             QTextEdit
             {
