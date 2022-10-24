@@ -1092,12 +1092,15 @@ if __name__ == "__main__":
             QStatusBar { color: #BFBDB6; background: #161a21; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
             QMenuBar::item { color: #BFBDB6; background: #161a21; }
+            
             QTabWidget::pane { border: none; }
             QTabBar::tab { border: none; }
-            QTabBar::tab:!selected:hover { background: #161a21; }
-            QTabBar::tab:top:!selected { background: #161a21; }
+            QTabBar::tab:!selected:hover { background: #1c2028; }
+            QTabBar::tab:top:!selected { background: #1c2028; }
+            
             QTabBar::close-button { image: url(:/images/close_default.png); margin: 2px}
             QTabBar::close-button:hover { image: url(:/images/close_active.png);  margin: 2px}
+            
             QTabBar::tab:selected {
                 color: #e1af4b;
                 background: #161a21;
@@ -1114,6 +1117,7 @@ if __name__ == "__main__":
                 margin-right: -1px;
                 padding: 5px 10px 5px 10px;
             }
+
             QTextEdit
             {
                 border: none;

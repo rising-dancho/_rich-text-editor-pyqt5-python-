@@ -106,81 +106,8 @@ class MainWindow(qtw.QMainWindow):
         self._createMenuBar()
         self._connectActions()
         self._createToolBars()
-  
-    def create_editor(self):
-        current_editor = qtw.QTextEdit()
-        # Set the tab stop width to around 33 pixels which is
-        # about 8 spaces
-        current_editor.setTabStopWidth(33)
-        return current_editor
-
-    def change_text_editor(self, index):
-        if index < len(self.text_editors):
-            self.current_editor = self.text_editors[index]
-
-    def remove_editor(self, index):
-        if self.tabs.count() < 2:
-            return
-        
-        self.tabs.removeTab(index)
-        if index < len(self.text_editors):
-            del self.text_editors[index]
-
-    def closeTab(self):
-        close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
-        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
     
-    # def tab_open_doubleclick(self, index):
-    #     if index == -1:
-    #         self.new_tab()
-
-    def new_tab(self, checked = False, title = "Untitled.txt"):
-        self.current_editor = self.create_editor() # create a QTextEdit
-        self.text_editors.append(self.current_editor) # add current editor id to the array list 
-        self.tabs.addTab(self.current_editor, title)
-        self.tabs.setCurrentWidget(self.current_editor) # set the currently tab selected as current widget
-
-    def open_document(self):
-        options = qtw.QFileDialog.Options()
-        # Get filename and show only .notes files
-        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
-        self.filename, _ = qtw.QFileDialog.getOpenFileName(
-            self, 'Open File',".",
-            "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
-            options=options
-        )
-        if self.filename:
-            with open(self.filename,"rt") as file:
-                content = file.read()
-                self.current_editor = self.create_editor() 
-                currentIndex = self.tabs.addTab(self.current_editor, str(self.filename))   # use that widget as the new tab
-                self.current_editor.setText(content) # set the contents of the file as the text
-                self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
-
-    def save_document (self):
-        if not self.current_editor.document().isModified():
-            self.statusBar().showMessage("There are no texts to be saved!")
-        else:
-            # Only open dialog if there is no filename yet
-            #PYQT5 Returns a tuple in PyQt5, we only need the filename
-            options = qtw.QFileDialog.Options()
-            file_filter = 'Notes_ file (*.notes);; Text file (*.txt);; Python file (*.py)'
-            if not self.filename:
-                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Notes Files (*.notes)')[0] # zero index is required, otherwise it would throw an error if no selection was made
-            
-            if self.filename:
-
-                # We just store the contents of the text file along with the
-                # format in html, which Qt does in a very nice way for us
-                with open(self.filename,"wt") as file:
-                    file.write(self.current_editor.toHtml())
-                    print(self.tabs.currentIndex())
-                    print(str(self.filename))
-                    self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
-                    self.statusBar().showMessage(f"Saved to {self.filename}")
-                    
-                self.changesSaved = True
-
+    
     def _createActions(self):
         # FILE MENU
         self.new_action = qtw.QAction(qtg.QIcon(":/images/new_file.png"),"New", self)
@@ -550,6 +477,82 @@ class MainWindow(qtw.QMainWindow):
         # magnify_toolbar.addAction(self.zoom_out_action)
         # magnify_toolbar.addAction(self.zoom_default_action)
     
+
+
+    def create_editor(self):
+        current_editor = qtw.QTextEdit()
+        # Set the tab stop width to around 33 pixels which is
+        # about 8 spaces
+        current_editor.setTabStopWidth(33)
+        return current_editor
+
+    def change_text_editor(self, index):
+        if index < len(self.text_editors):
+            self.current_editor = self.text_editors[index]
+
+    def remove_editor(self, index):
+        if self.tabs.count() < 2:
+            return
+        
+        self.tabs.removeTab(index)
+        if index < len(self.text_editors):
+            del self.text_editors[index]
+
+    def closeTab(self):
+        close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
+        close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
+    
+    # def tab_open_doubleclick(self, index):
+    #     if index == -1:
+    #         self.new_tab()
+
+    def new_tab(self, checked = False, title = "Untitled.txt"):
+        self.current_editor = self.create_editor() # create a QTextEdit
+        self.text_editors.append(self.current_editor) # add current editor id to the array list 
+        self.tabs.addTab(self.current_editor, title)
+        self.tabs.setCurrentWidget(self.current_editor) # set the currently tab selected as current widget
+
+    def open_document(self):
+        options = qtw.QFileDialog.Options()
+        # Get filename and show only .notes files
+        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
+        self.filename, _ = qtw.QFileDialog.getOpenFileName(
+            self, 'Open File',".",
+            "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
+            options=options
+        )
+        if self.filename:
+            with open(self.filename,"rt") as file:
+                content = file.read()
+                self.current_editor = self.create_editor() 
+                currentIndex = self.tabs.addTab(self.current_editor, str(self.filename))   # use that widget as the new tab
+                self.current_editor.setText(content) # set the contents of the file as the text
+                self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
+
+    def save_document (self):
+        if not self.current_editor.document().isModified():
+            self.statusBar().showMessage("There are no texts to be saved!")
+        else:
+            # Only open dialog if there is no filename yet
+            #PYQT5 Returns a tuple in PyQt5, we only need the filename
+            options = qtw.QFileDialog.Options()
+            file_filter = 'Notes_ file (*.notes);; Text file (*.txt);; Python file (*.py)'
+            if not self.filename:
+                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Notes Files (*.notes)')[0] # zero index is required, otherwise it would throw an error if no selection was made
+            
+            if self.filename:
+
+                # We just store the contents of the text file along with the
+                # format in html, which Qt does in a very nice way for us
+                with open(self.filename,"wt") as file:
+                    file.write(self.current_editor.toHtml())
+                    print(self.tabs.currentIndex())
+                    print(str(self.filename))
+                    self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
+                    self.statusBar().showMessage(f"Saved to {self.filename}")
+                    
+                self.changesSaved = True
+
     def insert_image(self):
         # Get image file name
         #PYQT5 Returns a tuple in PyQt5
@@ -897,23 +900,14 @@ class MainWindow(qtw.QMainWindow):
             return True
     
     
-    def myStyleSheet(self):
+    def myStyleSheet(self): # css guide: https://doc.qt.io/qt-6/stylesheet-reference.html
         return """
-            /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp */
-            
             QMainWindow{ background: #1c2028; border-style: none;}
             QStatusBar { color: #BFBDB6; background: #1c2028; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #1c2028; }
             QMenuBar::item { color: #BFBDB6; background: #1c2028; }
-            
-            /* styling Qmenu: https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qmenu */
-            
-            QTextEdit QMenu::item {color: #BFBDB6; font-weight: normal;} /* for context menu> right click -> textedit*/
-            QTextEdit QMenu::item:selected { /* when user selects item using mouse or keyboard */
-                background-color: #0086b6;
-                color: #000;
-            }
-       
+         
+            QTextEdit QMenu::item {color: #ffb454; font-weight: normal}
             QTextEdit
             {
                 border: none;
@@ -945,26 +939,24 @@ class MainWindow(qtw.QMainWindow):
                 border-style: none;
             }
             
-            QTabWidget::pane { border: none; }
             QTabBar::tab { border: none; }
             QTabBar::tab:!selected:hover { background: #1c2028; }
             QTabBar::tab:top:!selected { background: #1c2028; }
-            QTabBar::close-button { image: url(:/images/close_default.png); }
-            QTabBar::close-button:hover { image: url(:/images/close_active.png); }
-
+            
+            QTabBar::close-button { image: url(:/images/close_default.png); margin: 2px}
+            QTabBar::close-button:hover { image: url(:/images/close_active.png);  margin: 2px}
+            
             QTabBar::tab:selected {
                 color: #e1af4b;
                 background: #161a21;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
             }
-
             QTabBar::tab:!selected {
                 background: silver;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
             }
-
             QTabBar::tab:top, QTabBar::tab:bottom {
                 min-width: 8ex;
                 margin-right: -1px;
