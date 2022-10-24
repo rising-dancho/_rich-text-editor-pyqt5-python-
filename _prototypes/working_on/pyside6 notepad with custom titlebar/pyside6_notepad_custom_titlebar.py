@@ -201,7 +201,6 @@ class TitleBar(qtw.QWidget):
         if event.globalPosition().y() < 10:
             self.prevGeo = self.geometry() # save window geometry
             self.showMaxRestore() # maximize window
-            return True
 
     def mousePressEvent(self, event):
         # getting previous mouse x and y coordinates
@@ -212,7 +211,6 @@ class TitleBar(qtw.QWidget):
         if event.type() == qtc.QEvent.MouseButtonDblClick:
             self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore()
-            return True
 
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
 
