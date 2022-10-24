@@ -123,9 +123,8 @@ class TitleBar(qtw.QWidget):
     # window will maximize if mouse cursor is positioned at less then 10 pixels in y-coordinate
     def mouseReleaseEvent(self, event):
         if event.globalPosition().y() < 10:
-            self.prevGeo = self.geometry() # save window geometry
+            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore() # maximize window
-            return True
 
     def mousePressEvent(self, event):
         # getting previous mouse x and y coordinates
@@ -133,8 +132,8 @@ class TitleBar(qtw.QWidget):
         self.pressing = True
         
         if event.type() == qtc.QEvent.MouseButtonDblClick:
+            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore()
-            return True
 
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
 
@@ -145,7 +144,7 @@ class TitleBar(qtw.QWidget):
                 self.maximizedWindow= False
                 self.maxButton.setStyleSheet(self.nav_maximize)
                 # mouse cursor re-positioning on the window
-                self.prevMousePos = qtc.QPointF(self.prevGeo.width()*.5,50)
+                self.prevMousePos = qtc.QPointF((self.prevGeo.width()*.5), (self.prevGeo.height()*.5)) # setting the mouse position to be exactly at the center of the titlebar
 
         if self.pressing: # this is for moving the window
             # GLOBAL POSITION: https://stackoverflow.com/questions/67723421/deprecationwarning-function-when-moving-app-removed-titlebar-pyside6

@@ -210,6 +210,7 @@ class TitleBar(qtw.QWidget):
         self.pressing = True
         
         if event.type() == qtc.QEvent.MouseButtonDblClick:
+            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore()
             return True
 

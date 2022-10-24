@@ -16,10 +16,14 @@
 
 
 import sys
+from pathlib import Path
+from PyQt6 import QtPrintSupport
+
 from PyQt6 import QtWidgets as qtw
 from PyQt6 import QtCore as qtc
 from PyQt6 import QtGui as qtg
-from pathlib import Path
+
+import resources
 
 
 class TitleBar(qtw.QWidget):
@@ -29,13 +33,13 @@ class TitleBar(qtw.QWidget):
 
         self.nav_maximize = """
             QToolButton[accessibleName="btn_max"] {
-                image: url(./icons/nav_maximize.png);
+                image: url(:/images/nav_maximize.png);
                 background: #1c2028;
                 border: nobutton_stylene;
                 padding-right: 3px; 
             }
             QToolButton[accessibleName="btn_max"]:hover {
-                image: url(./icons/colored_maximize.png);
+                image: url(:/images/colored_maximize.png);
                 background: #1c2028;
                 border: none;
             }
@@ -43,13 +47,13 @@ class TitleBar(qtw.QWidget):
 
         self.nav_normal =  """
                 QToolButton[accessibleName="btn_max"]{
-                    image: url(./icons/nav_normal.png);
+                    image: url(:/images/nav_normal.png);
                     background: #1c2028;
                     border: none;
                     
                 }
                 QToolButton[accessibleName="btn_max"]:hover{
-                    image: url(./icons/colored_normal.png);
+                    image: url(:/images/colored_normal.png);
                     background: #1c2028;
                     border: none;
                     
@@ -77,15 +81,11 @@ class TitleBar(qtw.QWidget):
         
         self.menubar = qtw.QMenuBar()
   
-        file_menu = self.menubar.addMenu('File')
-        file_menu.addAction(self.parent().new_action)
-        file_menu.addAction(self.parent().open_action)
-        file_menu.addSeparator()
-        file_menu.addAction(self.parent().exit_action)
+        self._createMenuBar()
 
         self.layout.addWidget(self.menubar) 
 
-        self.window_title = qtw.QLabel("Visual Studio Code") # Notes
+        self.window_title = qtw.QLabel(" ") # Visual Studio Code
         self.window_title.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
         self.window_title.setAccessibleName("lbl_title") 
         self.window_title.setFixedHeight(self.height)
@@ -114,6 +114,35 @@ class TitleBar(qtw.QWidget):
         self.setLayout(self.layout)
 
     #####################################################
+    ##              CREATE MENU BAR
+    #####################################################
+    def _createMenuBar(self):
+        file_menu = self.menubar.addMenu("File")
+        file_menu.addAction(self.parent().new_action)
+        file_menu.addAction(self.parent().open_action)
+        file_menu.addAction(self.parent().save_action)
+        file_menu.addSeparator()
+        file_menu.addAction(self.parent().export_as_odt_action)
+        file_menu.addAction(self.parent().export_as_pdf_action)
+        file_menu.addSeparator()
+        file_menu.addAction(self.parent().print_action)
+        file_menu.addAction(self.parent().preview_action)
+        file_menu.addSeparator()
+        file_menu.addAction(self.parent().exit_action)
+
+        edit_menu = self.menubar.addMenu("Edit")
+        edit_menu.addAction(self.parent().select_all_action)
+        edit_menu.addSeparator()
+        edit_menu.addAction(self.parent().cut_action)
+        edit_menu.addAction(self.parent().copy_action)
+        edit_menu.addAction(self.parent().paste_action)
+        edit_menu.addSeparator()
+        edit_menu.addAction(self.parent().undo_action)
+        edit_menu.addAction(self.parent().redo_action)
+
+        
+
+    #####################################################
     ## TITLE BAR MINIMIZE, MAXIMIZE, CLOSE METHODS
     #####################################################
     def onClickClose(self):
@@ -140,9 +169,8 @@ class TitleBar(qtw.QWidget):
     # window will maximize if mouse cursor is positioned at less then 10 pixels in y-coordinate
     def mouseReleaseEvent(self, event):
         if event.globalPosition().toPoint().y() < 10:
-            self.prevGeo = self.geometry() # save current window geometry: returns-> QtCore.QRect(int x, int y, int width, int height)
+            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore() # maximize window
-            return
 
     def mousePressEvent(self, event):
         # getting previous mouse x and y coordinates
@@ -151,8 +179,8 @@ class TitleBar(qtw.QWidget):
         self.pressing = True
         
         if event.type() == qtc.QEvent.Type.MouseButtonDblClick:
+            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore()
-            return
 
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
 
@@ -196,8 +224,8 @@ class MainWindow(qtw.QMainWindow):
         self.resize(700,500)
         self.setWindowFlags(qtc.Qt.WindowType.FramelessWindowHint|
                             qtc.Qt.WindowType.WindowMaximizeButtonHint|
-                            qtc.Qt.WindowType.WindowMinimizeButtonHint |
-                            qtc.Qt.WindowType.WindowStaysOnTopHint  # make window on top of taskbar
+                            qtc.Qt.WindowType.WindowMinimizeButtonHint 
+                            # qtc.Qt.WindowType.WindowStaysOnTopHint  # make window on top of taskbar
                             )
 
         self.title_bar  = TitleBar(self)
@@ -226,6 +254,88 @@ class MainWindow(qtw.QMainWindow):
         self.closeTab()
         self._createActions()
         self._connectActions()
+
+    def _createToolBars(self):
+        # File toolbar
+        self.file_toolbar = self.addToolBar("File")
+        self.file_toolbar.setIconSize(qtc.QSize(22,22))
+        # file_toolbar.setMovable(False)
+        self.file_toolbar.addAction(self.new_action)
+        self.file_toolbar.addAction(self.open_action)
+        self.file_toolbar.addAction(self.save_action)
+        self.file_toolbar.addAction(self.print_action)
+        self.file_toolbar.addAction(self.preview_action)
+        
+    def _createActions(self): 
+        # FILE MENU
+        self.new_action = qtg.QAction(qtg.QIcon(":/images/new_file.png"),"New", self)
+        self.open_action = qtg.QAction(qtg.QIcon(":/images/folder.png"),"Open", self)
+        self.save_action = qtg.QAction(qtg.QIcon(":/images/save.png"),"Save", self)
+        self.exit_action = qtg.QAction(qtg.QIcon(":/images/close.png"), "Exit", self)
+        self.export_as_odt_action = qtg.QAction(qtg.QIcon(":/images/odt.png"), "Export as OpenOffice Document", self)
+        self.export_as_pdf_action = qtg.QAction(qtg.QIcon(":/images/pdf.png"), "Export as PDF Document", self)
+        self.print_action = qtg.QAction(qtg.QIcon(":/images/print.png"), "Print Document", self)
+        self.preview_action = qtg.QAction(qtg.QIcon(":/images/preview.png"), "Page View", self)
+
+        self.new_action.setShortcut("Ctrl+N")
+        self.open_action.setShortcut("Ctrl+O")
+        self.save_action.setShortcut("Ctrl+S")
+        self.exit_action.setShortcut("Ctrl+Shift+Q")
+        self.export_as_odt_action.setShortcut("Alt+O")
+        self.export_as_pdf_action.setShortcut("Alt+P")
+        self.print_action.setShortcut("Ctrl+P")
+        self.preview_action.setShortcut("Ctrl+Shift+P")
+
+        self.new_action.setStatusTip("New file")
+        self.open_action.setStatusTip("Open a file")
+        self.save_action.setStatusTip("Save a file")
+        self.exit_action.setStatusTip("Exit Program")
+        self.export_as_odt_action.setStatusTip("Export your file as an OpenOffice document")
+        self.export_as_pdf_action.setStatusTip("Export your file as PDF document")
+        self.print_action.setStatusTip("Print document")
+        self.preview_action.setStatusTip("Preview page before printing")
+
+        # EDIT MENU
+        self.select_all_action = qtg.QAction(qtg.QIcon(":/images/select_all.png"), "Select All", self)
+        self.cut_action = qtg.QAction(qtg.QIcon(":/images/cut.png"), "Cut", self)
+        self.copy_action = qtg.QAction(qtg.QIcon(":/images/copy.png"), "Copy", self)
+        self.paste_action = qtg.QAction(qtg.QIcon(":/images/paste.png"), "Paste", self)
+        self.undo_action = qtg.QAction(qtg.QIcon(":/images/undo.png"), "Undo", self)
+        self.redo_action = qtg.QAction(qtg.QIcon(":/images/redo.png"), "Redo", self)
+        
+        self.select_all_action.setShortcut("Ctrl+A")
+        self.cut_action.setShortcut("Ctrl+X")
+        self.copy_action.setShortcut("Ctrl+C")
+        self.paste_action.setShortcut("Ctrl+V")
+        self.undo_action.setShortcut("Ctrl+Z")
+        self.redo_action.setShortcut("Ctrl+Y")
+
+        self.select_all_action.setStatusTip("Selects all texts")
+        self.cut_action.setStatusTip("Cuts the selected text and copies it to the clipboard")
+        self.copy_action.setStatusTip("Copies the selected text to the clipboard")
+        self.paste_action.setStatusTip("Pastes the clipboard text into the text editor")
+        self.undo_action.setStatusTip("Undo the previous operation")
+        self.redo_action.setStatusTip("Redo the previous operation")
+
+
+    def _connectActions(self):
+        # Connect File actions
+        self.new_action.triggered.connect(self.new_tab)
+        self.open_action.triggered.connect(self.open_document)
+        self.save_action.triggered.connect(self.save_document)
+        self.exit_action.triggered.connect(self.close)
+        self.export_as_odt_action.triggered.connect(self.export_as_odt)
+        self.export_as_pdf_action.triggered.connect(self.export_as_pdf)
+        self.print_action.triggered.connect(self.print_handler)
+        self.preview_action.triggered.connect(self.preview)
+
+        # Connect Edit actions
+        self.select_all_action.triggered.connect(self.select_all_document)
+        self.cut_action.triggered.connect(self.cut_document)
+        self.copy_action.triggered.connect(self.copy_document)
+        self.paste_action.triggered.connect(self.paste_document)
+        self.undo_action.triggered.connect(self.undo_document)
+        self.redo_action.triggered.connect(self.redo_document)
 
     def create_editor(self):
         current_editor = qtw.QTextEdit()
@@ -277,33 +387,97 @@ class MainWindow(qtw.QMainWindow):
                 currentIndex = self.tabs.addTab(self.current_editor, str(self.filename))   # use that widget as the new tab
                 self.current_editor.setText(content) # set the contents of the file as the text
                 self.tabs.setCurrentIndex(currentIndex) # make current opened tab be on focus
-                
-    def _createToolBars(self):
-        # create toolbars
-        self.file_toolbar = self.addToolBar("File")
-        self.file_toolbar.setIconSize(qtc.QSize(22,22))
-        self.file_toolbar.addAction(self.new_action)
-        self.file_toolbar.addAction(self.open_action)
-        
-    def _createActions(self): 
-        # FILE MENU
-        self.new_action = qtg.QAction(qtg.QIcon("./icons/new_file.png"),"New", self)
-        self.open_action = qtg.QAction(qtg.QIcon("./icons/folder.png"),"Open", self)
-        self.exit_action = qtg.QAction(qtg.QIcon("./icons/close.png"), "Exit", self)
-   
-        self.new_action.setShortcut("Ctrl+N")
-        self.open_action.setShortcut("Ctrl+O")
-        self.exit_action.setShortcut("Ctrl+Shift+Q")
 
-        self.new_action.setToolTip("New file")
-        self.open_action.setToolTip("Open a file")
-        self.exit_action.setToolTip("Exit Program")
+    def save_document (self):
+        if not self.current_editor.document().isModified():
+            self.statusBar().showMessage("There are no texts to be saved!")
+        else:
+            # Only open dialog if there is no filename yet
+            #PYQT5 Returns a tuple in PyQt5, we only need the filename
+            options = qtw.QFileDialog.Options()
+            file_filter = 'Notes_ file (*.notes);; Text file (*.txt);; Python file (*.py)'
+            if not self.filename:
+                self.filename = qtw.QFileDialog.getSaveFileName(self,caption='Save File',directory=".",filter=file_filter,initialFilter='Notes Files (*.notes)')[0] # zero index is required, otherwise it would throw an error if no selection was made
+            
+            if self.filename:
 
-    def _connectActions(self):
-        # Connect File actions
-        self.new_action.triggered.connect(self.new_tab)
-        self.open_action.triggered.connect(self.open_document)
-        self.exit_action.triggered.connect(self.close)
+                # We just store the contents of the text file along with the
+                # format in html, which Qt does in a very nice way for us
+                with open(self.filename,"wt") as file:
+                    file.write(self.current_editor.toHtml())
+                    print(self.tabs.currentIndex())
+                    print(str(self.filename))
+                    self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
+                    self.statusBar().showMessage(f"Saved to {self.filename}")
+                    
+                self.changesSaved = True
+
+    def export_as_odt(self):
+            if not self.current_editor.document().isModified():
+                self.statusBar().showMessage("There are no texts to export!")
+                # Append extension if not there yet
+            else:
+                filename, _ = qtw.QFileDialog.getSaveFileName(self, "Export as OpenOffice Document", self.strippedName(self.filename).replace(".html",""),
+                    "OpenOffice document (*.odt)")
+                if not filename:
+                    return False
+                lfn = filename.lower()
+                if not lfn.endswith(('.odt')):
+                    filename += '.odt'
+                return self.file_export_odt(filename)
+
+    def export_as_pdf(self): 
+        if not self.current_editor.document().isModified():
+            self.statusBar().showMessage("There are no texts to export!")
+        else:
+            file_dialog = qtw.QFileDialog(self, "Export PDF")
+            file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
+            file_dialog.setMimeTypeFilters(["application/pdf"])
+            file_dialog.setDefaultSuffix("pdf")
+            if file_dialog.exec() != qtw.QDialog.Accepted:
+                return
+            pdf_file_name = file_dialog.selectedFiles()[0]
+            printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
+            printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
+            printer.setOutputFileName(pdf_file_name)
+            self.current_editor.document().print_(printer)
+            native_fn = qtc.QDir.toNativeSeparators(pdf_file_name)
+            self.changesSaved = True
+            self.statusBar().showMessage(f'Exported "{native_fn}"')
+            self.tabs.setTabText(self.tabs.currentIndex(), str(native_fn)) # renames the current tabs with the filename
+
+    def print_handler(self):
+
+        # Open printing dialog
+        dialog = QtPrintSupport.QPrintDialog()
+        if dialog.exec() == qtw.QDialog.Accepted:
+            self.current_editor.document().print(dialog.printer())
+
+    def preview(self):
+
+        # Open preview dialog
+        preview = QtPrintSupport.QPrintPreviewDialog()
+        # If a print is requested, open print dialog
+        preview.paintRequested.connect(lambda p: self.current_editor.print(p))
+        preview.exec()
+    
+    def select_all_document(self): 
+        self.current_editor.selectAll()
+
+    def cut_document(self): 
+        self.current_editor.cut()
+
+    def copy_document(self): 
+        self.current_editor.copy()
+
+    def paste_document(self): 
+        self.current_editor.paste()
+    
+    def undo_document(self): 
+        self.current_editor.undo()
+
+    def redo_document(self): 
+        self.current_editor.redo()
 
 
 if __name__ == "__main__":
@@ -326,37 +500,27 @@ if __name__ == "__main__":
     main = MainWindow()
     main.setStyleSheet(
          """
-            /* css styling properties: https://www.w3schools.com/cssref/pr_border-bottom_style.asp */
-            
-            QMainWindow{ border-style: none;}
-            QStatusBar { color: #BFBDB6; background: #1c2028; }
-            QMenuBar::item:pressed {  color: #BFBDB6; background: #1c2028; }
-            QMenuBar::item { color: #BFBDB6; background: #1c2028; }
-            
-            /* styling Qmenu: https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qmenu */
-            
-            QTextEdit QMenu::item {color: #BFBDB6; font-weight: normal;} /* for context menu> right click -> textedit*/
-            QTextEdit QMenu::item:selected { /* when user selects item using mouse or keyboard */
-                background-color: #0086b6;
-                color: #000;
-            }
+            QMainWindow{ background: #161a21; border-style: none;}
+            QStatusBar { color: #BFBDB6; background: #161a21; }
+            QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
+            QMenuBar::item { color: #BFBDB6; background: #161a21; }
             
             QTabWidget::pane { border: none; }
             QTabBar::tab { border: none; }
-            QTabBar::tab:top:selected { background: #161a21;}
+            QTabBar::tab:!selected:hover { background: #1c2028; }
             QTabBar::tab:top:!selected { background: #1c2028; }
-            QTabBar::close-button { image: url(./icons/close_default.png); margin: 2px}
-            QTabBar::close-button:hover { image: url(./icons/close_active.png);  margin: 2px}
+            
+            QTabBar::close-button { image: url(:/images/close_default.png); margin: 2px}
+            QTabBar::close-button:hover { image: url(:/images/close_active.png);  margin: 2px}
+            
             QTabBar::tab:selected {
-                color: #ffb454;
-                background: #1c2028;
+                color: #e1af4b;
+                background: #161a21;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
             }
-            
             QTabBar::tab:!selected {
-                color: #BFBDB6;
-                background: #1c2028;
+                background: silver;
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
             }
@@ -365,30 +529,31 @@ if __name__ == "__main__":
                 margin-right: -1px;
                 padding: 5px 10px 5px 10px;
             }
+
             QTextEdit
             {
                 border: none;
                 font: "Consolas";
                 color: #BFBDB6;
-                background: #161a21;
+                background: #13161d;
                 selection-background-color: #ffb454;
                 selection-color: #000000;
             }
             QMenuBar
             {
                 color: #BFBDB6;
-                background: #1c2028;
+                background: #161a21;
                 border: none;
                 border-style: none;
             }
             QMenuBar::item:selected 
             { 
                 color: #BFBDB6;
-                background: #1c2028; 
+                background: #161a21; 
             } 
             QToolBar
             {
-                background: #1c2028;
+                background: #161a21;
                 border: none;
                 border-style: none;
             }
@@ -397,29 +562,29 @@ if __name__ == "__main__":
                 -----------------------------//
             */
                 QToolButton::hover{
-                background-color: #1c2028;
+                background-color: #161a21;
             }
             /*  ---------- [end] ------------*/
 
                 QToolButton[accessibleName="btn_max"]{
-                image: url(./icons/nav_normal.png);
-                background: #1c2028;
+                image: url(:/images/nav_normal.png);
+                background: #161a21;
                 border: none;  
             }
             QToolButton[accessibleName="btn_max"]:hover{
-                image: url(./icons/colored_normal.png);
-                background: #1c2028;
+                image: url(:/images/colored_normal.png);
+                background: #161a21;
                 border: none;
             }
             QToolButton[accessibleName="btn_max"] {
-                image: url(./icons/nav_maximize.png);
-                background: #1c2028;
+                image: url(:/images/nav_maximize.png);
+                background: #161a21;
                 border: nobutton_stylene;
                 padding-right: 3px; 
             }
             QToolButton[accessibleName="btn_max"]:hover {
-                image: url(./icons/colored_maximize.png);
-                background: #1c2028;
+                image: url(:/images/colored_maximize.png);
+                background: #161a21;
                 border: none;
             }
             QMenuBar{
@@ -429,30 +594,30 @@ if __name__ == "__main__":
                 padding: 3px; 
             }
             QLabel[accessibleName="lbl_title"]{
-                background-color: #1c2028; 
+                background-color: #161a21; 
                 font-size: 13px;
                 font: "Consolas";
                 padding-right: 425px;
             }
             QToolButton[accessibleName="btn_close"] {
-                image: url(./icons/nav_close.png);
-                background: #1c2028;
+                image: url(:/images/nav_close.png);
+                background: #161a21;
                 border: none;
             }
             QToolButton[accessibleName="btn_close"]:hover {
-                image: url(./icons/colored_close.png);
-                background: #1c2028;
+                image: url(:/images/colored_close.png);
+                background: #161a21;
                 border: none;
             }    
             QToolButton[accessibleName="btn_min"] {
-                image: url(./icons/nav_minimize.png);
-                background: #1c2028;
+                image: url(:/images/nav_minimize.png);
+                background: #161a21;
                 border: none;
                 padding-right: 3px;
             }
             QToolButton[accessibleName="btn_min"]:hover {
-                image: url(./icons/colored_minimize.png);
-                background: #1c2028;
+                image: url(:/images/colored_minimize.png);
+                background: #161a21;
                 border: none;
                 padding-right: 3px;
             }
@@ -460,7 +625,7 @@ if __name__ == "__main__":
                 border: none;
                 width: 14px;
                 margin: 0px 0 0px 0;
-                background-color: #1c2028;
+                background-color: #161a21;
                 border-radius: 0px;
             }
             QScrollBar:handle:vertical {
@@ -476,7 +641,7 @@ if __name__ == "__main__":
                 border: none;
                 height: 14px;
                 margin: 0px 0 0 0;
-                background-color: #1c2028;
+                background-color: #161a21;
                 border-radius: 0px;
             }
             QScrollBar:handle:horizontal {
