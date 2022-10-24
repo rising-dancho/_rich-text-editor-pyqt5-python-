@@ -1096,8 +1096,8 @@ if __name__ == "__main__":
             QTabBar::tab { border: none; }
             QTabBar::tab:!selected:hover { background: #161a21; }
             QTabBar::tab:top:!selected { background: #161a21; }
-            QTabBar::close-button { image: url(./icons/close_default.png); margin: 2px}
-            QTabBar::close-button:hover { image: url(./icons/close_active.png);  margin: 2px}
+            QTabBar::close-button { image: url(:/images/close_default.png); margin: 2px}
+            QTabBar::close-button:hover { image: url(:/images/close_active.png);  margin: 2px}
             QTabBar::tab:selected {
                 color: #e1af4b;
                 background: #161a21;
@@ -1194,13 +1194,13 @@ if __name__ == "__main__":
                 border: none;
             }    
             QToolButton[accessibleName="btn_min"] {
-                image: url(./icons/nav_minimize.png);
+                image: url(:/images/nav_minimize.png);
                 background: #161a21;
                 border: none;
                 padding-right: 3px;
             }
             QToolButton[accessibleName="btn_min"]:hover {
-                image: url(./icons/colored_minimize.png);
+                image: url(:/images/colored_minimize.png);
                 background: #161a21;
                 border: none;
                 padding-right: 3px;
