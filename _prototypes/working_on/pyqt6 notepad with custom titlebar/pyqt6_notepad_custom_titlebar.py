@@ -434,7 +434,7 @@ class MainWindow(qtw.QMainWindow):
             file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
             file_dialog.setMimeTypeFilters(["application/pdf"])
             file_dialog.setDefaultSuffix("pdf")
-            if file_dialog.exec() != qtw.QDialog.Accepted:
+            if file_dialog.exec() != qtw.QDialog.accepted:
                 return
             pdf_file_name = file_dialog.selectedFiles()[0]
             printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
@@ -450,7 +450,7 @@ class MainWindow(qtw.QMainWindow):
 
         # Open printing dialog
         dialog = QtPrintSupport.QPrintDialog()
-        if dialog.exec() == qtw.QDialog.Accepted:
+        if dialog.exec() == qtw.QDialog.accepted:
             self.current_editor.document().print(dialog.printer())
 
     def preview(self):
