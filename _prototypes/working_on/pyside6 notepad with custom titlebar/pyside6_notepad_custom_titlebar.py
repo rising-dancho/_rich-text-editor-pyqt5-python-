@@ -1015,9 +1015,9 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.setFocus()
     
     def fullscreen(self):
-        if not self.isFullScreen():
-            self.showFullScreen()
-        else :
+        if self.windowState() == qtc.Qt.WindowMaximized:
+             self.showNormal()
+        elif self.windowState() == qtc.Qt.WindowNoState:
             self.showMaximized()
     
     # def increment_font_size(self):
