@@ -14,8 +14,6 @@ anyway, here it is: [8/3/2022]
 
 ![image](https://user-images.githubusercontent.com/43742265/187019107-ba57126e-bc8f-468f-8843-5b730392125a.png)
 
-UPDATE: 
-
 here it is now: [10/25/2022]
 
 ![image](https://user-images.githubusercontent.com/43742265/197764449-90fbf6ca-1a98-4ce9-b371-cd89c3c0fcaf.png)
