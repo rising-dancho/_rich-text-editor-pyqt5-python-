@@ -167,11 +167,18 @@ class TitleBar(qtw.QWidget):
         insert_menu.addAction(self.parent().insert_image_action) 
 
         view_menu = self.menubar.addMenu("View")
-        view_menu.addAction(self.parent().fullscreen_action) 
+        # fullscreen
+        self.fullscreen_action = qtg.QAction(qtg.QIcon(":/images/fullscreen.png"), "Fullscreen", self)
+        self.fullscreen_action.setShortcut("F11") 
+        self.fullscreen_action.setStatusTip("Toggles the full screen mode")
+        view_menu.addAction(self.fullscreen_action) 
+        self.fullscreen_action.triggered.connect(self.fullscreen)
+        
         view_menu.addSeparator()
         view_menu.addAction(self.parent().view_status_action)
 
-
+    def fullscreen(self):
+        self.showMaxRestore()
     #####################################################
     ## TITLE BAR MINIMIZE, MAXIMIZE, CLOSE METHODS
     #####################################################
@@ -185,12 +192,14 @@ class TitleBar(qtw.QWidget):
         # QWidget.showNormal() # https://doc.qt.io/qt-6/qwidget.html#showNormal
         #-- Restores the widget after it has been maximized or minimized.
         if(self.maximizedWindow):
+            # self.prevGeo = self.geometry() 
             main.showNormal()
             self.maximizedWindow = False
             self.maxButton.setStyleSheet(self.nav_maximize)
         else:
         # QWidget.showMaximized() # https://doc.qt.io/qt-6/qwidget.html#showMaximized
         #-- Shows the widget maximized.
+            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             main.showMaximized()
             self.maximizedWindow = True
             self.maxButton.setStyleSheet(self.nav_normal)
@@ -209,7 +218,6 @@ class TitleBar(qtw.QWidget):
         self.pressing = True
         
         if event.type() == qtc.QEvent.MouseButtonDblClick:
-            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore()
 
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
@@ -647,13 +655,8 @@ class MainWindow(qtw.QMainWindow):
         # self.zoom_default_action.setStatusTip("Restore to the default font size")
 
         # VIEW MENU
-        self.fullscreen_action = qtg.QAction(qtg.QIcon(":/images/fullscreen.png"), "Fullscreen", self)
         self.view_status_action = qtg.QAction('Show Statusbar', self, checkable=True)
-        
-        self.fullscreen_action.setShortcut("F11") 
         self.view_status_action.setShortcut("")
-
-        self.fullscreen_action.setStatusTip("Toggles the full screen mode")
         self.view_status_action.setStatusTip('Toggle the status bar to be visible or not')
         self.view_status_action.setChecked(True)
 
@@ -675,9 +678,6 @@ class MainWindow(qtw.QMainWindow):
         self.paste_action.triggered.connect(self.paste_document)
         self.undo_action.triggered.connect(self.undo_document)
         self.redo_action.triggered.connect(self.redo_document)
-
-        # Connect Format actions
-        self.fullscreen_action.triggered.connect(self.fullscreen)
 
         # Connect Insert actions
         self.insert_image_action.triggered.connect(self.insert_image)
@@ -1014,11 +1014,7 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.setAlignment(qtc.Qt.AlignLeft)
         self.current_editor.setFocus()
     
-    def fullscreen(self):
-        if self.windowState() == qtc.Qt.WindowMaximized:
-             self.showNormal()
-        elif self.windowState() == qtc.Qt.WindowNoState:
-            self.showMaximized()
+
     
     # def increment_font_size(self):
     #     self.counterFontSize +=1

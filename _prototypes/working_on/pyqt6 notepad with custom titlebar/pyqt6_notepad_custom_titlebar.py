@@ -155,12 +155,14 @@ class TitleBar(qtw.QWidget):
         # QWidget.showNormal() # https://doc.qt.io/qt-6/qwidget.html#showNormal
         #-- Restores the widget after it has been maximized or minimized.
         if(self.maximizedWindow):
+            # self.prevGeo = self.geometry() 
             main.showNormal()
             self.maximizedWindow = False
             self.maxButton.setStyleSheet(self.nav_maximize)
         else:
         # QWidget.showMaximized() # https://doc.qt.io/qt-6/qwidget.html#showMaximized
         #-- Shows the widget maximized.
+            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             main.showMaximized()
             self.maximizedWindow = True
             self.maxButton.setStyleSheet(self.nav_normal)
@@ -169,7 +171,6 @@ class TitleBar(qtw.QWidget):
     # window will maximize if mouse cursor is positioned at less then 10 pixels in y-coordinate
     def mouseReleaseEvent(self, event):
         if event.globalPosition().toPoint().y() < 10:
-            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore() # maximize window
 
     def mousePressEvent(self, event):
@@ -179,7 +180,6 @@ class TitleBar(qtw.QWidget):
         self.pressing = True
         
         if event.type() == qtc.QEvent.Type.MouseButtonDblClick:
-            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore()
 
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
@@ -529,7 +529,6 @@ if __name__ == "__main__":
                 margin-right: -1px;
                 padding: 5px 10px 5px 10px;
             }
-
             QTextEdit
             {
                 border: none;
@@ -565,7 +564,6 @@ if __name__ == "__main__":
                 background-color: #161a21;
             }
             /*  ---------- [end] ------------*/
-
                 QToolButton[accessibleName="btn_max"]{
                 image: url(:/images/nav_normal.png);
                 background: #161a21;

@@ -1,5 +1,4 @@
 # SOMEONE HELPED ME WITH THE TOOLBAR FIXED: https://stackoverflow.com/questions/38322349/pyqt-having-a-status-bar-menu-bar-qwidget
-
 import sys
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
@@ -108,13 +107,17 @@ class TitleBar(qtw.QWidget):
         main.showMinimized()
 
     def showMaxRestore(self):
-        # PySide6.QtGui.QWindow.showNormal() # https://doc.qt.io/qtforpython/PySide6/QtGui/QWindow.html?highlight=shownormal#PySide6.QtGui.PySide6.QtGui.QWindow.showNormal
-        #-- Shows the window as normal
+        # QWidget.showNormal() # https://doc.qt.io/qt-6/qwidget.html#showNormal
+        #-- Restores the widget after it has been maximized or minimized.
         if(self.maximizedWindow):
+            # self.prevGeo = self.geometry() 
             main.showNormal()
             self.maximizedWindow = False
             self.maxButton.setStyleSheet(self.nav_maximize)
         else:
+        # QWidget.showMaximized() # https://doc.qt.io/qt-6/qwidget.html#showMaximized
+        #-- Shows the widget maximized.
+            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             main.showMaximized()
             self.maximizedWindow = True
             self.maxButton.setStyleSheet(self.nav_normal)
@@ -123,7 +126,6 @@ class TitleBar(qtw.QWidget):
     # window will maximize if mouse cursor is positioned at less then 10 pixels in y-coordinate
     def mouseReleaseEvent(self, event):
         if event.globalPosition().y() < 10:
-            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore() # maximize window
 
     def mousePressEvent(self, event):
@@ -132,7 +134,6 @@ class TitleBar(qtw.QWidget):
         self.pressing = True
         
         if event.type() == qtc.QEvent.MouseButtonDblClick:
-            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
             self.showMaxRestore()
 
     def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
