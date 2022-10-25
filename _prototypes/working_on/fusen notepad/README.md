@@ -2,4 +2,4 @@
 
 source: https://www.youtube.com/watch?v=-iQzkx1_0tw&t=2s
 
-** note this has slightly different code from the creator's original work because i fixed some bugs from his project
+** note: this version has slightly different code from the creator's original work because i fixed some bugs from his project
