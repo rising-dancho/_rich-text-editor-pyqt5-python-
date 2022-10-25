@@ -1,0 +1,9 @@
+http://fontawesome.io/icons/
+http://blog.csdn.net/qq_19528953/article/details/52659109
+http://blog.csdn.net/leichelle/article/details/7900627
+http://blog.csdn.net/tgbus18990140382/article/details/26136661
+http://blog.chinaunix.net/uid-24517893-id-3014393.html
+https://www.cnblogs.com/pinking/p/7788447.html
+https://github.com/search?l=Python&q=QsciLexerPython&type=Code&utf8=%E2%9C%93
+http://www.scintilla.org/ScintillaDoc.html#SCI_SETFOLDMARGINCOLOUR
+http://pyqt.sourceforge.net/Docs/QScintilla2/classQsciScintilla.html

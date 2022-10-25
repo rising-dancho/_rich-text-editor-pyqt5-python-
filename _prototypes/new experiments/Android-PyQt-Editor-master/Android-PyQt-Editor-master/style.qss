@@ -1,0 +1,84 @@
+TitleBar {
+    background: #222222;
+}
+TitleBar QPushButton {
+    color: white;
+    font-family: FontAwesome;
+    background: transparent;
+}
+TitleBar QPushButton::pressed {
+    background: rgba(45, 45, 45, 100);
+}
+#MenuButton {
+    text-align: left;
+}
+#SettingButton {
+    text-align: right;
+}
+QTabWidget::pane {
+    background: #272727;
+}
+QTabWidget::tab-bar:top {
+    top: 1px;
+}
+QTabWidget::tab-bar:bottom {
+    bottom: 1px;
+}
+QTabWidget::tab-bar:left {
+    right: 1px;
+}
+QTabWidget::tab-bar:right {
+    left: 1px;
+}
+QTabBar {
+    background-color: #1b1b1b;
+    qproperty-drawBase: 0;
+}
+QTabBar::tab {
+    border: 1px #1b1b1b;
+}
+QTabBar::tab:selected {
+    background: #3c3e3f;
+    color: #bbbbbb;
+}
+QTabBar::tab:!selected {
+    background: #2b2b2b;
+    color: #bbbbbb;
+}
+QTabBar::tab:bottom:!selected {
+    margin-bottom: 3px;
+}
+QTabBar::tab:top, QTabBar::tab:bottom {
+    min-width: 8ex;
+    margin-right: -1px;
+    padding: 5px 10px 5px 10px;
+}
+QScrollBar:vertical {
+    width:12px;
+    background:#272727;
+    margin:0px;
+    padding-top:0px;
+    padding-bottom:0px;
+}
+QScrollBar::handle:vertical {
+    background: #454545;
+    border: 4px solid rgba(0,0,0,0);
+    border-radius: 6px;
+    min-width: 14px;
+    max-width: 14px;
+    min-height:20;
+}
+QScrollBar::add-line:vertical {
+    width:0px;
+    height:0px;
+    subcontrol-position:bottom;
+}
+QScrollBar::sub-line:vertical {
+    width:0px;
+    height:0px;
+    subcontrol-position:top;
+}
+QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical {
+    background:#272727;
+    border-radius:0px;
+}

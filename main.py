@@ -1,123 +1,410 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######################
-# NOTE: 
-# here are some resources that may be helpful to those that will inherit the work and love
-# .. that was poured in here. goodluck, my child - adfinem_rising
-#   
-#   GETTING STARTED:                        https://www.youtube.com/watch?v=a7iFHz70J1I&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=7
-#   GETTING STARTED CODING:                 https://doc.qt.io/qtforpython/gettingstarted.html
-#   FINISH THIS:                            https://www.youtube.com/watch?v=e4fwY9ZsxPw&t=3599s
-#   FINDING CODE EXAMPLES:                  https://www.programcreek.com/python/
+# TODO: PySide6/PyQt5 to PyQt6 conversion
+# -> In order to call "Window" or "WindowText" in QPallete, you need to use the enum "ColorRole" 
+#   like this: (QtGui.QPalette.ColorRole.Window) = read here: https://doc.qt.io/qt-6/qpalette.html
 #
-#   MINDSET WHEN READING DOCUMENTATION  1:  https://www.freecodecamp.org/news/how-to-read-your-way-to-becoming-a-better-developer-b6432fa5bc0c/ 
-#   MINDSET WHEN READING DOCUMENTATION  2:  https://blog.techtalentsouth.com/8-tips-to-reading-documentation-a-newbies-guide
-#   MINDSET WHEN READING DOCUMENTATION  3:  https://medium.com/@laymanExplained/layman-explained-reading-documentation-36c450e77e6b
-#   MINDSET WHEN READING DOCUMENTATION  4:  https://www.youtube.com/watch?v=lwqeNnboh_4
-#   PRACTICALS ON READING DOCUMENTATION 5:  https://www.youtube.com/watch?v=s1PLS3SQHQ0
-#   SHORT TUTORIAL ON READING DOCS      6:  https://www.youtube.com/watch?v=vYuvEWiffts
+# -> "qtc.Qt.white" does not work anymore in PyQt6, use the enum "GlobalColor"
+#   like this: (QtCore.Qt.GlobalColor.black) = read here: https://doc.qt.io/qt-6/qt.html
 #   
-#   UI GUIDE:                               https://realpython.com/python-menus-toolbars/
-#   TEXT EDITOR GUIDE:                      https://www.binpress.com/building-text-editor-pyqt-1/
-#   QT TEXT EDITOR DOC:                     https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
-#   MY TABBED EDITOR:                       https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
-#   TEXT EDITOR REFERENCE 1:                https://gist.github.com/Axel-Erfurt/e33608124a4e47167ba76f4d62cba9ca
-#   TEXT EDITOR REFERENCE 2:                https://github.com/goldsborough/Writer
-#   QRC RESOURCES GUIDE:                    https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
-#   INFO ABOUT SAVING AS DOCX:              https://stackoverflow.com/questions/22959642/pyqt4-how-to-read-a-doc-file-with-all-formatting-settings-using-python
-#   SYNTAX HIGHLIGHTING GUIDE:              https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
-#   SYNTAX HIGHLIGHTING CODE:               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
-#   
-#   RECOLORABLE ICONS:                      https://icons8.com/icons/set/list-number
-#   RESIZING IMG TO ICON SIZE:              https://www.img2go.com/resize-image
-#   TRANSPARENT BACKGROUND IMAGES:          https://www.remove.bg/
-#   CREATE YOUR OWN ICONS:                  https://github.com/rising-dancho/custom_minimize_maximize_and_close_window_icons-java-netbeans-
+# -> error: AttributeError: type object 'Qt' has no attribute 'FramelessWindowHint'. solution: use enum "WindowType"
+#   like this: (QtCore.Qt.WindowType.FramelessWindowHint) = read here: https://stackoverflow.com/questions/69747328/pyqt6-attributeerror-qt
 #
-#   QSCINTILLA DOC:                         https://qscintilla.com/#home
-#   EXECUTING PYTHON SCRIPT:                https://www.pythonguis.com/tutorials/qprocess-external-programs/
-#   QFILEDIALOG:                            https://learndataanalysis.org/source-code-how-to-use-qfiledialog-file-dialog-in-pyqt5/
-#   FUSION DARK THEME:                      https://stackoverflow.com/questions/48256772/dark-theme-for-qt-widgets
-#   CUSTOM TITLE BAR WINDOW:                https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application
-#   COMBINED MENUBAR ON TITLEBAR 1:         https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
-#   COMBINED MENUBAR ON TITLEBAR 2:         https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/tree/main/_prototype
-#   TAB QSS STYLE:                          https://gist.github.com/espdev/4f1565b18497a42d317cdf2531b7ef05    
-#   RESIZE ON EDGE DRAG:                    https://stackoverflow.com/questions/64784966/resizing-custom-widget-by-dragging-the-edges-in-pyqt5
-#   BLUR WINDOW:                            https://stackoverflow.com/questions/54807743/transparent-window-with-blur-behind-with-pyqt    
-#   WHITE BORDER ON TAB BAR ISSUE:          https://forum.qt.io/topic/42265/qtabwidget-stylesheet-white-top-border/7
-#   DESIGN CUSTOM BLINKING CURSOR:          https://www.youtube.com/watch?v=9STObkCGq-Y
-#   CHANGING BLINKING CURSOR:               https://stackoverflow.com/questions/55136056/is-it-possible-to-create-a-custom-cursor-using-pyqt
-#   
-#   LIVING LEGENDS:      https://github.com/alandmoore
-#                        https://github.com/eyllanesc
-#                        https://github.com/892768447
-#                        https://github.com/yjg30737
-#                        https://github.com/Axel-Erfurt
-#                        https://github.com/goldsborough
-#                        https://github.com/zhiyiYo
-#                        https://github.com/Fus3n
-#                        https://github.com/marcel-goldschen-ohm
-#                        https://github.com/joshuawillman
-#                        https://github.com/alexpdev
-#                        https://github.com/matkuki
+# -> error: AttributeError: type object 'Qt' has no attribute 'AlignCenter'. solution: use enum "AlignmentFlag" 
+#   like this: (QtCore.Qt.AlignmentFlag.AlignCenter) = read here: https://doc.qt.io/qt-6/qt.html#AlignmentFlag-enum
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####################
+# -> error: AttributeError: type object 'QSizePolicy' has no attribute 'Expanding'. solution: use enum "Policy"
+#   like this: (QtWidgets.QSizePolicy.Policy.Expanding) = read here: https://doc.qt.io/qt-6/qsizepolicy.html
+
 
 import sys
-from PyQt5 import QtWidgets as qtw
-from PyQt5 import QtCore as qtc
-from PyQt5 import QtGui as qtg
-from PyQt5 import QtPrintSupport
-# from BlurWindow.blurWindow import blur 
+from pathlib import Path
+from PyQt6 import QtPrintSupport
 
-import resources 
+from PyQt6 import QtWidgets as qtw
+from PyQt6 import QtCore as qtc
+from PyQt6 import QtGui as qtg
+
+import resources
+
+
+class TitleBar(qtw.QWidget):
+    height = 35
+    def __init__(self, parent):
+        super(TitleBar, self).__init__(parent)
+
+        self.nav_maximize = """
+            QToolButton[accessibleName="btn_max"] {
+                image: url(:/images/nav_maximize.png);
+                background: #1c2028;
+                border: nobutton_stylene;
+                padding-right: 3px; 
+            }
+            QToolButton[accessibleName="btn_max"]:hover {
+                image: url(:/images/colored_maximize.png);
+                background: #1c2028;
+                border: none;
+            }
+        """
+
+        self.nav_normal =  """
+                QToolButton[accessibleName="btn_max"]{
+                    image: url(:/images/nav_normal.png);
+                    background: #1c2028;
+                    border: none;
+                    
+                }
+                QToolButton[accessibleName="btn_max"]:hover{
+                    image: url(:/images/colored_normal.png);
+                    background: #1c2028;
+                    border: none;
+                    
+                }
+            """
+
+        ### for window movement ###
+        self.prevGeo = self.geometry() # save window geometry: QtCore.QRect(int x, int y, int width, int height)
+        self.pressing = False
+        self.maximizedWindow=False
+        ### [ end ] ###
+        
+        self.current_editor = self.parent().create_editor()
+        self.current_editor.setFocus()
+        self.text_editors = []
+        self.tabs = qtw.QTabWidget()
+        self.tabs.setTabsClosable(True) 
+        self.tabs.tabBar().setMovable(True)
+
+        self.parent()._createActions()
+        self.parent()._connectActions()
+        
+        self.layout = qtw.QHBoxLayout()
+        self.layout.setContentsMargins(0,0,10,0) 
+        
+        self.menubar = qtw.QMenuBar()
+  
+        self._createMenuBar()
+
+        self.layout.addWidget(self.menubar) 
+
+        self.window_title = qtw.QLabel(" ") # Visual Studio Code
+        self.window_title.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
+        self.window_title.setAccessibleName("lbl_title") 
+        self.window_title.setFixedHeight(self.height)
+        self.layout.addStretch(1) # this stretches the self.window_title qlabel to take-up all the remaining space
+        self.layout.addWidget(self.window_title)
+
+        self.setSizePolicy(qtw.QSizePolicy.Policy.Expanding, qtw.QSizePolicy.Policy.Fixed)
+        self.maximizedWindow=False
+       
+        self.closeButton = qtw.QToolButton() 
+        self.closeButton.setAccessibleName("btn_close")                           
+        self.closeButton.clicked.connect(self.onClickClose)
+
+        self.maxButton = qtw.QToolButton()
+        self.maxButton.setAccessibleName("btn_max")  
+        self.maxButton.setStyleSheet(self.nav_maximize)
+        self.maxButton.clicked.connect(self.showMaxRestore)
+
+        self.hideButton = qtw.QToolButton()
+        self.hideButton.setAccessibleName("btn_min")  
+        self.hideButton.clicked.connect(self.onClickHide)
+
+        self.layout.addWidget(self.hideButton)
+        self.layout.addWidget(self.maxButton)
+        self.layout.addWidget(self.closeButton)
+        self.setLayout(self.layout)
+
+    #####################################################
+    ##              CREATE MENU BAR
+    #####################################################
+    def _createMenuBar(self):
+
+        file_menu = self.menubar.addMenu("File")
+        file_menu.addAction(self.parent().new_action)
+        file_menu.addAction(self.parent().open_action)
+        file_menu.addAction(self.parent().save_action)
+        file_menu.addSeparator()
+        file_menu.addAction(self.parent().export_as_odt_action)
+        file_menu.addAction(self.parent().export_as_pdf_action)
+        file_menu.addSeparator()
+        file_menu.addAction(self.parent().print_action)
+        file_menu.addAction(self.parent().preview_action)
+        file_menu.addSeparator()
+        file_menu.addAction(self.parent().exit_action)
+
+        edit_menu = self.menubar.addMenu("Edit")
+        edit_menu.addAction(self.parent().select_all_action)
+        edit_menu.addSeparator()
+        edit_menu.addAction(self.parent().cut_action)
+        edit_menu.addAction(self.parent().copy_action)
+        edit_menu.addAction(self.parent().paste_action)
+        edit_menu.addSeparator()
+        edit_menu.addAction(self.parent().undo_action)
+        edit_menu.addAction(self.parent().redo_action)
+
+        format_menu = self.menubar.addMenu("Format")
+        format_menu.addAction(self.parent().strike_out_text_action)
+        format_menu.addAction(self.parent().bold_text_action)
+        format_menu.addAction(self.parent().italic_text_action)
+        format_menu.addAction(self.parent().underline_text_action)
+        format_menu.addSeparator()
+        format_menu.addAction(self.parent().superscript_text_action)
+        format_menu.addAction(self.parent().subscript_text_action)
+        format_menu.addSeparator()
+        format_menu.addAction(self.parent().number_list_action)
+        format_menu.addAction(self.parent().bullet_list_action)
+        format_menu.addSeparator()
+        format_menu.addAction(self.parent().align_left_action)
+        format_menu.addAction(self.parent().align_center_action)
+        format_menu.addAction(self.parent().align_right_action)
+        format_menu.addAction(self.parent().align_justify_action)
+        format_menu.addAction(self.parent().indent_action)
+        format_menu.addAction(self.parent().unindent_action)
+        format_menu.addSeparator()
+        # color for toolbar
+        pix = qtg.QPixmap(20, 20)
+        pix.fill(qtc.Qt.GlobalColor.black) 
+        self.text_color_action = qtg.QAction(qtg.QIcon(pix), "Colors", self,
+                triggered=self.parent().textColor)
+        self.text_color_action.setShortcut("Ctrl+Shift+C")
+        self.text_color_action.setStatusTip("Allows users to pick a color of their choice")
+        format_menu.addAction(self.text_color_action)
+        format_menu.addAction(self.parent().font_dialog_action)
+
+        insert_menu = self.menubar.addMenu("Insert")
+        insert_menu.addAction(self.parent().insert_image_action) 
+
+        view_menu = self.menubar.addMenu("View")
+        # fullscreen
+        self.fullscreen_action = qtg.QAction(qtg.QIcon(":/images/fullscreen.png"), "Fullscreen", self)
+        self.fullscreen_action.setShortcut("F11") 
+        self.fullscreen_action.setStatusTip("Toggles the full screen mode")
+        view_menu.addAction(self.fullscreen_action) 
+        self.fullscreen_action.triggered.connect(self.fullscreen)
+        
+        view_menu.addSeparator()
+        view_menu.addAction(self.parent().view_status_action)
+
+    def fullscreen(self):
+        self.showMaxRestore()
+    #####################################################
+    ## TITLE BAR MINIMIZE, MAXIMIZE, CLOSE METHODS
+    #####################################################
+    def onClickClose(self):
+        main.close()
+            
+    def onClickHide(self):
+        main.showMinimized()
+
+    def showMaxRestore(self):
+        # QWidget.showNormal() # https://doc.qt.io/qt-6/qwidget.html#showNormal
+        #-- Restores the widget after it has been maximized or minimized.
+        if(self.maximizedWindow):
+            # self.prevGeo = self.geometry() 
+            main.showNormal()
+            self.maximizedWindow = False
+            self.maxButton.setStyleSheet(self.nav_maximize)
+        else:
+        # QWidget.showMaximized() # https://doc.qt.io/qt-6/qwidget.html#showMaximized
+        #-- Shows the widget maximized.
+            self.prevGeo = self.geometry() # save current window geometry. this helps with centering the mouse cursor in the titlebar
+            main.showMaximized()
+            self.maximizedWindow = True
+            self.maxButton.setStyleSheet(self.nav_normal)
+    
+    # EVENT FUNCTIONS
+    # window will maximize if mouse cursor is positioned at less then 10 pixels in y-coordinate
+    def mouseReleaseEvent(self, event):
+        if event.globalPosition().toPoint().y() < 10:
+            self.showMaxRestore() # maximize window
+
+    def mousePressEvent(self, event):
+        # getting previous mouse x and y coordinates
+        self.prevMousePos = event.scenePosition() # coordinates of prev mouse position
+        # print("previous mouse pos",self.prevMousePos)
+        self.pressing = True
+        
+        if event.type() == qtc.QEvent.Type.MouseButtonDblClick:
+            self.showMaxRestore()
+
+    def mouseMoveEvent(self, event): # this is responsible for the mouse drag on title bar
+
+        if(self.maximizedWindow): 
+        # if the window is moved while maximized, 
+        # it is automatically returned to its normal state upon mouse drag
+                main.showNormal()
+                self.maximizedWindow= False
+                self.maxButton.setStyleSheet(self.nav_maximize)
+                # mouse cursor re-positioning on the window
+                self.prevMousePos = qtc.QPointF((self.prevGeo.width()*.5), (self.prevGeo.height()*.5)) # setting the mouse position to be exactly at the center of the titlebar
+
+        if self.pressing: # this is for moving the window
+            # GLOBAL POSITION: https://stackoverflow.com/questions/67723421/deprecationwarning-function-when-moving-app-removed-titlebar-pyside6
+            mousePosition = event.globalPosition()
+            print("mousePosition",mousePosition)
+            pos = mousePosition-self.prevMousePos
+            # "toPoint()" rounds the the float value of QPointF to the nearest integer
+            x = pos.toPoint().x()
+            y = pos.toPoint().y() 
+            main.move(x,y) # .move() only accepts integer values that's why we use .toPoint()
+
+      
+    #####################################################
+    ##                      END
+    #####################################################
 
 
 class MainWindow(qtw.QMainWindow):
     def __init__(self):
-        super().__init__()
+        super(MainWindow, self).__init__()
         
-        # BLUR EXPERIMENT
-        # self.setAttribute(qtc.Qt.WA_TranslucentBackground)
-        # hWnd = self.winId()
-        # blur(hWnd)
-        # self.setWindowOpacity(0.98)
         self.filename = ""
         self.changesSaved = False
         self.current_editor = self.create_editor()
         self.current_editor.setFocus()
         self.text_editors = []
 
-        # self.setContentsMargins(qtc.QMargins())
-
         self.statusbar = self.statusBar()
-        self.statusbar.showMessage("Ready") 
+        self.statusbar.showMessage("Ready")
 
-        self.tabs = qtw.QTabWidget(self)
+        self.current_editor = self.create_editor()
+        self.current_editor.setFocus()
+        self.text_editors = []
+
+        # WINDOW FLAGS: https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-windowflags-example.html?highlight=windowminimizebuttonhint
+        self.setMinimumSize(435,500)
+        self.setMaximumSize(715,545)
+        self.resize(715,545)
+        self.setWindowFlags(qtc.Qt.WindowType.FramelessWindowHint|
+                            qtc.Qt.WindowType.WindowMaximizeButtonHint|
+                            qtc.Qt.WindowType.WindowMinimizeButtonHint   
+                            )
+
+        self.title_bar  = TitleBar(self)
+        self.tabs = qtw.QTabWidget()
         self.tabs.setTabsClosable(True)
-        # self.tabs.setDocumentMode(True) # let's you double click tab bar to create new tabs
-        # self.tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
+        self.tabs.tabBar().setMovable(True)
         self.tabs.tabCloseRequested.connect(self.remove_editor)
         self.tabs.currentChanged.connect(self.change_text_editor)
         self.tabs.tabBar().setMovable(True)
-        self.setStyleSheet(self.myStyleSheet())
-        self.setCentralWidget(self.tabs)
-
+        
+        self._createToolBars()
+        
+        # Cannot set QxxLayout directly on the QMainWindow
+        # Need to create a QWidget and set it as the central widget
+        widget = qtw.QWidget()
+        layout = qtw.QVBoxLayout()
+        layout.setContentsMargins(0,0,0,0)
+        layout.addWidget(self.title_bar,1)
+        layout.addWidget(self.file_toolbar,2) 
+        layout.addWidget(self.edit_toolbar,3)
+        layout.addWidget(self.tabs,4)
+        layout.setSpacing(0) 
+        widget.setLayout(layout)
+     
+        self.setCentralWidget(widget)
         self.new_tab()
         self.closeTab()
         self._createActions()
-        self._createMenuBar()
         self._connectActions()
-        self._createToolBars()
-    
-    
-    def _createActions(self):
-        # FILE MENU
-        self.new_action = qtw.QAction(qtg.QIcon(":/images/new_file.png"),"New", self)
-        self.open_action = qtw.QAction(qtg.QIcon(":/images/folder.png"),"Open", self)
-        self.save_action = qtw.QAction(qtg.QIcon(":/images/save.png"),"Save", self)
-        self.exit_action = qtw.QAction(qtg.QIcon(":/images/close.png"), "Exit", self)
-        self.export_as_odt_action = qtw.QAction(qtg.QIcon(":/images/odt.png"), "Export as OpenOffice Document", self)
-        self.export_as_pdf_action = qtw.QAction(qtg.QIcon(":/images/pdf.png"), "Export as PDF Document", self)
-        self.print_action = qtw.QAction(qtg.QIcon(":/images/print.png"), "Print Document", self)
-        self.preview_action = qtw.QAction(qtg.QIcon(":/images/preview.png"), "Page View", self)
+
+    def _createToolBars(self):
+        # File toolbar
+        self.file_toolbar = self.addToolBar("File")
+        self.file_toolbar.setIconSize(qtc.QSize(22,22))
+        # file_toolbar.setMovable(False)
+        self.file_toolbar.addAction(self.new_action)
+        self.file_toolbar.addAction(self.open_action)
+        self.file_toolbar.addAction(self.save_action)
+        
+        # print 
+        self.file_toolbar.addAction(self.print_action)
+        self.file_toolbar.addAction(self.preview_action)
+
+        # export pdf and odt
+        self.file_toolbar.addAction(self.export_as_odt_action)
+        self.file_toolbar.addAction(self.export_as_pdf_action)
+   
+
+        # Select all, cut, copy, paste toolbar
+        self.file_toolbar.addAction(self.select_all_action)
+        self.file_toolbar.addAction(self.cut_action)
+        self.file_toolbar.addAction(self.copy_action)
+        self.file_toolbar.addAction(self.paste_action)
+
+        # undo redo
+        self.file_toolbar.addAction(self.undo_action)
+        self.file_toolbar.addAction(self.redo_action)
+
+        # Insert 
+        self.file_toolbar.addAction(self.insert_image_action)
+
+        self.addToolBarBreak()
+
+        self.edit_toolbar = self.addToolBar("Edit")
+        self.edit_toolbar.setIconSize(qtc.QSize(20,20))
+        # Alignment 
+        self.edit_toolbar.addAction(self.align_left_action)
+        self.edit_toolbar.addAction(self.align_center_action)
+        self.edit_toolbar.addAction(self.align_right_action)
+        self.edit_toolbar.addAction(self.align_justify_action)
+        self.edit_toolbar.addAction(self.indent_action)
+        self.edit_toolbar.addAction(self.unindent_action)
+        
+        # font
+        self.edit_toolbar.addAction(self.strike_out_text_action)
+        self.edit_toolbar.addAction(self.bold_text_action)
+        self.edit_toolbar.addAction(self.italic_text_action)
+        self.edit_toolbar.addAction(self.underline_text_action)
+       
+        self.edit_toolbar.addAction(self.superscript_text_action)
+        self.edit_toolbar.addAction(self.subscript_text_action)
+        self.edit_toolbar.addAction(self.bullet_list_action)
+        self.edit_toolbar.addAction(self.number_list_action)
+
+        self.combo_font = qtw.QFontComboBox(self.edit_toolbar)
+        self.combo_font.setCurrentFont(qtg.QFont("Consolas"))
+        self.edit_toolbar.addWidget(self.combo_font)
+        self.combo_font.textActivated.connect(self.text_family)
+   
+        # prevent letter inputs in the font size combobox
+        validator = qtg.QIntValidator()
+        self._combo_size = qtw.QComboBox(self.edit_toolbar)
+        self.edit_toolbar.addSeparator()
+        self._combo_size.setObjectName("_combo_size")
+        self.edit_toolbar.addWidget(self._combo_size)
+        self._combo_size.setEditable(True)
+        self._combo_size.setValidator(validator)
+
+        # getting all the valid font sizes from QFontDatabase
+        standard_sizes = qtg.QFontDatabase.standardSizes()
+        for size in standard_sizes:
+            self._combo_size.addItem("%s" % (size))
+            self._combo_size.activated.connect(self.textSize)
+            self._combo_size.setCurrentIndex(
+                    self._combo_size.findText( 
+                            "%s" % (qtw.QApplication.font().pointSize())))                    
+            self.addToolBar(self.edit_toolbar)
+        
+        # color for toolbar
+        self.edit_toolbar.addAction(self.color_action)
+  
+        # magnify_toolbar = self.addToolBar("Magnify") 
+        # magnify_toolbar.setIconSize(qtc.QSize(25,25))
+        # magnify_toolbar.setMovable(False)
+        # magnify_toolbar.addAction(self.zoom_in_action)
+        # magnify_toolbar.addAction(self.zoom_out_action)
+        # magnify_toolbar.addAction(self.zoom_default_action)
+        
+    def _createActions(self): 
+         # FILE MENU
+        self.new_action = qtg.QAction(qtg.QIcon(":/images/new_file.png"),"New", self)
+        self.open_action = qtg.QAction(qtg.QIcon(":/images/folder.png"),"Open", self)
+        self.save_action = qtg.QAction(qtg.QIcon(":/images/save.png"),"Save", self)
+        self.exit_action = qtg.QAction(qtg.QIcon(":/images/close.png"), "Exit", self)
+        self.export_as_odt_action = qtg.QAction(qtg.QIcon(":/images/odt.png"), "Export as OpenOffice Document", self)
+        self.export_as_pdf_action = qtg.QAction(qtg.QIcon(":/images/pdf.png"), "Export as PDF Document", self)
+        self.print_action = qtg.QAction(qtg.QIcon(":/images/print.png"), "Print Document", self)
+        self.preview_action = qtg.QAction(qtg.QIcon(":/images/preview.png"), "Page View", self)
 
         self.new_action.setShortcut("Ctrl+N")
         self.open_action.setShortcut("Ctrl+O")
@@ -138,12 +425,12 @@ class MainWindow(qtw.QMainWindow):
         self.preview_action.setStatusTip("Preview page before printing")
 
         # EDIT MENU
-        self.select_all_action = qtw.QAction(qtg.QIcon(":/images/select_all.png"), "Select All", self)
-        self.cut_action = qtw.QAction(qtg.QIcon(":/images/cut.png"), "Cut", self)
-        self.copy_action = qtw.QAction(qtg.QIcon(":/images/copy.png"), "Copy", self)
-        self.paste_action = qtw.QAction(qtg.QIcon(":/images/paste.png"), "Paste", self)
-        self.undo_action = qtw.QAction(qtg.QIcon(":/images/undo.png"), "Undo", self)
-        self.redo_action = qtw.QAction(qtg.QIcon(":/images/redo.png"), "Redo", self)
+        self.select_all_action = qtg.QAction(qtg.QIcon(":/images/select_all.png"), "Select All", self)
+        self.cut_action = qtg.QAction(qtg.QIcon(":/images/cut.png"), "Cut", self)
+        self.copy_action = qtg.QAction(qtg.QIcon(":/images/copy.png"), "Copy", self)
+        self.paste_action = qtg.QAction(qtg.QIcon(":/images/paste.png"), "Paste", self)
+        self.undo_action = qtg.QAction(qtg.QIcon(":/images/undo.png"), "Undo", self)
+        self.redo_action = qtg.QAction(qtg.QIcon(":/images/redo.png"), "Redo", self)
         
         self.select_all_action.setShortcut("Ctrl+A")
         self.cut_action.setShortcut("Ctrl+X")
@@ -159,33 +446,40 @@ class MainWindow(qtw.QMainWindow):
         self.undo_action.setStatusTip("Undo the previous operation")
         self.redo_action.setStatusTip("Redo the previous operation")
 
+        self.select_all_action.setStatusTip("Selects all texts")
+        self.cut_action.setStatusTip("Cuts the selected text and copies it to the clipboard")
+        self.copy_action.setStatusTip("Copies the selected text to the clipboard")
+        self.paste_action.setStatusTip("Pastes the clipboard text into the text editor")
+        self.undo_action.setStatusTip("Undo the previous operation")
+        self.redo_action.setStatusTip("Redo the previous operation")
+
         # MISC MENU
-        self.insert_image_action = qtw.QAction(qtg.QIcon(":/images/insert_image.png"),"Insert image",self)
+        self.insert_image_action = qtg.QAction(qtg.QIcon(":/images/insert_image.png"),"Insert image",self)
         self.insert_image_action.setStatusTip("Insert image")
         self.insert_image_action.setShortcut("Ctrl+Shift+I")
         
         # FORMAT MENU
-        self.bold_text_action = qtw.QAction(qtg.QIcon(":/images/bold.png"), "Bold", self)
-        self.italic_text_action = qtw.QAction(qtg.QIcon(":/images/italic.png"), "Italic", self)
-        self.underline_text_action = qtw.QAction(qtg.QIcon(":/images/underline.png"), "Underline", self)
-        self.strike_out_text_action = qtw.QAction(qtg.QIcon(":/images/strikeout.png"), "Strikeout", self)
-        self.superscript_text_action = qtw.QAction(qtg.QIcon(":/images/superscript.png"), "Superscript", self)
-        self.subscript_text_action = qtw.QAction(qtg.QIcon(":/images/subscript.png"), "Subscript", self)
-        self.align_left_action = qtw.QAction(qtg.QIcon(":/images/left_align.png"), "Align Left", self)
-        self.align_right_action = qtw.QAction(qtg.QIcon(":/images/right_align.png"), "Align Right", self)
-        self.align_center_action = qtw.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
-        self.align_justify_action = qtw.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
-        self.indent_action = qtw.QAction(qtg.QIcon(":/images/indent.png"), "Indent", self)
-        self.unindent_action = qtw.QAction(qtg.QIcon(":/images/unindent.png"), "Unindent", self)
+        self.bold_text_action = qtg.QAction(qtg.QIcon(":/images/bold.png"), "Bold", self)
+        self.italic_text_action = qtg.QAction(qtg.QIcon(":/images/italic.png"), "Italic", self)
+        self.underline_text_action = qtg.QAction(qtg.QIcon(":/images/underline.png"), "Underline", self)
+        self.strike_out_text_action = qtg.QAction(qtg.QIcon(":/images/strikeout.png"), "Strikeout", self)
+        self.superscript_text_action = qtg.QAction(qtg.QIcon(":/images/superscript.png"), "Superscript", self)
+        self.subscript_text_action = qtg.QAction(qtg.QIcon(":/images/subscript.png"), "Subscript", self)
+        self.align_left_action = qtg.QAction(qtg.QIcon(":/images/left_align.png"), "Align Left", self)
+        self.align_right_action = qtg.QAction(qtg.QIcon(":/images/right_align.png"), "Align Right", self)
+        self.align_center_action = qtg.QAction(qtg.QIcon(":/images/center_align.png"), "Align Center", self)
+        self.align_justify_action = qtg.QAction(qtg.QIcon(":/images/justify.png"), "Align Justify", self)
+        self.indent_action = qtg.QAction(qtg.QIcon(":/images/indent.png"), "Indent", self)
+        self.unindent_action = qtg.QAction(qtg.QIcon(":/images/unindent.png"), "Unindent", self)
 
-        self.color_action = qtw.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
-        self.font_dialog_action = qtw.QAction(qtg.QIcon(":/images/text.png"), "Default Font", self)
-        self.number_list_action = qtw.QAction(qtg.QIcon(":/images/number_list.png"), "Numbering", self)
-        self.bullet_list_action = qtw.QAction(qtg.QIcon(":/images/bullet_list.png"), "Bullets", self)
+        self.color_action = qtg.QAction(qtg.QIcon(":/images/colour.png"), "Colors", self)
+        self.font_dialog_action = qtg.QAction(qtg.QIcon(":/images/text.png"), "Default Font", self)
+        self.number_list_action = qtg.QAction(qtg.QIcon(":/images/number_list.png"), "Numbering", self)
+        self.bullet_list_action = qtg.QAction(qtg.QIcon(":/images/bullet_list.png"), "Bullets", self)
 
-        # self.zoom_in_action = qtw.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
-        # self.zoom_out_action = qtw.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
-        # self.zoom_default_action = qtw.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
+        # self.zoom_in_action = qtg.QAction(qtg.QIcon(":/images/zoom_in.png"), "Zoom In", self)
+        # self.zoom_out_action = qtg.QAction(qtg.QIcon(":/images/zoom_out.png"), "Zoom Out", self)
+        # self.zoom_default_action = qtg.QAction(qtg.QIcon(":/images/reset.png"), "Restore", self)
 
         self.bold_text_action.setShortcut("Ctrl+B")
         self.italic_text_action.setShortcut("Ctrl+I")
@@ -227,78 +521,12 @@ class MainWindow(qtw.QMainWindow):
         # self.zoom_default_action.setStatusTip("Restore to the default font size")
 
         # VIEW MENU
-        self.fullscreen_action = qtw.QAction(qtg.QIcon(":/images/fullscreen.png"), "Fullscreen", self)
-        self.view_status_action = qtw.QAction('Show Statusbar', self, checkable=True)
-        
-        self.fullscreen_action.setShortcut("F11")
+        self.view_status_action = qtg.QAction('Show Statusbar', self, checkable=True)
         self.view_status_action.setShortcut("")
-
-        self.fullscreen_action.setStatusTip("Toggles the full screen mode")
         self.view_status_action.setStatusTip('Toggle the status bar to be visible or not')
         self.view_status_action.setChecked(True)
-      
-    def _createMenuBar(self):
-        self.menubar = self.menuBar()
-        file_menu = self.menubar .addMenu("File")
-        file_menu.addAction(self.new_action)
-        file_menu.addAction(self.open_action)
-        file_menu.addAction(self.save_action)
-        file_menu.addSeparator()
-        file_menu.addAction(self.export_as_odt_action)
-        file_menu.addAction(self.export_as_pdf_action)
-        file_menu.addSeparator()
-        file_menu.addAction(self.print_action)
-        file_menu.addAction(self.preview_action)
-        file_menu.addSeparator()
-        file_menu.addAction(self.exit_action)
 
-        edit_menu = self.menubar.addMenu("Edit")
-        edit_menu.addAction(self.select_all_action)
-        edit_menu.addSeparator()
-        edit_menu.addAction(self.cut_action)
-        edit_menu.addAction(self.copy_action)
-        edit_menu.addAction(self.paste_action)
-        edit_menu.addSeparator()
-        edit_menu.addAction(self.undo_action)
-        edit_menu.addAction(self.redo_action)
 
-        format_menu = self.menubar.addMenu("Format")
-        format_menu.addAction(self.strike_out_text_action)
-        format_menu.addAction(self.bold_text_action)
-        format_menu.addAction(self.italic_text_action)
-        format_menu.addAction(self.underline_text_action)
-        format_menu.addSeparator()
-        format_menu.addAction(self.superscript_text_action)
-        format_menu.addAction(self.subscript_text_action)
-        format_menu.addSeparator()
-        format_menu.addAction(self.number_list_action)
-        format_menu.addAction(self.bullet_list_action)
-        format_menu.addSeparator()
-        format_menu.addAction(self.align_left_action)
-        format_menu.addAction(self.align_center_action)
-        format_menu.addAction(self.align_right_action)
-        format_menu.addAction(self.align_justify_action)
-        format_menu.addAction(self.indent_action)
-        format_menu.addAction(self.unindent_action)
-        format_menu.addSeparator()
-        # color for toolbar
-        pix = qtg.QPixmap(20, 20)
-        pix.fill(qtc.Qt.black) 
-        self.text_color_action = qtw.QAction(qtg.QIcon(pix), "Colors", self,
-                triggered=self.textColor)
-        self.text_color_action.setShortcut("Ctrl+Shift+C")
-        self.text_color_action.setStatusTip("Allows users to pick a color of their choice")
-        format_menu.addAction(self.text_color_action)
-        format_menu.addAction(self.font_dialog_action)
-
-        insert_menu = self.menubar.addMenu("Insert")
-        insert_menu.addAction(self.insert_image_action) 
-
-        view_menu = self.menubar.addMenu("View")
-        view_menu.addAction(self.fullscreen_action) 
-        view_menu.addSeparator()
-        view_menu.addAction(self.view_status_action)
-       
     def _connectActions(self):
         # Connect File actions
         self.new_action.triggered.connect(self.new_tab)
@@ -317,9 +545,6 @@ class MainWindow(qtw.QMainWindow):
         self.paste_action.triggered.connect(self.paste_document)
         self.undo_action.triggered.connect(self.undo_document)
         self.redo_action.triggered.connect(self.redo_document)
-
-        # Connect Format actions
-        self.fullscreen_action.triggered.connect(self.fullscreen)
 
         # Connect Insert actions
         self.insert_image_action.triggered.connect(self.insert_image)
@@ -367,123 +592,11 @@ class MainWindow(qtw.QMainWindow):
         self.font_dialog_action.triggered.connect( self.font_dialog)
         self.view_status_action.triggered.connect(self.toggle_menu)
 
-
-    def _createToolBars(self):
-        # File toolbar
-        file_toolbar = self.addToolBar("File")
-        file_toolbar.setIconSize(qtc.QSize(22,22))
-        # file_toolbar.setMovable(False)
-        file_toolbar.addAction(self.new_action)
-        file_toolbar.addAction(self.open_action)
-        file_toolbar.addAction(self.save_action)
-
-        # print toolbar
-        print_toolbar = self.addToolBar("Print")
-        print_toolbar.setIconSize(qtc.QSize(22,22))
-        print_toolbar.setMovable(False)
-        print_toolbar.addAction(self.print_action)
-        print_toolbar.addAction(self.preview_action)
-
-        # export pdf and odt
-        export_toolbar = self.addToolBar("Export")
-        export_toolbar.setIconSize(qtc.QSize(25,25))
-        # export_toolbar.setMovable(False)
-        export_toolbar.addAction(self.export_as_odt_action)
-        export_toolbar.addAction(self.export_as_pdf_action)
-   
-
-        # Select all, cut, copy, paste toolbar
-        clipboard_toolbar = self.addToolBar("Clipboard")
-        clipboard_toolbar.setIconSize(qtc.QSize(25,25))
-        # clipboard_toolbar.setMovable(False)
-        clipboard_toolbar.addAction(self.select_all_action)
-        clipboard_toolbar.addAction(self.cut_action)
-        clipboard_toolbar.addAction(self.copy_action)
-        clipboard_toolbar.addAction(self.paste_action)
-
-        # Select all, cut, copy, paste toolbar
-        undo_redo_toolbar = self.addToolBar("Undo Redo")
-        undo_redo_toolbar.setIconSize(qtc.QSize(28,28))
-        # undo_redo_toolbar.setMovable(False)
-        undo_redo_toolbar.addAction(self.undo_action)
-        undo_redo_toolbar.addAction(self.redo_action)
-
-        # Insert toolbar
-        insert_toolbar = self.addToolBar("Insert")
-        insert_toolbar.setIconSize(qtc.QSize(23,23))
-        # insert_toolbar.setMovable(False)
-        insert_toolbar.addAction(self.insert_image_action)
-
-        self.addToolBarBreak()
-
-        # Alignment toolbar
-        alignment_toolbar = self.addToolBar("Alignment") 
-        alignment_toolbar.setIconSize(qtc.QSize(20,20))
-        # alignment_toolbar.setMovable(False)
-        alignment_toolbar.addAction(self.align_left_action)
-        alignment_toolbar.addAction(self.align_center_action)
-        alignment_toolbar.addAction(self.align_right_action)
-        alignment_toolbar.addAction(self.align_justify_action)
-        alignment_toolbar.addAction(self.indent_action)
-        alignment_toolbar.addAction(self.unindent_action)
-        
-        font_weight_toolbar = self.addToolBar("Font Weight") 
-        font_weight_toolbar.setIconSize(qtc.QSize(18,18))
-        # font_weight_toolbar.setMovable(False)
-        font_weight_toolbar.addAction(self.strike_out_text_action)
-        font_weight_toolbar.addAction(self.bold_text_action)
-        font_weight_toolbar.addAction(self.italic_text_action)
-        font_weight_toolbar.addAction(self.underline_text_action)
-       
-        font_weight_toolbar.addAction(self.superscript_text_action)
-        font_weight_toolbar.addAction(self.subscript_text_action)
-        font_weight_toolbar.addAction(self.bullet_list_action)
-        font_weight_toolbar.addAction(self.number_list_action)
-
-        self.font_toolbar = qtw.QToolBar(self)
-        self.font_toolbar.setIconSize(qtc.QSize(20,20))
-        # self.font_toolbar.setMovable(False)
-        self.combo_font = qtw.QFontComboBox(self.font_toolbar)
-        self.combo_font.setCurrentFont(qtg.QFont("Consolas"))
-        self.font_toolbar.addWidget(self.combo_font)
-        self.combo_font.textActivated.connect(self.text_family)
-   
-        # prevent letter inputs in the font size combobox
-        validator = qtg.QIntValidator()
-        self.comboSize = qtw.QComboBox(self.font_toolbar)
-        self.font_toolbar.addSeparator()
-        self.comboSize.setObjectName("comboSize")
-        self.font_toolbar.addWidget(self.comboSize)
-        self.comboSize.setEditable(True)
-        self.comboSize.setValidator(validator)
-
-        # getting all the valid font sizes from QFontDatabase
-        fontDatabase = qtg.QFontDatabase()
-        for size in fontDatabase.standardSizes():
-            self.comboSize.addItem("%s" % (size))
-            self.comboSize.activated[str].connect(self.textSize)
-            self.comboSize.setCurrentIndex(
-                    self.comboSize.findText( 
-                            "%s" % (qtw.QApplication.font().pointSize())))                    
-            self.addToolBar(self.font_toolbar)
-        
-        # color for toolbar
-        self.font_toolbar.addAction(self.color_action)
-  
-        # magnify_toolbar = self.addToolBar("Magnify") 
-        # magnify_toolbar.setIconSize(qtc.QSize(25,25))
-        # magnify_toolbar.setMovable(False)
-        # magnify_toolbar.addAction(self.zoom_in_action)
-        # magnify_toolbar.addAction(self.zoom_out_action)
-        # magnify_toolbar.addAction(self.zoom_default_action)
-    
-
-
     def create_editor(self):
         current_editor = qtw.QTextEdit()
         # Set the tab stop width to around 33 pixels which is
         # about 8 spaces
-        current_editor.setTabStopWidth(33)
+        current_editor.setTabStopDistance(33)
         return current_editor
 
     def change_text_editor(self, index):
@@ -491,34 +604,34 @@ class MainWindow(qtw.QMainWindow):
             self.current_editor = self.text_editors[index]
 
     def remove_editor(self, index):
-        if self.tabs.count() < 2:
-            return
-        
+        if self.tabs.count() < 2: 
+            return True
+
         self.tabs.removeTab(index)
         if index < len(self.text_editors):
             del self.text_editors[index]
-
-    def closeTab(self):
-        close_tab = qtw.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
+        
+    def closeTab(self): 
+        close_tab = qtg.QShortcut(qtg.QKeySequence("Ctrl+W"), self)
         close_tab.activated.connect(lambda:self.remove_editor(self.tabs.currentIndex()))
-    
-    # def tab_open_doubleclick(self, index):
-    #     if index == -1:
-    #         self.new_tab()
+
+    def close(self): # close entire program
+        qtw.QApplication.quit()
 
     def new_tab(self, checked = False, title = "Untitled.txt"):
+        self.widget = qtw.QMainWindow()
+        self.tabs.addTab(self.widget, title)
+        self.tabs.setCurrentWidget(self.current_editor) # set the current tab selected as current widget
+        
         self.current_editor = self.create_editor() # create a QTextEdit
-        self.text_editors.append(self.current_editor) # add current editor id to the array list 
-        self.tabs.addTab(self.current_editor, title)
-        self.tabs.setCurrentWidget(self.current_editor) # set the currently tab selected as current widget
-
+        self.text_editors.append(self.current_editor) # add current editor to the array list 
+        self.widget.setCentralWidget(self.current_editor)
+    
     def open_document(self):
         options = qtw.QFileDialog.Options()
-        # Get filename and show only .notes files
-        #PYQT5 Returns a tuple in PyQt5, we only need the following filenames
         self.filename, _ = qtw.QFileDialog.getOpenFileName(
             self, 'Open File',".",
-            "(*.notes);;Text Files (*.txt);;Python Files (*.py)",
+            "Text Files (*.txt);;Python Files (*.py)",
             options=options
         )
         if self.filename:
@@ -550,9 +663,76 @@ class MainWindow(qtw.QMainWindow):
                     print(str(self.filename))
                     self.tabs.setTabText(self.tabs.currentIndex(), str(self.filename)) # renames the current tabs with the filename
                     self.statusBar().showMessage(f"Saved to {self.filename}")
-                    
                 self.changesSaved = True
+        
+    
+    def export_as_odt(self):
+            if not self.current_editor.document().isModified():
+                self.statusBar().showMessage("There are no texts to export!")
+                # Append extension if not there yet
+            else:
+                filename, _ = qtw.QFileDialog.getSaveFileName(self, "Export as OpenOffice Document", self.strippedName(self.filename).replace(".html",""),
+                    "OpenOffice document (*.odt)")
+                if not filename:
+                    return False
+                lfn = filename.lower()
+                if not lfn.endswith(('.odt')):
+                    filename += '.odt'
+                return self.file_export_odt(filename)
 
+    def export_as_pdf(self): 
+        if not self.current_editor.document().isModified():
+            self.statusBar().showMessage("There are no texts to export!")
+        else:
+            file_dialog = qtw.QFileDialog(self, "Export PDF")
+            file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
+            file_dialog.setMimeTypeFilters(["application/pdf"])
+            file_dialog.setDefaultSuffix("pdf")
+            if file_dialog.exec() != qtw.QDialog.Accepted:
+                return
+            pdf_file_name = file_dialog.selectedFiles()[0]
+            printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
+            printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
+            printer.setOutputFileName(pdf_file_name)
+            self.current_editor.document().print_(printer)
+            native_fn = qtc.QDir.toNativeSeparators(pdf_file_name)
+            self.changesSaved = True
+            self.statusBar().showMessage(f'Exported "{native_fn}"')
+            self.tabs.setTabText(self.tabs.currentIndex(), str(native_fn)) # renames the current tabs with the filename
+
+    def print_handler(self):
+
+        # Open printing dialog
+        dialog = QtPrintSupport.QPrintDialog()
+        if dialog.exec() == qtw.QDialog.Accepted:
+            self.current_editor.document().print_(dialog.printer())
+
+    def preview(self):
+
+        # Open preview dialog
+        preview = QtPrintSupport.QPrintPreviewDialog()
+        # If a print is requested, open print dialog
+        preview.paintRequested.connect(lambda p: self.current_editor.print_(p))
+        preview.exec()
+    
+    def select_all_document(self): 
+        self.current_editor.selectAll()
+
+    def cut_document(self): 
+        self.current_editor.cut()
+
+    def copy_document(self): 
+        self.current_editor.copy()
+
+    def paste_document(self): 
+        self.current_editor.paste()
+    
+    def undo_document(self): 
+        self.current_editor.undo()
+
+    def redo_document(self): 
+        self.current_editor.redo()
+      
     def insert_image(self):
         # Get image file name
         #PYQT5 Returns a tuple in PyQt5
@@ -671,7 +851,7 @@ class MainWindow(qtw.QMainWindow):
         self.text_color_action.setIcon(qtg.QIcon(pix))
 
     def textSize(self, pointSize):
-        pointSize = int(self.comboSize.currentText())
+        pointSize = int(self._combo_size.currentText())
         if pointSize > 0:
             fmt = qtg.QTextCharFormat()
             fmt.setFontPointSize(pointSize)
@@ -680,7 +860,7 @@ class MainWindow(qtw.QMainWindow):
     def mergeFormatOnWordOrSelection(self, format):
         cursor = self.current_editor.textCursor()
         if not cursor.hasSelection(): 
-            cursor.select(qtg.QTextCursor.WordUnderCursor)
+            cursor.select(qtg.QTextCursor.SelectionType.WordUnderCursor)
         cursor.mergeCharFormat(format)
         self.current_editor.mergeCurrentCharFormat(format)
 
@@ -754,9 +934,6 @@ class MainWindow(qtw.QMainWindow):
         # Insert list with numbers
         cursor.insertList(qtg.QTextListFormat.ListDecimal)
     
-
-   
-
     def export_as_odt(self):
             if not self.current_editor.document().isModified():
                 self.statusBar().showMessage("There are no texts to export!")
@@ -844,11 +1021,7 @@ class MainWindow(qtw.QMainWindow):
         self.current_editor.setAlignment(qtc.Qt.AlignLeft)
         self.current_editor.setFocus()
     
-    def fullscreen(self):
-        if not self.isFullScreen():
-            self.showFullScreen()
-        else :
-            self.showMaximized()
+
     
     # def increment_font_size(self):
     #     self.counterFontSize +=1
@@ -868,7 +1041,7 @@ class MainWindow(qtw.QMainWindow):
     #     font.setPointSize(int(self.defaultFontSize))  
     #     self.current_editor.setFont(font)                          
     #     self.counterFontSize = self.defaultFontSize
-    #     self.comboSize.setCurrentText(str(self.counterFontSize))
+    #     self._combo_size.setCurrentText(str(self.counterFontSize))
 
     def toggle_menu(self, state):
             if state:
@@ -898,47 +1071,34 @@ class MainWindow(qtw.QMainWindow):
             if reply == qtw.QMessageBox.Cancel:
                 return False
             return True
-    
-    
-    def myStyleSheet(self): # css guide: https://doc.qt.io/qt-6/stylesheet-reference.html
-        return """
-            QMainWindow{ background: #1c2028; border-style: none;}
-            QStatusBar { color: #BFBDB6; background: #1c2028; }
-            QMenuBar::item:pressed {  color: #BFBDB6; background: #1c2028; }
-            QMenuBar::item { color: #BFBDB6; background: #1c2028; }
-         
-            QTextEdit QMenu::item {color: #ffb454; font-weight: normal}
-            QTextEdit
-            {
-                border: none;
-                font: "Consolas";
-                color: #BFBDB6;
-                background: #161a21;
-                selection-background-color: #ffb454;
-                selection-color: #000000;
-            }
 
-            QMenuBar
-            {
-                color: #BFBDB6;
-                background: #1c2028;
-                border: none;
-                border-style: none;
-            }
 
-            QMenuBar::item:selected 
-            { 
-                color: #BFBDB6;
-                background: #1c2028; 
-            } 
-
-            QToolBar
-            {
-                background: #1c2028;
-                border: none;
-                border-style: none;
-            }
+if __name__ == "__main__":
+    app = qtw.QApplication(sys.argv)
+    app.setStyle(qtw.QStyleFactory.create("Fusion")) # ['windowsvista', 'Windows', 'Fusion']
+    print(qtw.QStyleFactory.keys())
+    # DARKER COLOR OR LIGHTER: https://pinetools.com/darken-color
+    # COLOR READABILITY CHECKER: https://coolors.co/contrast-checker/dfdcd1-1c2028
+    # QPallete documentation: https://doc.qt.io/qt-6/qpalette.html
+    palette = qtg.QPalette()
+    palette.setColor(qtg.QPalette.ColorRole.Window, qtg.QColor("#1c2028")) # general background color
+    palette.setColor(qtg.QPalette.ColorRole.WindowText, qtg.QColor("#BFBDB6")) # for the window title
+    palette.setColor(qtg.QPalette.ColorRole.Button, qtg.QColor("#1c2028")) # overflow buttons color for the qtabbar
+    palette.setColor(qtg.QPalette.ColorRole.Window, qtg.QColor("#1c2028")) # menu border color
+    palette.setColor(qtg.QPalette.ColorRole.Text, qtg.QColor("#BFBDB6")) # menu unhighlited text color
+    palette.setColor(qtg.QPalette.ColorRole.Base, qtg.QColor("#1c2028")) # menu unhighlited bg color
+    palette.setColor(qtg.QPalette.ColorRole.Highlight, qtg.QColor("#0086b6")) # menu mouse hover highlight color 
+    palette.setColor(qtg.QPalette.ColorRole.HighlightedText, qtg.QColor("#000000")) # menu highlighted text color 
+    app.setPalette(palette)
+    main = MainWindow()
+    main.setStyleSheet(
+         """
+            QMainWindow{ background: #161a21; border-style: none;}
+            QStatusBar { color: #BFBDB6; background: #161a21; }
+            QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
+            QMenuBar::item { color: #BFBDB6; background: #161a21; }
             
+            QTabWidget::pane { border: none; }
             QTabBar::tab { border: none; }
             QTabBar::tab:!selected:hover { background: #1c2028; }
             QTabBar::tab:top:!selected { background: #1c2028; }
@@ -962,35 +1122,148 @@ class MainWindow(qtw.QMainWindow):
                 margin-right: -1px;
                 padding: 5px 10px 5px 10px;
             }
-            
+            QTextEdit
+            {
+                border: none;
+                font: "Consolas";
+                color: #BFBDB6;
+                background: #13161d;
+                selection-background-color: #ffb454;
+                selection-color: #000000;
+            }
+            QMenuBar
+            {
+                color: #BFBDB6;
+                background: #161a21;
+                border: none;
+                border-style: none;
+            }
+            QMenuBar::item:selected 
+            { 
+                color: #BFBDB6;
+                background: #161a21; 
+            } 
+            QToolBar
+            {
+                background: #161a21;
+                border: none;
+                border-style: none;
+            }
+            /*  -----------------------------//
+                -  The css below affects the QToolbar buttons (or any QToolButton)
+                -----------------------------//
+            */
+                QToolButton::hover{
+                background-color: #161a21;
+            }
+            /*  ---------- [end] ------------*/
+                QToolButton[accessibleName="btn_max"]{
+                image: url(:/images/nav_normal.png);
+                background: #161a21;
+                border: none;  
+            }
+            QToolButton[accessibleName="btn_max"]:hover{
+                image: url(:/images/colored_normal.png);
+                background: #161a21;
+                border: none;
+            }
+            QToolButton[accessibleName="btn_max"] {
+                image: url(:/images/nav_maximize.png);
+                background: #161a21;
+                border: nobutton_stylene;
+                padding-right: 3px; 
+            }
+            QToolButton[accessibleName="btn_max"]:hover {
+                image: url(:/images/colored_maximize.png);
+                background: #161a21;
+                border: none;
+            }
+            QMenuBar{
+                color: #fff;
+                font: "Consolas";
+                font-size: 14px;
+                padding: 3px; 
+            }
+            QLabel[accessibleName="lbl_title"]{
+                background-color: #161a21; 
+                font-size: 13px;
+                font: "Consolas";
+                padding-right: 425px;
+            }
+            QToolButton[accessibleName="btn_close"] {
+                image: url(:/images/nav_close.png);
+                background: #161a21;
+                border: none;
+            }
+            QToolButton[accessibleName="btn_close"]:hover {
+                image: url(:/images/colored_close.png);
+                background: #161a21;
+                border: none;
+            }    
+            QToolButton[accessibleName="btn_min"] {
+                image: url(:/images/nav_minimize.png);
+                background: #161a21;
+                border: none;
+                padding-right: 3px;
+            }
+            QToolButton[accessibleName="btn_min"]:hover {
+                image: url(:/images/colored_minimize.png);
+                background: #161a21;
+                border: none;
+                padding-right: 3px;
+            }
+            QScrollBar:vertical {
+                border: none;
+                width: 14px;
+                margin: 0px 0 0px 0;
+                background-color: #161a21;
+                border-radius: 0px;
+            }
+            QScrollBar:handle:vertical {
+                background-color: #292c35;
+            }
+            QScrollBar:handle:vertical:hover {
+                background-color: #4c4a4a;
+            }
+            QScrollBar:handle:vertical:pressed {
+                background-color: #5c5b5b;
+            }
+            QScrollBar:horizontal {
+                border: none;
+                height: 14px;
+                margin: 0px 0 0 0;
+                background-color: #161a21;
+                border-radius: 0px;
+            }
+            QScrollBar:handle:horizontal {
+                background-color: #292c35;
+            }
+            QScrollBar:handle:horizontal:hover {
+                background-color: #4c4a4a;
+            }
+            QScrollBar:handle:horizontal:pressed {
+                background-color: #5c5b5b;
+            }
+            /*  -----------------------------//
+                -  The css below removes the QScrollBar's Arrow keys both aesthetically AND functionally
+                -----------------------------//
+            */
+            QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal,
+            QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal{
+                border: none;
+                background-color: none;
+                color: none;
+                width:0px;
+                height:0px;
+            }
+            QScrollBar::sub-line, QScrollBar::add-line{
+                border: none;
+                background-color: none;
+                width:0px;
+                height:0px;
+            }
+            /*  ---------- [end] ----------  */
         """
-
-if __name__ == "__main__":
-    app = qtw.QApplication(sys.argv) 
-    app.setStyle(qtw.QStyleFactory.create("Fusion")) # Oxygen, Windows, Fusion etc.
-    # Now use a palette to switch to dark colors:
-    palette = qtg.QPalette()
-    palette.setColor(qtg.QPalette.Window, qtg.QColor("#161a21"))
-    palette.setColor(qtg.QPalette.WindowText, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.AlternateBase, qtg.QColor("#161a21"))
-    palette.setColor(qtg.QPalette.ToolTipBase, qtc.Qt.black)
-    palette.setColor(qtg.QPalette.ToolTipText, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.Text, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.Button, qtg.QColor("#161a21")) # button color
-    palette.setColor(qtg.QPalette.Base, qtg.QColor("#161a21")) # textedit
-    palette.setColor(qtg.QPalette.ButtonText, qtg.QColor("#BFBDB6"))
-    palette.setColor(qtg.QPalette.BrightText, qtc.Qt.white)
-    palette.setColor(qtg.QPalette.Link, qtg.QColor("#0086b6"))
-    palette.setColor(qtg.QPalette.Highlight, qtg.QColor("#0086b6"))
-    palette.setColor(qtg.QPalette.HighlightedText, qtc.Qt.black)
-    app.setPalette(palette)
-    main = MainWindow()
-    main.resize(710,590)
-    main.setMinimumSize(700,550)
-    main.setWindowTitle(" ") 
-    QPixmap = qtg.QPixmap( 32, 32 )
-    QPixmap.fill( qtc.Qt.transparent ) 
-    main.setWindowIcon(qtg.QIcon(QPixmap))
-    # main.setWindowIcon(qtg.QIcon(":/images/notepad.png"))
+    )
     main.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
