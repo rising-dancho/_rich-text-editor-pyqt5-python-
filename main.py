@@ -1,3 +1,67 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######################
+# NOTE: 
+# here are some resources that may be helpful to those that will inherit the work and love
+# .. that was poured in here. goodluck, my child - adfinem_rising
+#   
+#   GETTING STARTED:                        https://www.youtube.com/watch?v=a7iFHz70J1I&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=7
+#   GETTING STARTED CODING:                 https://doc.qt.io/qtforpython/gettingstarted.html
+#   FINISH THIS:                            https://www.youtube.com/watch?v=e4fwY9ZsxPw&t=3599s
+#   FINDING CODE EXAMPLES:                  https://www.programcreek.com/python/
+#
+#   MINDSET WHEN READING DOCUMENTATION  1:  https://www.freecodecamp.org/news/how-to-read-your-way-to-becoming-a-better-developer-b6432fa5bc0c/ 
+#   MINDSET WHEN READING DOCUMENTATION  2:  https://blog.techtalentsouth.com/8-tips-to-reading-documentation-a-newbies-guide
+#   MINDSET WHEN READING DOCUMENTATION  3:  https://medium.com/@laymanExplained/layman-explained-reading-documentation-36c450e77e6b
+#   MINDSET WHEN READING DOCUMENTATION  4:  https://www.youtube.com/watch?v=lwqeNnboh_4
+#   PRACTICALS ON READING DOCUMENTATION 5:  https://www.youtube.com/watch?v=s1PLS3SQHQ0
+#   SHORT TUTORIAL ON READING DOCS      6:  https://www.youtube.com/watch?v=vYuvEWiffts
+#   
+#   UI GUIDE:                               https://realpython.com/python-menus-toolbars/
+#   TEXT EDITOR GUIDE:                      https://www.binpress.com/building-text-editor-pyqt-1/
+#   QT TEXT EDITOR DOC:                     https://doc.qt.io/qtforpython/examples/example_widgets_richtext_textedit.html
+#   MY TABBED EDITOR:                       https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/_tabbed_texteditor_prototype.py
+#   TEXT EDITOR REFERENCE 1:                https://gist.github.com/Axel-Erfurt/e33608124a4e47167ba76f4d62cba9ca
+#   TEXT EDITOR REFERENCE 2:                https://github.com/goldsborough/Writer
+#   QRC RESOURCES GUIDE:                    https://www.youtube.com/watch?v=zyAQr3VRHLo&list=PLXlKT56RD3kBu2Wk6ajCTyBMkPIGx7O37&index=10
+#   INFO ABOUT SAVING AS DOCX:              https://stackoverflow.com/questions/22959642/pyqt4-how-to-read-a-doc-file-with-all-formatting-settings-using-python
+#   SYNTAX HIGHLIGHTING GUIDE:              https://carsonfarmer.com/2009/07/syntax-highlighting-with-pyqt/
+#   SYNTAX HIGHLIGHTING CODE:               https://github.com/rising-dancho/_notepad-pyqt5-python-/blob/main/_prototype/syntax_highlighter.py
+#   
+#   RECOLORABLE ICONS:                      https://icons8.com/icons/set/list-number
+#   RESIZING IMG TO ICON SIZE:              https://www.img2go.com/resize-image
+#   TRANSPARENT BACKGROUND IMAGES:          https://www.remove.bg/
+#   CREATE YOUR OWN ICONS:                  https://github.com/rising-dancho/custom_minimize_maximize_and_close_window_icons-java-netbeans-
+#
+#   QSCINTILLA DOC:                         https://qscintilla.com/#home
+#   EXECUTING PYTHON SCRIPT:                https://www.pythonguis.com/tutorials/qprocess-external-programs/
+#   QFILEDIALOG:                            https://learndataanalysis.org/source-code-how-to-use-qfiledialog-file-dialog-in-pyqt5/
+#   FUSION DARK THEME:                      https://stackoverflow.com/questions/48256772/dark-theme-for-qt-widgets
+#   CUSTOM TITLE BAR WINDOW:                https://stackoverflow.com/questions/9377914/how-to-customize-title-bar-and-window-of-desktop-application
+#   COMBINED MENUBAR ON TITLEBAR 1:         https://pyquestions.com/pyqt-how-to-create-custom-combined-titlebar-and-menubar
+#   COMBINED MENUBAR ON TITLEBAR 2:         https://github.com/rising-dancho/_rich-text-editor-pyqt5-python-/tree/main/_prototype
+#   TAB QSS STYLE:                          https://gist.github.com/espdev/4f1565b18497a42d317cdf2531b7ef05    
+#   RESIZE ON EDGE DRAG:                    https://stackoverflow.com/questions/64784966/resizing-custom-widget-by-dragging-the-edges-in-pyqt5
+#   BLUR WINDOW:                            https://stackoverflow.com/questions/54807743/transparent-window-with-blur-behind-with-pyqt    
+#   WHITE BORDER ON TAB BAR ISSUE:          https://forum.qt.io/topic/42265/qtabwidget-stylesheet-white-top-border/7
+#   DESIGN CUSTOM BLINKING CURSOR:          https://www.youtube.com/watch?v=9STObkCGq-Y
+#   CHANGING BLINKING CURSOR:               https://stackoverflow.com/questions/55136056/is-it-possible-to-create-a-custom-cursor-using-pyqt
+#   
+#   LIVING LEGENDS:      https://github.com/alandmoore
+#                        https://github.com/eyllanesc
+#                        https://github.com/892768447
+#                        https://github.com/yjg30737
+#                        https://github.com/Axel-Erfurt
+#                        https://github.com/goldsborough
+#                        https://github.com/zhiyiYo
+#                        https://github.com/Fus3n
+#                        https://github.com/marcel-goldschen-ohm
+#                        https://github.com/joshuawillman
+#                        https://github.com/alexpdev
+#                        https://github.com/matkuki
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####################
+
+
+
 # TODO: PySide6/PyQt5 to PyQt6 conversion
 # -> In order to call "Window" or "WindowText" in QPallete, you need to use the enum "ColorRole" 
 #   like this: (QtGui.QPalette.ColorRole.Window) = read here: https://doc.qt.io/qt-6/qpalette.html
@@ -17,7 +81,7 @@
 
 import sys
 from pathlib import Path
-from PyQt6 import QtPrintSupport
+from PyQt6 import QtPrintSupport as qps
 
 from PyQt6 import QtWidgets as qtw
 from PyQt6 import QtCore as qtc
@@ -535,8 +599,8 @@ class MainWindow(qtw.QMainWindow):
         self.exit_action.triggered.connect(self.close)
         self.export_as_odt_action.triggered.connect(self.export_as_odt)
         self.export_as_pdf_action.triggered.connect(self.export_as_pdf)
-        self.print_action.triggered.connect(self.print_handler)
-        self.preview_action.triggered.connect(self.preview)
+        self.print_action.triggered.connect(self.file_print)
+        self.preview_action.triggered.connect(self.file_print_preview)
 
         # Connect Edit actions
         self.select_all_action.triggered.connect(self.select_all_document)
@@ -685,35 +749,20 @@ class MainWindow(qtw.QMainWindow):
             self.statusBar().showMessage("There are no texts to export!")
         else:
             file_dialog = qtw.QFileDialog(self, "Export PDF")
-            file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
+            file_dialog.setAcceptMode(qtw.QFileDialog.AcceptMode.AcceptSave)
             file_dialog.setMimeTypeFilters(["application/pdf"])
             file_dialog.setDefaultSuffix("pdf")
-            if file_dialog.exec() != qtw.QDialog.Accepted:
+            if file_dialog.exec() != qtw.QDialog.DialogCode.Accepted:
                 return
             pdf_file_name = file_dialog.selectedFiles()[0]
-            printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
-            printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
+            printer = qps.QPrinter(qps.QPrinter.PrinterMode.HighResolution)
+            printer.setOutputFormat(qps.QPrinter.OutputFormat.PdfFormat)
             printer.setOutputFileName(pdf_file_name)
-            self.current_editor.document().print_(printer)
+            self.current_editor.document().print(printer)
             native_fn = qtc.QDir.toNativeSeparators(pdf_file_name)
             self.changesSaved = True
             self.statusBar().showMessage(f'Exported "{native_fn}"')
             self.tabs.setTabText(self.tabs.currentIndex(), str(native_fn)) # renames the current tabs with the filename
-
-    def print_handler(self):
-
-        # Open printing dialog
-        dialog = QtPrintSupport.QPrintDialog()
-        if dialog.exec() == qtw.QDialog.Accepted:
-            self.current_editor.document().print_(dialog.printer())
-
-    def preview(self):
-
-        # Open preview dialog
-        preview = QtPrintSupport.QPrintPreviewDialog()
-        # If a print is requested, open print dialog
-        preview.paintRequested.connect(lambda p: self.current_editor.print_(p))
-        preview.exec()
     
     def select_all_document(self): 
         self.current_editor.selectAll()
@@ -815,20 +864,22 @@ class MainWindow(qtw.QMainWindow):
         else:
             self.handleDedent(cursor)
 
-    def preview(self):
-
+    def file_print_preview(self):
         # Open preview dialog
-        preview = QtPrintSupport.QPrintPreviewDialog()
+        preview = qps.QPrintPreviewDialog()
         # If a print is requested, open print dialog
-        preview.paintRequested.connect(lambda p: self.current_editor.print_(p))
-        preview.exec_()
+        preview.paintRequested.connect(lambda p: self.current_editor.print(p))
+        preview.exec()
 
-    def print_handler(self):
+    def file_print(self):
+        printer = qps.QPrinter(qps.QPrinter.PrinterMode.HighResolution)
+        dlg = qps.QPrintDialog(printer, self)
+        if self.current_editor.textCursor().hasSelection():
+            dlg.setOption(qps.QAbstractPrintDialog.PrintSelection)
+        dlg.setWindowTitle("Print Document") 
+        if dlg.exec() == qtw.QDialog.accepted:
+            self.current_editor.print(printer)
 
-        # Open printing dialog
-        dialog = QtPrintSupport.QPrintDialog()
-        if dialog.exec_() == qtw.QDialog.Accepted:
-            self.current_editor.document().print_(dialog.printer())
 
     def font_dialog(self):
         font, ok =qtw.QFontDialog.getFont()
@@ -961,25 +1012,6 @@ class MainWindow(qtw.QMainWindow):
     def strippedName(self, fullFileName): 
         return qtc.QFileInfo(fullFileName).fileName()
 
-    def export_as_pdf(self): 
-        if not self.current_editor.document().isModified():
-            self.statusBar().showMessage("There are no texts to export!")
-        else:
-            file_dialog = qtw.QFileDialog(self, "Export PDF")
-            file_dialog.setAcceptMode(qtw.QFileDialog.AcceptSave)
-            file_dialog.setMimeTypeFilters(["application/pdf"])
-            file_dialog.setDefaultSuffix("pdf")
-            if file_dialog.exec() != qtw.QDialog.Accepted:
-                return
-            pdf_file_name = file_dialog.selectedFiles()[0]
-            printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
-            printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
-            printer.setOutputFileName(pdf_file_name)
-            self.current_editor.document().print_(printer)
-            native_fn = qtc.QDir.toNativeSeparators(pdf_file_name)
-            self.changesSaved = True
-            self.statusBar().showMessage(f'Exported "{native_fn}"')
-            self.tabs.setTabText(self.tabs.currentIndex(), str(native_fn)) # renames the current tabs with the filename
 
     def select_all_document(self): 
         self.current_editor.selectAll()
