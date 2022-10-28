@@ -1082,7 +1082,7 @@ if __name__ == "__main__":
     app.setPalette(palette)
     main = MainWindow()
     main.setStyleSheet(
-         """
+       """
             QMainWindow{ background: #161a21; border-style: none;}
             QStatusBar { color: #BFBDB6; background: #161a21; }
             QMenuBar::item:pressed {  color: #BFBDB6; background: #161a21; }
@@ -1112,7 +1112,6 @@ if __name__ == "__main__":
                 margin-right: -1px;
                 padding: 5px 10px 5px 10px;
             }
-
             QTextEdit
             {
                 border: none;
@@ -1141,14 +1140,13 @@ if __name__ == "__main__":
                 border-style: none;
             }
             /*  -----------------------------//
-                -  The css below affects the QToolbar buttons (or any QToolButton)
+                -  The css below affects the Toolbar buttons (or any QToolButton)
                 -----------------------------//
             */
                 QToolButton::hover{
                 background-color: #161a21;
             }
             /*  ---------- [end] ------------*/
-
                 QToolButton[accessibleName="btn_max"]{
                 image: url(:/images/nav_normal.png);
                 background: #161a21;
@@ -1204,40 +1202,57 @@ if __name__ == "__main__":
                 border: none;
                 padding-right: 3px;
             }
+
+            /*  -----------------------------//
+                -  SCROLL BAR VERTICAL
+                -----------------------------//
+            */
             QScrollBar:vertical {
                 border: none;
+                background: #14181f;
                 width: 14px;
                 margin: 0px 0 0px 0;
-                background-color: #161a21;
                 border-radius: 0px;
             }
-            QScrollBar:handle:vertical {
+            /*  HANDLE BAR VERTICAL */
+            QScrollBar::handle:vertical {	
                 background-color: #292c35;
+                min-height: 60px;
+                border-radius: 7px;
             }
-            QScrollBar:handle:vertical:hover {
+            QScrollBar::handle:vertical:hover{	
                 background-color: #4c4a4a;
             }
-            QScrollBar:handle:vertical:pressed {
-                background-color: #5c5b5b;
+            QScrollBar::handle:vertical:pressed {	
+                background-color: #ba6800;
             }
-            QScrollBar:horizontal {
+
+            /*  -----------------------------//
+                -  SCROLL BAR HORIZONTAL
+                -----------------------------//
+            */
+              QScrollBar:horizontal {
                 border: none;
-                height: 14px;
-                margin: 0px 0 0 0;
-                background-color: #161a21;
+                background: #14181f;
+                width: 14px;
+                margin: 0px 0 0px 0;
                 border-radius: 0px;
             }
+            /*  HANDLE BAR HORIZONTAL */
             QScrollBar:handle:horizontal {
                 background-color: #292c35;
+                min-width: 60px;
+                border-radius: 7px;
             }
             QScrollBar:handle:horizontal:hover {
-                background-color: #4c4a4a;
+                background-color: #cb7200;
             }
             QScrollBar:handle:horizontal:pressed {
-                background-color: #5c5b5b;
+                background-color: #ba6800;
             }
+
             /*  -----------------------------//
-                -  The css below removes the QScrollBar's Arrow keys both aesthetically AND functionally
+                -  REMOVE QScrollBar's ARROW BUTTONS both aesthetically AND functionally
                 -----------------------------//
             */
             QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal,
@@ -1254,6 +1269,7 @@ if __name__ == "__main__":
                 width:0px;
                 height:0px;
             }
+
             /*  ---------- [end] ----------  */
         """
     )
