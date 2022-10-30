@@ -12,7 +12,7 @@ damn.. but luckily i can save the file as .odt, .pdf, or .html extensions which 
 
 anyway, here it is: [8/3/2022]
 
-![image](https://user-images.githubusercontent.com/43742265/187019107-ba57126e-bc8f-468f-8843-5b730392125a.png)
+![image](https://user-images.githubusercontent.com/43742265/198871698-69863511-cc3c-4a01-82d3-f01ba1355e90.png)
 
 here it is now: [10/25/2022]
 
