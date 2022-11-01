@@ -18,4 +18,6 @@ damn.. but luckily i can save the file as .odt, .pdf, or .html extensions which 
 
 ![image](https://user-images.githubusercontent.com/43742265/197764449-90fbf6ca-1a98-4ce9-b371-cd89c3c0fcaf.png)
 
+Experiment with Line Numbers: [10/31/2022]
+![image](https://user-images.githubusercontent.com/43742265/199150688-aa5bb7b9-185f-4bf0-83c5-6933e54fe64e.png)
 
